@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=saucybacon
+Comment=My project description
+Exec=/usr/bin/qmlscene $@ /usr/share/saucybacon/saucybacon.qml
+Icon=qmlscene
+Terminal=false
+Type=Application
+X-Ubuntu-Touch=true

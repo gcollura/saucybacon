@@ -33,9 +33,14 @@ MainView {
 
         RecipeListPage {
             objectName: "recipesPage"
-            id: recipesPage
+            id: recipeListPage
 
             visible: false
+        }
+
+        RecipePage {
+            objectName: "recipePage"
+            id: recipePage
         }
 
         NewRecipePage {
@@ -54,12 +59,23 @@ MainView {
     }
 
     Component.onCompleted: {
-        pageStack.push(recipesPage)
+        pageStack.push(recipeListPage)
     }
 
+    /* Database */
     U1db.Database {
         id: db
         path: "saucybacondb"
+    }
+
+    /* Base recipe document */
+    U1db.Document {
+        id: newRecipe
+        database: db
+        create: false
+        defaults: {"title": "world", "tags": { }, "difficulty": "normal",
+            "preptime": "0", "cooktime": "0", "totaltime": "0", "ingredients": { },
+            "directions": "text" }
     }
 
     // Helper functions

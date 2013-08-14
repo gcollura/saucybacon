@@ -112,8 +112,9 @@ Page {
             TextArea {
                 id: recipeDirections
                 width: parent.width
+                height: units.gu(10)
 
-                placeholderText: i18n.tr("Write down your directions")
+                placeholderText: i18n.tr("Write your directions")
                 maximumLineCount: 15
                 autoSize: true
 
@@ -174,6 +175,7 @@ Page {
 
         newRecipe.create = true
         resetRecipe();
+        pageStack.push(recipeListPage);
     }
 
     function resetRecipe() {
@@ -184,13 +186,6 @@ Page {
     function getRandomId() {
         var n = Math.random();
         return n.toString();
-    }
-
-    U1db.Document {
-        id: newRecipe
-        database: db
-        defaults: {"title": "world", "preptime": "0", "cooktime": "0", "totaltime": "0", "ingredients": { },
-            "directions": "text" }
     }
 
     Component.onCompleted: resetRecipe()

@@ -12,6 +12,7 @@ ListItem.MultiValue {
     onClicked: openRecipe(docId)
 
     function openRecipe(id) {
-        console.log("Opening %1".arg(id))
+        pageStack.push(recipePage);
+        recipePage.setRecipe(id);
     }
 }

@@ -21,6 +21,7 @@ Row {
         width: units.gu(8)
 
         inputMethodHints: Qt.ImhDigitsOnly
+        placeholderText: i18n.tr("Qty")
     }
 
     Button {

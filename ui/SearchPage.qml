@@ -62,11 +62,13 @@ Page {
         // it's better to keep the online search a real request by the user
         // TODO: have money to buy a unlimited API
 
+        console.log("Perfoming remote search...");
     }
 
     function searchLocally(querystr) {
         // Perform a local search on our personal db
         // this function can be called everytime the user write text in the entry
 
+        console.log("Performing local search...");
     }
 }

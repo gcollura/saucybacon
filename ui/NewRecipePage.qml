@@ -21,9 +21,6 @@ Page {
     Flickable {
         id: flickable
 
-        width: parent.width
-        height: parent.height
-
         contentHeight: newRecipeColumn.implicitHeight
 
         anchors.fill: parent
@@ -166,8 +163,12 @@ Page {
         tmpContents["preptime"] = prepTime.text;
         tmpContents["cooktime"] = cookTime.text;
         tmpContents["totaltime"] = totalTime.text;
-        for (var i = 0; i < ingredientsContainer.children.length; ++i)
-            tmpContents["ingredients"][ingredientsContainer.children[i].name] = ingredientsContainer.children[i].quantity
+        var tmpingredient = { "name" : "", "quantity": "" }
+        for (var i = 0; i < ingredientsContainer.children.length; ++i) {
+            tmpingredient.name = ingredientsContainer.children[i].name;
+            tmpingredient.quantity = ingredientsContainer.children[i].quantity;
+            tmpContents["ingredients"][i] = tmpingredient;
+        }
 
         console.log(JSON.stringify(tmpContents))
 

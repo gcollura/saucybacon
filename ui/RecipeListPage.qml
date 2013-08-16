@@ -16,8 +16,6 @@ Page {
 
         anchors.fill: parent
 
-        model: db
-
         /* A delegate will be created for each Document retrieved from the Database */
         delegate: RecipeItem {
         }
@@ -26,5 +24,9 @@ Page {
     Scrollbar {
         flickableItem: listView
         align: Qt.AlignTrailing
+    }
+
+    Component.onCompleted: {
+        listView.model = db
     }
 }

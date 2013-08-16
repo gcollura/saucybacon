@@ -7,7 +7,7 @@ ListItem.MultiValue {
     progression: true
 
     text: contents.title
-    values: [contents.totaltime, Object.keys(contents.ingredients)]
+    values: [contents.totaltime, /*Object.values(contents.ingredients.name)*/]
 
     onClicked: openRecipe(docId)
 

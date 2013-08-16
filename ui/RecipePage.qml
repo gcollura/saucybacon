@@ -6,31 +6,45 @@ Page {
     title: i18n.tr("")
 
     property var recipeId
+    property alias directions: directionsLabel.text
+    property alias ingredients: ingredientsList.model
 
     tools: RecipePageToolbar {
         objectName: "recipePageToolbar"
     }
 
-    // Delete dialog
-    Component {
-        id: deletionDialog
-        Dialog {
-            id: deletionDialogue
-            title: i18n.tr("Confirm deletion")
-            text: i18n.tr("Are you sure you want to delete this recipe?")
-            Button {
-                text: i18n.tr("Delete")
-                onClicked: {
-                    deleteRecipe(recipeId);
-                    PopupUtils.close(deletionDialogue);
-                    pageStack.push(recipeListPage);
-                }
+    Column {
+        width: parent.width
+        anchors{
+            margins: units.gu(2)
+            fill: parent
+        }
+        spacing: units.gu(2)
+
+        Label {
+            text: i18n.tr("Ingredients")
+            fontSize: "large"
+            font.bold: true
+        }
+
+        ListView {
+            id: ingredientsList
+
+            delegate: Label {
+                text: ingredientsList.model[index].name
+                height: units.gu(3)
             }
-            Button {
-                text: i18n.tr("Cancel")
-                gradient: UbuntuColors.greyGradient
-                onClicked: PopupUtils.close(deletionDialogue)
-            }
+        }
+
+        Label {
+            text: i18n.tr("Directions")
+            fontSize: "large"
+            font.bold: true
+        }
+
+        Label {
+            id: directionsLabel
+            text: ""
         }
     }
 
@@ -38,15 +52,16 @@ Page {
         var recipe = db.getDoc(id);
 
         if (recipe) {
-            title = recipe.title;
+            title = recipe.title.length > 0 ? recipe.title : "Unnamed";
+            directions = recipe.directions;
+            ingredients = recipe.ingredients;
+            console.log(JSON.stringify(recipe.ingredients))
             recipeId = id;
         }
     }
 
     function deleteRecipe(id) {
-        var recipe = db.getDoc(id);
-
-        newRecipe.docId = id;
+        var recipe = db.putDoc("", id);
 
         console.log("FIXME: Delete this entry please!");
     }

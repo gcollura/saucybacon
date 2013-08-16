@@ -41,6 +41,8 @@ MainView {
         RecipePage {
             objectName: "recipePage"
             id: recipePage
+
+            visible: false
         }
 
         NewRecipePage {
@@ -74,7 +76,7 @@ MainView {
         database: db
         create: false
         defaults: {"title": "world", "tags": { }, "difficulty": "normal",
-            "preptime": "0", "cooktime": "0", "totaltime": "0", "ingredients": { },
+            "preptime": "0", "cooktime": "0", "totaltime": "0", "ingredients": [ ],
             "directions": "text" }
     }
 

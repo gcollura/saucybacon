@@ -5,6 +5,15 @@ import Ubuntu.Components.Popups 0.1
 ToolbarItems {
 
     ToolbarButton {
+        text: i18n.tr("Share")
+        iconSource: icon("share")
+
+        onTriggered: {
+
+        }
+    }
+
+    ToolbarButton {
         text: i18n.tr("Edit")
         iconSource: icon("edit")
 
@@ -18,6 +27,10 @@ ToolbarItems {
         iconSource: icon("delete")
 
         onTriggered: PopupUtils.open(deletionDialog)
+    }
+
+    DeleteDialog {
+        id: deletionDialog
     }
 
 }

@@ -10,11 +10,28 @@ Page {
         objectName: "recipesTabToolbar"
     }
 
+    Component {
+        id: sectionDelegate
+        Rectangle {
+            width: parent.width
+            height: units.gu(5)
+
+            Text {
+                text: section
+            }
+        }
+    }
+
     ListView {
         objectName: "recipesListView"
         id: listView
 
         anchors.fill: parent
+
+        model: db
+        section.property: "contents.title"
+        section.criteria: ViewSection.FullString
+        section.delegate: sectionDelegate
 
         /* A delegate will be created for each Document retrieved from the Database */
         delegate: RecipeItem {
@@ -24,9 +41,5 @@ Page {
     Scrollbar {
         flickableItem: listView
         align: Qt.AlignTrailing
-    }
-
-    Component.onCompleted: {
-        listView.model = db
     }
 }

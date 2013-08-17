@@ -45,19 +45,25 @@ Page {
                 model: 0
 
                 delegate: Label {
-                    text: "%1".arg(ingredientsList.model[index].name)
+                    text: "%1 %2 %3".arg(ingredientsList.model[index].quantity)
+                    .arg(ingredientsList.model[index].type)
+                    .arg(ingredientsList.model[index].name)
                 }
             }
         }
 
         Label {
             text: i18n.tr("Directions")
+
             fontSize: "large"
             font.bold: true
         }
 
         Label {
             id: directionsLabel
+            width: parent.width
+
+            wrapMode: Text.Wrap
         }
     }
 
@@ -65,7 +71,7 @@ Page {
         var recipe = db.getDoc(id);
 
         if (recipe) {
-            title = recipe.title;
+            title = truncate(recipe.title);
             directions = recipe.directions;
             ingredients = recipe.ingredients;
             preptime = recipe.preptime;
@@ -82,5 +88,13 @@ Page {
         var recipe = db.putDoc("", id);
 
         console.log("FIXME: Delete this entry please!");
+    }
+
+    function truncate(name) {
+        if (name.length > parent.width / units.gu(2)) {
+            name = name.substring(0, parent.width / units.gu(2.3));
+            name += "...";
+        }
+        return name;
     }
 }

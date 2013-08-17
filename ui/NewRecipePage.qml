@@ -115,16 +115,16 @@ Page {
                 maximumLineCount: 15
             }
 
-            Row {
+            Grid {
                 width: parent.width
-                spacing: units.gu(1)
+                spacing: units.gu(2)
 
                 Repeater {
                     width: parent.width
-                    model: 5
+                    model: 20
                     UbuntuShape {
 
-                        width: parent.width / 5 - units.gu(4)
+                        width: units.gu(8)
                         height: width
 
                         Image {
@@ -174,11 +174,11 @@ Page {
         tmpContents.totaltime = totalTime.text;
 
         for (var i = 0; i < ingredientsContainer.children.length; i++) {
-            var tmpingredient = { "name" : "", "quantity": 0, "type": "gr" }
+            var tmpingredient = { "name" : "", "quantity": 1, "type": "gr" }
 
             tmpingredient.name = ingredientsContainer.children[i].name;
             tmpingredient.quantity = ingredientsContainer.children[i].quantity ?
-                        parseInt(ingredientsContainer.children[i].quantity) : 0;
+                        parseInt(ingredientsContainer.children[i].quantity) : 1;
             tmpingredient.type = ingredientsContainer.children[i].type;
 
             // Add the ingredient to the contents

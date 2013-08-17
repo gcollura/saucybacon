@@ -18,7 +18,8 @@ ToolbarItems {
         iconSource: icon("edit")
 
         onTriggered: {
-
+            pageStack.push(newRecipePage)
+            newRecipePage.loadRecipe(recipeId);
         }
     }
 

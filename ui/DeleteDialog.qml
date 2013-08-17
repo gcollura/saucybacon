@@ -4,6 +4,7 @@ import Ubuntu.Components.Popups 0.1
 
 // Delete dialog
 Component {
+    id: deletionDialog
     Dialog {
         id: deletionDialogue
         title: i18n.tr("Confirm deletion")

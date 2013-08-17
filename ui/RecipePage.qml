@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.Popups 0.1
+import Ubuntu.Components.ListItems 0.1 as ListItem
 
 Page {
     title: i18n.tr("")
@@ -8,6 +9,9 @@ Page {
     property var recipeId
     property alias directions: directionsLabel.text
     property alias ingredients: ingredientsList.model
+    property string preptime
+    property string cooktime
+    property string totaltime
 
     tools: RecipePageToolbar {
         objectName: "recipePageToolbar"
@@ -22,17 +26,27 @@ Page {
         spacing: units.gu(2)
 
         Label {
+            id: totaltimeLabel
+            text: i18n.tr("<b>%1</b> \t (Prep: %2 mins, Cook: %3 mins)".arg(totaltime).arg(preptime).arg(cooktime))
+        }
+
+        Label {
             text: i18n.tr("Ingredients")
             fontSize: "large"
             font.bold: true
         }
 
-        ListView {
-            id: ingredientsList
+        Column {
+            width: parent.width
 
-            delegate: Label {
-                text: ingredientsList.model[index].name
-                height: units.gu(3)
+            Repeater {
+                id: ingredientsList
+                width: parent.width
+                model: 0
+
+                delegate: Label {
+                    text: "%1".arg(ingredientsList.model[index].name)
+                }
             }
         }
 
@@ -44,7 +58,6 @@ Page {
 
         Label {
             id: directionsLabel
-            text: ""
         }
     }
 
@@ -52,11 +65,16 @@ Page {
         var recipe = db.getDoc(id);
 
         if (recipe) {
-            title = recipe.title.length > 0 ? recipe.title : "Unnamed";
+            title = recipe.title;
             directions = recipe.directions;
             ingredients = recipe.ingredients;
-            console.log(JSON.stringify(recipe.ingredients))
+            preptime = recipe.preptime;
+            cooktime = recipe.cooktime;
+            totaltime = recipe.totaltime;
+
             recipeId = id;
+        } else {
+            console.log("Error while opening recipe with id: %1".arg(id));
         }
     }
 

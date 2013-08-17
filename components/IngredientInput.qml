@@ -4,14 +4,15 @@ import Ubuntu.Components 0.1
 Row {
     id: ingredient
     width: parent.width
-    spacing: units.gu(2)
+    spacing: units.gu(1)
 
     property alias name: ingredientName.text
     property alias quantity: ingredientQuantity.text
+    property alias type: ingredientQuantityType.text
 
     TextField {
         id: ingredientName
-        width: parent.width - units.gu(16)
+        width: parent.width - units.gu(23)
 
         placeholderText: i18n.tr("Insert ingredient name")
     }
@@ -20,8 +21,15 @@ Row {
         id: ingredientQuantity
         width: units.gu(8)
 
-        inputMethodHints: Qt.ImhDigitsOnly
+        inputMethodHints: Qt.ImhFormattedNumbersOnly
         placeholderText: i18n.tr("Qty")
+    }
+
+    TextField {
+        id: ingredientQuantityType
+        width: units.gu(8)
+
+        placeholderText: i18n.tr("Type")
     }
 
     Button {

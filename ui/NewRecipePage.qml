@@ -7,6 +7,8 @@ import "../components"
 Page {
     title: i18n.tr("New Recipe")
 
+    property string recipeId: ""
+
     tools: ToolbarItems {
         ToolbarButton {
             iconSource: icon('save')
@@ -21,6 +23,7 @@ Page {
     Flickable {
         id: flickable
 
+        // FIXME: the flickable doesn't fit the whole view sometimes
         contentHeight: newRecipeColumn.implicitHeight
 
         anchors.fill: parent
@@ -40,43 +43,46 @@ Page {
                 id: recipeName
                 width: parent.width
                 placeholderText: i18n.tr("Enter a name for your recipe")
-                hasClearButton: true
             }
 
             Row {
                 width: parent.width
 
+                // TODO: Change this to a combobox-like widget
                 TextField {
                     id: recipeTags
                     width: parent.width
-                    placeholderText: i18n.tr("Enter tags separated by a comma")
+                    placeholderText: i18n.tr("TODO: Categories")
                 }
             }
 
             Row {
                 width: parent.width
-                spacing: units.gu(2)
+                spacing: units.gu(1)
+
+                Label {
+                    id: totalTime
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: parent.width / 3 - units.gu(2)
+                    text: i18n.tr("Total: %1 minutes").arg(computeTotalTime(prepTime.text, cookTime.text))
+                }
 
                 TextField {
                     id: prepTime
-                    width: parent.width / 2 - units.gu(1)
+                    width: parent.width / 3
                     placeholderText: i18n.tr("Prep time (in min)")
                     inputMethodHints: Qt.ImhPreferNumbers
                 }
 
                 TextField {
                     id: cookTime
-                    width: parent.width / 2 - units.gu(1)
+                    width: parent.width / 3
                     placeholderText: i18n.tr("Cook time (in min)")
                     inputMethodHints: Qt.ImhPreferNumbers
                 }
+
             }
 
-            Label {
-                id: totalTime
-                width: units.gu(8)
-                text: i18n.tr("Total time: %1 minutes").arg(computeTotalTime(prepTime.text, cookTime.text))
-            }
 
 
             Label {
@@ -98,47 +104,50 @@ Page {
                 height: units.gu(4)
                 text: i18n.tr("Add new ingredient")
 
-                onClicked: {
-                    var component = Qt.createComponent("../components/IngredientInput.qml")
-                    var object = component.createObject(ingredientsContainer)
-                    if (object == null)
-                        console.log("Error while creating the object")
-                }
+                onClicked: addNewIngredient()
             }
 
             TextArea {
                 id: recipeDirections
                 width: parent.width
-                height: units.gu(10)
 
                 placeholderText: i18n.tr("Write your directions")
                 maximumLineCount: 15
-                autoSize: true
-
-                onLineCountChanged: updateFlickable()
             }
 
-            UbuntuShape {
+            Row {
+                width: parent.width
+                spacing: units.gu(1)
 
-                width: parent.width - units.gu(20)
-                height: width
-                anchors.horizontalCenter: parent.horizontalCenter
+                Repeater {
+                    width: parent.width
+                    model: 5
+                    UbuntuShape {
 
-                Image {
-                    source: icon("import-image")
-                    anchors {
-                        verticalCenter: parent.verticalCenter
-                        horizontalCenter: parent.horizontalCenter
+                        width: parent.width / 5 - units.gu(4)
+                        height: width
+
+                        Image {
+                            source: icon("import-image")
+                            width: parent.width - units.gu(1)
+                            height: width
+                            anchors {
+                                verticalCenter: parent.verticalCenter
+                                horizontalCenter: parent.horizontalCenter
+                            }
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                console.log("Open a file browser to choose an image!")
+                            }
+                        }
                     }
                 }
 
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        console.log("Open a file browser to choose an image!")
-                    }
-                }
             }
+
         }
 
     }
@@ -155,40 +164,89 @@ Page {
     }
 
     function saveRecipe() {
-        console.log("Saving recipe: %1".arg(newRecipe.docId))
 
         var tmpContents = newRecipe.defaults;
-        tmpContents["title"] = recipeName.text;
-        tmpContents["directions"] = recipeDirections.text;
-        tmpContents["preptime"] = prepTime.text;
-        tmpContents["cooktime"] = cookTime.text;
-        tmpContents["totaltime"] = totalTime.text;
-        var tmpingredient = { "name" : "", "quantity": "" }
-        for (var i = 0; i < ingredientsContainer.children.length; ++i) {
+
+        tmpContents.title = recipeName.text ? recipeName.text : i18n.tr("Misterious Recipe");
+        tmpContents.directions = recipeDirections.text;
+        tmpContents.preptime = prepTime.text;
+        tmpContents.cooktime = cookTime.text;
+        tmpContents.totaltime = totalTime.text;
+
+        for (var i = 0; i < ingredientsContainer.children.length; i++) {
+            var tmpingredient = { "name" : "", "quantity": 0, "type": "gr" }
+
             tmpingredient.name = ingredientsContainer.children[i].name;
-            tmpingredient.quantity = ingredientsContainer.children[i].quantity;
-            tmpContents["ingredients"][i] = tmpingredient;
+            tmpingredient.quantity = ingredientsContainer.children[i].quantity ?
+                        parseInt(ingredientsContainer.children[i].quantity) : 0;
+            tmpingredient.type = ingredientsContainer.children[i].type;
+
+            // Add the ingredient to the contents
+            if (tmpingredient.name.length > 0) // Don't push non-sense ingredients
+                tmpContents.ingredients.push(tmpingredient);
         }
 
-        console.log(JSON.stringify(tmpContents))
+        console.log(JSON.stringify(tmpContents));
 
-        newRecipe.contents = tmpContents;
+        if (recipeId.length > 0)
+            db.putDoc(tmpContents, recipeId);
+        else
+            db.putDoc(tmpContents);
 
-        newRecipe.create = true
         resetRecipe();
         pageStack.push(recipeListPage);
     }
 
+    function loadRecipe(id) {
+        recipeId = id;
+        var contents = db.getDoc(recipeId);
+
+        recipeName.text = contents.title;
+        recipeDirections.text = contents.directions;
+        prepTime.text = contents.preptime;
+        cookTime.text = contents.cooktime;
+
+        for (var i = 0; i < contents.ingredients.length; i++) {
+            ingredientsContainer.children[i + 1].name = contents.ingredients[i].name;
+            ingredientsContainer.children[i + 1].quantity = contents.ingredients[i].quantity;
+            ingredientsContainer.children[i + 1].type = contents.ingredients[i].type;
+
+            addNewIngredient();
+        }
+
+    }
+
     function resetRecipe() {
-        newRecipe.create = false
-        newRecipe.docId = getRandomId()
+
+        recipeId = "";
+
+        recipeName.text = "";
+        recipeDirections.text = "";
+        prepTime.text = "";
+        cookTime.text = "";
+
+        for (var i = 0; i < ingredientsContainer.children.length; ++i) {
+            // Wipe out everything
+            ingredientsContainer.children[i].destroy();
+        }
+
+        addNewIngredient();
+
     }
 
-    function getRandomId() {
-        var n = Math.random();
-        return n.toString();
+    function addNewIngredient() {
+        var component = Qt.createComponent("../components/IngredientInput.qml")
+        var object = component.createObject(ingredientsContainer)
+
+        if (object == null)
+            console.log("Error while creating the object")
     }
 
-    Component.onCompleted: resetRecipe()
+    onVisibleChanged: {
+        // on edit, an id is passed after making visible the page
+        // on new, no id is passed, then a new recipe will be saved
+        if (visible)
+            resetRecipe();
+    }
 }
 

@@ -12,7 +12,7 @@ ToolbarItems {
     }
     ToolbarButton {
         iconSource: icon('add')
-        text: i18n.tr("Add...")
+        text: i18n.tr("New")
 
         onTriggered: {
             pageStack.push(newRecipePage);

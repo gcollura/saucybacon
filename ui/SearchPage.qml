@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import Ubuntu.Components 0.1
-import Ubuntu.Components.ListItems 0.1
+import Ubuntu.Components.ListItems 0.1 as ListItem
+import U1db 1.0 as U1db
 
 Page {
     title: i18n.tr("Search")
@@ -36,6 +37,8 @@ Page {
                 width: units.gu(5)
                 height: searchField.height
 
+                iconSource: icon("search")
+
                 onClicked: search(searchField.text)
             }
         }
@@ -48,11 +51,24 @@ Page {
                 bottom: parent.bottom
             }
 
-            model: db
+            model: searchQuery
 
             /* A delegate will be created for each Document retrieved from the Database */
-            delegate: Empty {
+            delegate: ListItem.Standard {
+                text: "contents.name %1".arg(contents.name)
             }
+        }
+
+        U1db.Index {
+            database: db
+            id: searchIndex
+            expression: [ "ingredients.name" ]
+        }
+
+        U1db.Query {
+            id: searchQuery
+            index: searchIndex
+            query: [{"name": "*"}]
         }
 
     }

@@ -18,14 +18,14 @@ MainView {
     // Note! applicationName needs to match the .desktop filename
     applicationName: "SaucyBacon"
 
-    automaticOrientation: false
+    automaticOrientation: true
 
     width: units.gu(60)
     height: units.gu(85)
 
-    headerColor: "#700328"
-    backgroundColor: "#7A2541"
-    footerColor: "#631E35"
+    headerColor: "#640707"
+    backgroundColor: "#9b1515"
+    footerColor: "#b32525"
 
     PageStack {
         id: pageStack
@@ -58,10 +58,18 @@ MainView {
 
             visible: false
         }
+
     }
 
     Component.onCompleted: {
-        pageStack.push(recipeListPage)
+        if (width < units.gu(80))
+            pageStack.push(recipeListPage)
+        else
+            console.log("Switch to tablet factor")
+    }
+
+    onWidthChanged: {
+
     }
 
     /* Database */
@@ -75,7 +83,7 @@ MainView {
         id: newRecipe
         database: db
         create: false
-        defaults: {"title": "world", "tags": { }, "difficulty": "normal",
+        defaults: { "title": "world", "category": [], "difficulty": "normal",
             "preptime": "0", "cooktime": "0", "totaltime": "0", "ingredients": [ ],
             "directions": "text" }
     }

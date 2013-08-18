@@ -30,7 +30,6 @@ MainView {
     PageStack {
         id: pageStack
 
-
         RecipeListPage {
             objectName: "recipesPage"
             id: recipeListPage
@@ -83,9 +82,9 @@ MainView {
         id: newRecipe
         database: db
         create: false
-        defaults: { "title": "world", "category": [], "difficulty": "normal",
+        defaults: { "title": "", "category": [ ], "difficulty": "normal",
             "preptime": "0", "cooktime": "0", "totaltime": "0", "ingredients": [ ],
-            "directions": "text" }
+            "directions": "", "proportions": 4, "images" : [ ] }
     }
 
     // Helper functions

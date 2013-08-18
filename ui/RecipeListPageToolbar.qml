@@ -16,6 +16,7 @@ ToolbarItems {
 
         onTriggered: {
             pageStack.push(newRecipePage);
+            newRecipePage.recipeId = "";
         }
     }
 }

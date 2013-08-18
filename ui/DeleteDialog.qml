@@ -3,24 +3,22 @@ import Ubuntu.Components 0.1
 import Ubuntu.Components.Popups 0.1
 
 // Delete dialog
-Component {
-    id: deletionDialog
-    Dialog {
-        id: deletionDialogue
-        title: i18n.tr("Confirm deletion")
-        text: i18n.tr("Are you sure you want to delete this recipe?")
-        Button {
-            text: i18n.tr("Delete")
-            onClicked: {
-                deleteRecipe(recipeId);
-                PopupUtils.close(deletionDialogue);
-                pageStack.push(recipeListPage);
-            }
+
+Dialog {
+    id: deletionDialogue
+    title: i18n.tr("Confirm deletion")
+    text: i18n.tr("Are you sure you want to delete this recipe?")
+    Button {
+        text: i18n.tr("Delete")
+        onClicked: {
+            deleteRecipe(recipeId);
+            PopupUtils.close(deletionDialogue);
+            pageStack.push(recipeListPage);
         }
-        Button {
-            text: i18n.tr("Cancel")
-            gradient: UbuntuColors.greyGradient
-            onClicked: PopupUtils.close(deletionDialogue)
-        }
+    }
+    Button {
+        text: i18n.tr("Cancel")
+        gradient: UbuntuColors.greyGradient
+        onClicked: PopupUtils.close(deletionDialogue)
     }
 }

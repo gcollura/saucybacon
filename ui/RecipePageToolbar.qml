@@ -19,7 +19,7 @@ ToolbarItems {
 
         onTriggered: {
             pageStack.push(newRecipePage)
-            newRecipePage.loadRecipe(recipeId);
+            newRecipePage.recipeId = recipeId;
         }
     }
 
@@ -27,11 +27,7 @@ ToolbarItems {
         text: i18n.tr("Delete")
         iconSource: icon("delete")
 
-        onTriggered: PopupUtils.open(deletionDialog)
-    }
-
-    DeleteDialog {
-        id: deletionDialog
+        onTriggered: PopupUtils.open(Qt.resolvedUrl("DeleteDialog.qml"))
     }
 
 }

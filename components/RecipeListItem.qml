@@ -7,7 +7,8 @@ ListItem.Subtitled {
     progression: true
 
     text: contents.title
-    subText: "%1\nIngredients: %2".arg(contents.totaltime).arg(listElement(contents.ingredients))
+    subText: i18n.tr("%1\nDifficulty: %2\nIngredients: %3"
+                     .arg(contents.totaltime).arg(contents.difficulty).arg(listElement(contents.ingredients)))
 
 
     onClicked: openRecipe(docId)

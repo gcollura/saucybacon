@@ -4,7 +4,7 @@ import QmlProject 1.1
 
 Project {
     mainFile: "saucybacon.qml"
-    
+
     /* Include .qml, .js, and image files from current directory and subdirectories */
     QmlFiles {
         directory: "."
@@ -42,5 +42,6 @@ Project {
         filter: "*"
     }
     /* List of plugin directories passed to QML runtime */
-    importPaths: [ "." ,"/usr/bin","/usr/lib/x86_64-linux-gnu/qt5/qml" ]
+    importPaths: [ "." ,"/usr/bin","/usr/lib/x86_64-linux-gnu/qt5/qml",
+        "/home/random/Projects/build-UbuntuApp-Qt_5_0_1_qt5-Release/backend/modules" ]
 }

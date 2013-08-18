@@ -34,7 +34,7 @@ Page {
         section.delegate: sectionDelegate
 
         /* A delegate will be created for each Document retrieved from the Database */
-        delegate: RecipeItem {
+        delegate: RecipeListItem {
         }
     }
 

@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=saucybacon
-Comment=My project description
+Name=SaucyBacon
+Comment=Manage your personal recipe and find new tastes on the web
 Exec=/usr/bin/qmlscene $@ /usr/share/saucybacon/saucybacon.qml
 Icon=qmlscene
 Terminal=false

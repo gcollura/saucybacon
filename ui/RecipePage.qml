@@ -7,11 +7,13 @@ Page {
     title: i18n.tr("")
 
     property var recipeId
+    property string name
     property alias directions: directionsLabel.text
     property alias ingredients: ingredientsList.model
     property string preptime
     property string cooktime
     property string totaltime
+    property string difficulty
 
     tools: RecipePageToolbar {
         objectName: "recipePageToolbar"
@@ -31,6 +33,15 @@ Page {
         }
 
         Label {
+            id: difficultyLabel
+            text: i18n.tr("Difficulty: %1".arg(difficulty))
+        }
+
+        ListItem.ThinDivider {
+
+        }
+
+        Label {
             text: i18n.tr("Ingredients")
             fontSize: "large"
             font.bold: true
@@ -46,11 +57,12 @@ Page {
 
                 delegate: Label {
                     text: "%1 %2 %3".arg(ingredientsList.model[index].quantity)
-                    .arg(ingredientsList.model[index].type)
-                    .arg(ingredientsList.model[index].name)
+                    .arg(ingredientsList.model[index].type).arg(ingredientsList.model[index].name)
                 }
             }
         }
+
+        ListItem.ThinDivider {}
 
         Label {
             text: i18n.tr("Directions")
@@ -71,14 +83,16 @@ Page {
         var recipe = db.getDoc(id);
 
         if (recipe) {
-            title = truncate(recipe.title);
+            name = recipe.title;
             directions = recipe.directions;
             ingredients = recipe.ingredients;
             preptime = recipe.preptime;
             cooktime = recipe.cooktime;
             totaltime = recipe.totaltime;
+            difficulty = recipe.difficulty;
 
             recipeId = id;
+            title = truncate(name);
         } else {
             console.log("Error while opening recipe with id: %1".arg(id));
         }
@@ -92,9 +106,13 @@ Page {
 
     function truncate(name) {
         if (name.length > parent.width / units.gu(2)) {
-            name = name.substring(0, parent.width / units.gu(2.3));
+            name = name.substring(0, parent.width / units.gu(2.1));
             name += "...";
         }
         return name;
+    }
+
+    onWidthChanged: {
+        title = truncate(name);
     }
 }

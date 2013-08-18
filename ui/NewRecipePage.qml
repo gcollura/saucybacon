@@ -1,13 +1,15 @@
 import QtQuick 2.0
 import Ubuntu.Components 0.1
+import Ubuntu.Components.Popups 0.1
+import Ubuntu.Components.ListItems 0.1
 import U1db 1.0 as U1db
 
 import "../components"
 
 Page {
-    title: i18n.tr("New Recipe")
+    title: i18n.tr("New recipe")
 
-    property string recipeId: ""
+    property string recipeId
 
     tools: ToolbarItems {
         ToolbarButton {
@@ -43,16 +45,42 @@ Page {
                 id: recipeName
                 width: parent.width
                 placeholderText: i18n.tr("Enter a name for your recipe")
+
+                onFocusChanged: {
+                    focus ? __styleInstance.color = Theme.palette.normal.overlayText : __styleInstance.color = "white"
+                }
             }
 
             Row {
                 width: parent.width
+                spacing: units.gu(2)
 
                 // TODO: Change this to a combobox-like widget
-                TextField {
-                    id: recipeTags
-                    width: parent.width
-                    placeholderText: i18n.tr("TODO: Categories")
+//                Button {
+//                    id: recipeTags
+//                    width: parent.width / 2 - units.gu(1)
+//                    height: units.gu(4)
+//                    text: i18n.tr("Select category")
+//                }
+                ValueSelector {
+                    width: parent.width / 2 - units.gu(1)
+                    text: "Category"
+                    values: ["Value 1", "Value 2", "Value 3", "Value 4", "Value 5", "Value 6", "Value 7"]
+                }
+
+//                Button {
+//                    id: recipeDifficulty
+//                    width: parent.width / 2 - units.gu(1)
+//                    height: units.gu(4)
+
+//                    text: i18n.tr("Select difficulty")
+
+//                    onClicked: PopupUtils.open(Qt.resolvedUrl("../components/DifficultySelector.qml"), recipeDifficulty)
+//                }
+                ValueSelector {
+                    width: parent.width / 2 - units.gu(1)
+                    text: "Difficulty"
+                    values: ["Value 1", "Value 2", "Value 3", "Value 4"]
                 }
             }
 
@@ -63,39 +91,42 @@ Page {
                 Label {
                     id: totalTime
                     anchors.verticalCenter: parent.verticalCenter
-                    width: parent.width / 3 - units.gu(2)
-                    text: i18n.tr("Total: %1 minutes").arg(computeTotalTime(prepTime.text, cookTime.text))
+                    width: parent.width / 2 - units.gu(2)
+                    text: i18n.tr("Total time: %1 minutes").arg(computeTotalTime(prepTime.text, cookTime.text))
                 }
 
                 TextField {
                     id: prepTime
-                    width: parent.width / 3
-                    placeholderText: i18n.tr("Prep time (in min)")
+                    width: parent.width / 4
+                    placeholderText: i18n.tr("Prep time")
                     inputMethodHints: Qt.ImhPreferNumbers
                 }
 
                 TextField {
                     id: cookTime
-                    width: parent.width / 3
-                    placeholderText: i18n.tr("Cook time (in min)")
+                    width: parent.width / 4
+                    placeholderText: i18n.tr("Cook time")
                     inputMethodHints: Qt.ImhPreferNumbers
                 }
 
             }
 
-
-
             Label {
-                text: i18n.tr("Ingredients:")
+                text: i18n.tr("Ingredients")
             }
 
             Column {
                 id: ingredientsContainer
                 width: parent.width
-                spacing: units.gu(2)
+                spacing: units.gu(1)
 
                 IngredientInput {
 
+                }
+
+                add: Transition {
+                    // Smooth animation
+                    NumberAnimation { property: "opacity"; from: 0; to: 100; duration: 1000 }
                 }
             }
 
@@ -117,31 +148,27 @@ Page {
 
             Grid {
                 width: parent.width
-                spacing: units.gu(2)
+                spacing: units.gu(1)
+                columns: parent.width / (units.gu(9))
 
                 Repeater {
+                    id: repeater
                     width: parent.width
-                    model: 20
-                    UbuntuShape {
+                    model: 1
+
+                    Button {
+                        id: photo
 
                         width: units.gu(8)
                         height: width
 
-                        Image {
-                            source: icon("import-image")
-                            width: parent.width - units.gu(1)
-                            height: width
-                            anchors {
-                                verticalCenter: parent.verticalCenter
-                                horizontalCenter: parent.horizontalCenter
-                            }
-                        }
+                        iconSource: icon("import-image")
+                        color: UbuntuColors.coolGrey
 
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                console.log("Open a file browser to choose an image!")
-                            }
+                        onClicked: {
+                            console.log("Open a file browser to choose an image!")
+                            PopupUtils.open(Qt.resolvedUrl("../components/ImageChooser.qml"))
+                            repeater.model += 1
                         }
                     }
                 }
@@ -172,6 +199,7 @@ Page {
         tmpContents.preptime = prepTime.text;
         tmpContents.cooktime = cookTime.text;
         tmpContents.totaltime = totalTime.text;
+        tmpContents.difficulty = recipeDifficulty.text;
 
         for (var i = 0; i < ingredientsContainer.children.length; i++) {
             var tmpingredient = { "name" : "", "quantity": 1, "type": "gr" }
@@ -193,44 +221,57 @@ Page {
         else
             db.putDoc(tmpContents);
 
-        resetRecipe();
         pageStack.push(recipeListPage);
     }
 
-    function loadRecipe(id) {
-        recipeId = id;
-        var contents = db.getDoc(recipeId);
+    onRecipeIdChanged: {
 
-        recipeName.text = contents.title;
-        recipeDirections.text = contents.directions;
-        prepTime.text = contents.preptime;
-        cookTime.text = contents.cooktime;
+        if (recipeId.length > 0) {
+            // If a recipeId is set, retrieve its information from the db
+            // load them in to the edit page and set a proper page title
+            var contents = db.getDoc(recipeId);
 
-        for (var i = 0; i < contents.ingredients.length; i++) {
-            ingredientsContainer.children[i + 1].name = contents.ingredients[i].name;
-            ingredientsContainer.children[i + 1].quantity = contents.ingredients[i].quantity;
-            ingredientsContainer.children[i + 1].type = contents.ingredients[i].type;
+            if (!contents) {
+                console.log("Error while loading " + recipeId);
+                return;
+            }
+
+            recipeName.text = contents.title;
+            recipeDirections.text = contents.directions;
+            prepTime.text = contents.preptime;
+            cookTime.text = contents.cooktime;
+            recipeDifficulty.text = contents.difficulty;
+
+            for (var i = 0; i < contents.ingredients.length; i++) {
+                ingredientsContainer.children[i].name = contents.ingredients[i].name;
+                ingredientsContainer.children[i].quantity = contents.ingredients[i].quantity;
+                ingredientsContainer.children[i].type = contents.ingredients[i].type;
+
+                // Should I always a new ingredient space ready?
+                addNewIngredient();
+            }
+
+            title = i18n.tr("Edit recipe");
+        } else if (recipeId == "") {
+            // Else, if no recipeId is set, clean everything and be ready to
+            // retrieve a new saucy recipe
+
+            recipeName.text = "";
+            recipeDirections.text = "";
+            prepTime.text = "";
+            cookTime.text = "";
+            recipeDifficulty.text = i18n.tr("Select difficulty")
+
+            for (var i = 0; i < ingredientsContainer.children.length; ++i) {
+                // Wipe out everything
+                ingredientsContainer.children[i].destroy();
+            }
 
             addNewIngredient();
+
+            // Set a proper title
+            title = i18n.tr("New recipe");
         }
-
-    }
-
-    function resetRecipe() {
-
-        recipeId = "";
-
-        recipeName.text = "";
-        recipeDirections.text = "";
-        prepTime.text = "";
-        cookTime.text = "";
-
-        for (var i = 0; i < ingredientsContainer.children.length; ++i) {
-            // Wipe out everything
-            ingredientsContainer.children[i].destroy();
-        }
-
-        addNewIngredient();
 
     }
 
@@ -242,11 +283,5 @@ Page {
             console.log("Error while creating the object")
     }
 
-    onVisibleChanged: {
-        // on edit, an id is passed after making visible the page
-        // on new, no id is passed, then a new recipe will be saved
-        if (visible)
-            resetRecipe();
-    }
 }
 

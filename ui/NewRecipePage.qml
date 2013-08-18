@@ -161,33 +161,8 @@ Page {
                 autoSize: true
             }
 
-            Grid {
-                width: parent.width
-                spacing: units.gu(1)
-                columns: parent.width / (units.gu(9))
-
-                Repeater {
-                    id: repeater
-                    width: parent.width
-                    model: 1
-
-                    Button {
-                        id: photo
-
-                        width: units.gu(8)
-                        height: width
-
-                        iconSource: icon("import-image")
-                        color: UbuntuColors.coolGrey
-
-                        onClicked: {
-                            console.log("Open a file browser to choose an image!")
-                            PopupUtils.open(Qt.resolvedUrl("../components/ImageChooser.qml"))
-                            repeater.model += 1
-                        }
-                    }
-                }
-
+            PhotoLayout {
+                id: photoLayout
             }
 
         }
@@ -229,12 +204,9 @@ Page {
                 tmpContents.ingredients.push(tmpingredient);
         }
 
-        for (i = 0; i < repeater.model.length; i++) {
-            console.log(repeater.children[i].color)
-            tmpContents.images[i] = repeater.children[i + 1].iconSource;
-        }
+        tmpContents.photos = photoLayout.photos;
 
-        //console.log(JSON.stringify(tmpContents));
+        // console.log(JSON.stringify(tmpContents));
 
         if (recipeId.length > 0)
             db.putDoc(tmpContents, recipeId);
@@ -276,6 +248,8 @@ Page {
 
             addNewIngredient();
 
+            photoLayout.photos = contents.photos;
+
             title = i18n.tr("Edit recipe");
         } else if (recipeId == "") {
             // Else, if no recipeId is set, clean everything and be ready to
@@ -289,6 +263,8 @@ Page {
 
             resetIngredients();
             addNewIngredient();
+
+            photoLayout.photos = [ ]
 
             // Set a proper title
             title = i18n.tr("New recipe");

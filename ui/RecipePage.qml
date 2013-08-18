@@ -3,6 +3,8 @@ import Ubuntu.Components 0.1
 import Ubuntu.Components.Popups 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
 
+import "../components"
+
 Page {
     title: i18n.tr("")
 
@@ -48,9 +50,7 @@ Page {
                 text: i18n.tr("Difficulty: %1".arg(difficulty))
             }
 
-            ListItem.ThinDivider {
-
-            }
+            ListItem.ThinDivider { }
 
             Label {
                 text: i18n.tr("Ingredients")
@@ -72,7 +72,7 @@ Page {
                 }
             }
 
-            ListItem.ThinDivider {}
+            ListItem.ThinDivider { }
 
             Label {
                 text: i18n.tr("Directions")
@@ -86,6 +86,13 @@ Page {
                 width: parent.width
 
                 wrapMode: Text.Wrap
+            }
+
+            ListItem.ThinDivider { }
+
+            PhotoLayout {
+                id: photoLayout
+                editable: false
             }
         }
     }
@@ -102,6 +109,7 @@ Page {
             totaltime = recipe.totaltime;
             difficulty = recipe.difficulty;
 
+            photoLayout.photos = recipe.photos
             recipeId = id;
             title = truncate(name);
         } else {

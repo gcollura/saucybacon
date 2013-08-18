@@ -59,7 +59,8 @@ Dialog {
                         if (fileName.split(".").pop() === "png"
                                 || fileName.split(".").pop() === "jpg") {
                             file = "/" + fileName
-                            photo.iconSource(fileName)
+
+                            caller.addPhoto(folderPath + file);
                             PopupUtils.close(dialogue)
                         }
                     }

@@ -9,7 +9,7 @@ ListItem.Subtitled {
     text: contents.title
     subText: i18n.tr("%1\nDifficulty: %2\nIngredients: %3"
                      .arg(contents.totaltime).arg(contents.difficulty).arg(listElement(contents.ingredients)))
-    icon: Qt.resolvedUrl(contents.images[0])
+    icon: Qt.resolvedUrl(contents.photos[0])
 
 
     onClicked: openRecipe(docId)

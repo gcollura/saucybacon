@@ -93,6 +93,7 @@ Page {
             PhotoLayout {
                 id: photoLayout
                 editable: false
+                iconSize: units.gu(12)
             }
         }
     }
@@ -108,8 +109,8 @@ Page {
             cooktime = recipe.cooktime;
             totaltime = recipe.totaltime;
             difficulty = recipe.difficulty;
-
             photoLayout.photos = recipe.photos
+
             recipeId = id;
             title = truncate(name);
         } else {

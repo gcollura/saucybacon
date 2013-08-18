@@ -20,6 +20,7 @@ Flickable {
     // Component properties
     property var photos: [ ]
     property bool editable: true
+    property int iconSize: units.gu(8)
 
     Row {
         id: photoRow
@@ -27,7 +28,7 @@ Flickable {
 
         Button {
             iconSource: icon("import-image")
-            height: units.gu(8)
+            height: iconSize
             width: height
 
             visible: editable
@@ -41,7 +42,7 @@ Flickable {
 
             UbuntuShape {
                 id: photo
-                height: units.gu(8)
+                height: iconSize
                 width: height
 
                 image: Image {
@@ -68,10 +69,14 @@ Flickable {
 
         function addPhoto(filename) {
             photos.push(filename);
+            // Update the model manually, since push() doesn't trigger
+            // the *Changed event
+            repeater.model = photos
         }
 
         function removePhoto(index) {
             photos.splice(index, 1);
+            repeater.model = photos
         }
     }
 

@@ -208,12 +208,15 @@ Page {
 
         // console.log(JSON.stringify(tmpContents));
 
-        if (recipeId.length > 0)
+        if (recipeId.length > 0) {
             db.putDoc(tmpContents, recipeId);
-        else
+            pageStack.push(recipePage);
+            recipePage.setRecipe(recipeId);
+        } else {
             db.putDoc(tmpContents);
+            pageStack.push(recipeListPage);
+        }
 
-        pageStack.push(recipeListPage);
     }
 
     onRecipeIdChanged: {

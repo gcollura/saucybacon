@@ -9,7 +9,7 @@ Dialog {
     title: i18n.tr("Add a Photo")
     text: i18n.tr("Locate the photo file.")
 
-    property string folderPath: "/home"
+    property string folderPath: "/home" // TODO: Write c++ plugin to retrieve user informations
     property string file: ""
 
     onFileChanged: {
@@ -28,6 +28,8 @@ Dialog {
             id: folderModel
             folder: folderPath
             showDotAndDotDot: true
+            nameFilters: [ "*.png", "*.jpg" ]
+            showDirsFirst: true
         }
 
         Component {
@@ -36,15 +38,15 @@ Dialog {
                 text: fileName
                 onClicked: {
                     var split = folder.text.split("/")
-                    if(fileName == "..") {
-                        if(split.length > 2) {
-                            for(var i = 1, newFolder = ""; i < split.length - 1; i++) {
+                    if (fileName == "..") {
+                        if (split.length > 2) {
+                            for (var i = 1, newFolder = ""; i < split.length - 1; i++) {
                                 newFolder = newFolder + "/" + split[i]
                             }
                         } else {
                             newFolder = "/"
                         }
-                    } else if(fileName == ".") {
+                    } else if (fileName == ".") {
                         newFolder = "/"
                     } else {
                         if (folder.text != "/") newFolder = folder.text + "/" + fileName
@@ -57,7 +59,7 @@ Dialog {
                         if (fileName.split(".").pop() === "png"
                                 || fileName.split(".").pop() === "jpg") {
                             file = "/" + fileName
-                            caller.iconSource(fileName)
+                            photo.iconSource(fileName)
                             PopupUtils.close(dialogue)
                         }
                     }

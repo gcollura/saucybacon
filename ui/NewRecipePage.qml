@@ -25,11 +25,12 @@ Page {
     Flickable {
         id: flickable
 
-        // FIXME: the flickable doesn't fit the whole view sometimes
-        contentHeight: newRecipeColumn.implicitHeight
-
         anchors.fill: parent
-        clip: true
+        anchors.topMargin: units.gu(2)
+        anchors.bottomMargin: units.gu(2)
+
+        contentHeight: newRecipeColumn.height
+        interactive: contentHeight > height
 
         Column {
             id: newRecipeColumn
@@ -37,7 +38,8 @@ Page {
             width: parent.width
             spacing: units.gu(2)
             anchors {
-                fill: parent
+                left: parent.left
+                right: parent.right
                 margins: units.gu(2)
             }
 
@@ -47,6 +49,7 @@ Page {
                 placeholderText: i18n.tr("Enter a name for your recipe")
 
                 onFocusChanged: {
+                    // FIXME
                     focus ? __styleInstance.color = Theme.palette.normal.overlayText : __styleInstance.color = "white"
                 }
             }
@@ -56,32 +59,32 @@ Page {
                 spacing: units.gu(2)
 
                 // TODO: Change this to a combobox-like widget
-//                Button {
-//                    id: recipeTags
-//                    width: parent.width / 2 - units.gu(1)
-//                    height: units.gu(4)
-//                    text: i18n.tr("Select category")
-//                }
-                ValueSelector {
+                Button {
+                    id: recipeTags
                     width: parent.width / 2 - units.gu(1)
-                    text: "Category"
-                    values: ["Value 1", "Value 2", "Value 3", "Value 4", "Value 5", "Value 6", "Value 7"]
+                    height: units.gu(4)
+                    text: i18n.tr("Select category")
                 }
-
-//                Button {
-//                    id: recipeDifficulty
+//                ValueSelector {
 //                    width: parent.width / 2 - units.gu(1)
-//                    height: units.gu(4)
-
-//                    text: i18n.tr("Select difficulty")
-
-//                    onClicked: PopupUtils.open(Qt.resolvedUrl("../components/DifficultySelector.qml"), recipeDifficulty)
+//                    text: "Category"
+//                    values: ["Value 1", "Value 2", "Value 3", "Value 4", "Value 5", "Value 6", "Value 7"]
 //                }
-                ValueSelector {
+
+                Button {
+                    id: recipeDifficulty
                     width: parent.width / 2 - units.gu(1)
-                    text: "Difficulty"
-                    values: ["Value 1", "Value 2", "Value 3", "Value 4"]
+                    height: units.gu(4)
+
+                    text: i18n.tr("Select difficulty")
+
+                    onClicked: PopupUtils.open(Qt.resolvedUrl("../components/DifficultySelector.qml"), recipeDifficulty)
                 }
+//                ValueSelector {
+//                    width: parent.width / 2 - units.gu(1)
+//                    text: "Difficulty"
+//                    values: ["Value 1", "Value 2", "Value 3", "Value 4"]
+//                }
             }
 
             Row {
@@ -111,8 +114,19 @@ Page {
 
             }
 
-            Label {
-                text: i18n.tr("Ingredients")
+            Row {
+                width: parent.width
+                Label {
+                    width: text.length * units.gu(2)
+                    text: i18n.tr("Ingredients")
+                }
+//                Slider {
+//                    height: units.gu(4)
+//                    value: 4
+//                    minimumValue: 1
+//                    maximumValue: 10
+//                    live: true
+//                }
             }
 
             Column {
@@ -143,7 +157,8 @@ Page {
                 width: parent.width
 
                 placeholderText: i18n.tr("Write your directions")
-                maximumLineCount: 15
+                maximumLineCount: 0
+                autoSize: true
             }
 
             Grid {

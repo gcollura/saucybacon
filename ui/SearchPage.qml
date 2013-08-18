@@ -6,10 +6,24 @@ import U1db 1.0 as U1db
 Page {
     title: i18n.tr("Search")
 
-    Rectangle {
-        // Column feels awkward with a listview
-        anchors.fill: parent
-        color: "transparent"
+    U1db.Index {
+        database: db
+        id: searchIndex
+        expression: [ "title", "ingredients.name" ]
+    }
+
+    U1db.Query {
+        id: searchQuery
+        index: searchIndex
+        query: [{"title": "*"}, {"name": "*" }]
+    }
+
+    Column {
+        anchors {
+            left: parent.left
+            right: parent.right
+            fill: parent
+        }
 
         Row {
             id: searchRow
@@ -46,29 +60,18 @@ Page {
         ListView {
             id: resultList
             width: parent.width
+            height: parent.height - searchRow.height
             anchors {
-                top: searchRow.bottom
-                bottom: parent.bottom
+                left: parent.left
+                right: parent.right
             }
 
             model: searchQuery
 
             /* A delegate will be created for each Document retrieved from the Database */
             delegate: ListItem.Standard {
-                text: "contents.name %1".arg(contents.name)
+                text: "%1".arg(contents.title)
             }
-        }
-
-        U1db.Index {
-            database: db
-            id: searchIndex
-            expression: [ "ingredients.name" ]
-        }
-
-        U1db.Query {
-            id: searchQuery
-            index: searchIndex
-            query: [{"name": "*"}]
         }
 
     }
@@ -76,7 +79,7 @@ Page {
     function search(querystr) {
         // Since the number of the api calls is limited,
         // it's better to keep the online search a real request by the user
-        // TODO: have money to buy a unlimited API
+        // TODO: have money to buy an unlimited API
 
         console.log("Perfoming remote search...");
     }
@@ -85,6 +88,7 @@ Page {
         // Perform a local search on our personal db
         // this function can be called everytime the user write text in the entry
 
-        console.log("Performing local search...");
+        searchQuery.query = [ {"title": querystr + "*" , "name": querystr + "*" }]
+        resultList.model = searchQuery.query
     }
 }

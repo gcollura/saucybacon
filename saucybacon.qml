@@ -84,7 +84,7 @@ MainView {
         create: false
         defaults: { "title": "", "category": [ ], "difficulty": "normal",
             "preptime": "0", "cooktime": "0", "totaltime": "0", "ingredients": [ ],
-            "directions": "", "proportions": 4, "images" : [ ] }
+            "directions": "", "servings": 4, "images" : [ ] }
     }
 
     // Helper functions

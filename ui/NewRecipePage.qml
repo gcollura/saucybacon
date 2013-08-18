@@ -149,7 +149,7 @@ Page {
                 height: units.gu(4)
                 text: i18n.tr("Add new ingredient")
 
-                onClicked: addNewIngredient()
+                onClicked: addNewIngredient(true)
             }
 
             TextArea {
@@ -229,7 +229,12 @@ Page {
                 tmpContents.ingredients.push(tmpingredient);
         }
 
-        console.log(JSON.stringify(tmpContents));
+        for (i = 0; i < repeater.model.length; i++) {
+            console.log(repeater.children[i].color)
+            tmpContents.images[i] = repeater.children[i + 1].iconSource;
+        }
+
+        //console.log(JSON.stringify(tmpContents));
 
         if (recipeId.length > 0)
             db.putDoc(tmpContents, recipeId);
@@ -257,14 +262,19 @@ Page {
             cookTime.text = contents.cooktime;
             recipeDifficulty.text = contents.difficulty;
 
+            resetIngredients(contents.ingredients.length);
+
             for (var i = 0; i < contents.ingredients.length; i++) {
+                if (!ingredientsContainer.children[i])
+                    addNewIngredient();
+
                 ingredientsContainer.children[i].name = contents.ingredients[i].name;
                 ingredientsContainer.children[i].quantity = contents.ingredients[i].quantity;
                 ingredientsContainer.children[i].type = contents.ingredients[i].type;
 
-                // Should I always a new ingredient space ready?
-                addNewIngredient();
             }
+
+            addNewIngredient();
 
             title = i18n.tr("Edit recipe");
         } else if (recipeId == "") {
@@ -275,13 +285,9 @@ Page {
             recipeDirections.text = "";
             prepTime.text = "";
             cookTime.text = "";
-            recipeDifficulty.text = i18n.tr("Select difficulty")
+            recipeDifficulty.text = i18n.tr("Select difficulty");
 
-            for (var i = 0; i < ingredientsContainer.children.length; ++i) {
-                // Wipe out everything
-                ingredientsContainer.children[i].destroy();
-            }
-
+            resetIngredients();
             addNewIngredient();
 
             // Set a proper title
@@ -290,12 +296,23 @@ Page {
 
     }
 
-    function addNewIngredient() {
-        var component = Qt.createComponent("../components/IngredientInput.qml")
-        var object = component.createObject(ingredientsContainer)
+    function addNewIngredient(setfocus) {
+        var component = Qt.createComponent("../components/IngredientInput.qml");
+        var object = component.createObject(ingredientsContainer);
 
-        if (object == null)
+        if (typeof object === 'undefined')
             console.log("Error while creating the object")
+        if (setfocus)
+            object.focus()
+    }
+
+    function resetIngredients(length) {
+        // Length parameter avoid useless object.destroy() calls
+        length = typeof length !== 'undefined' ? length : 0
+
+        for (var i = ingredientsContainer.children.length - 1; i >= length; i--) {
+            ingredientsContainer.children[i].destroy();
+        }
     }
 
 }

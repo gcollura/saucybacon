@@ -11,13 +11,10 @@ Popover {
             left: parent.left
             right: parent.right
         }
-        height: units.gu(6.5) * 3
 
         Repeater {
             id: popoverRepetear
             clip: true
-            width: parent.width
-            height: parent.height
 
             model: [ i18n.tr("Easy"), i18n.tr("Medium"), i18n.tr("Hard") ]
             Standard {

@@ -2,8 +2,10 @@ import QtQuick 2.0
 import Ubuntu.Components 0.1
 
 Row {
-    id: ingredient
-    width: parent.width
+    id: object
+
+    anchors.left: parent.left
+    anchors.right: parent.right
     spacing: units.gu(1)
 
     property alias name: ingredientName.text
@@ -39,6 +41,15 @@ Row {
 
         iconSource: icon("close")
 
-        onClicked: ingredient.destroy()
+        onClicked: object.destroy()
+    }
+
+    function focus() {
+        ingredientName.forceActiveFocus();
+    }
+    function clear() {
+        name = "";
+        quantity = "";
+        type = "";
     }
 }

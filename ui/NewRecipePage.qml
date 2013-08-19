@@ -60,10 +60,13 @@ Page {
 
                 // TODO: Change this to a combobox-like widget
                 Button {
-                    id: recipeTags
+                    id: recipeCategory
                     width: parent.width / 2 - units.gu(1)
                     height: units.gu(4)
                     text: i18n.tr("Select category")
+
+                    property var model: categories
+                    onClicked: PopupUtils.open(Qt.resolvedUrl("../components/DifficultySelector.qml"), recipeCategory)
                 }
 //                ValueSelector {
 //                    width: parent.width / 2 - units.gu(1)
@@ -78,6 +81,7 @@ Page {
 
                     text: i18n.tr("Select difficulty")
 
+                    property var model: difficultyModel
                     onClicked: PopupUtils.open(Qt.resolvedUrl("../components/DifficultySelector.qml"), recipeDifficulty)
                 }
 //                ValueSelector {
@@ -185,6 +189,7 @@ Page {
         tmpContents.preptime = prepTime.text;
         tmpContents.cooktime = cookTime.text;
         tmpContents.totaltime = totalTime.text;
+        tmpContents.category = recipeCategory.text;
         tmpContents.difficulty = recipeDifficulty.text;
 
         for (var i = 0; i < ingredientsContainer.children.length; i++) {
@@ -231,6 +236,7 @@ Page {
             recipeDirections.text = contents.directions;
             prepTime.text = contents.preptime;
             cookTime.text = contents.cooktime;
+            recipeCategory.text = contents.category;
             recipeDifficulty.text = contents.difficulty;
 
             resetIngredients(contents.ingredients.length);
@@ -258,6 +264,7 @@ Page {
             recipeDirections.text = "";
             prepTime.text = "";
             cookTime.text = "";
+            recipeCategory.text = i18n.tr("Select category")
             recipeDifficulty.text = i18n.tr("Select difficulty");
 
             resetIngredients();

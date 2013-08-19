@@ -16,22 +16,23 @@ Popover {
             id: popoverRepetear
             clip: true
 
-            model: difficultyModel
+            model: caller.model
             Standard {
                 Label {
+                    id: label
                     // FIXME: Hack because of Suru theme!
                     anchors {
                         verticalCenter: parent.verticalCenter
                         left: parent.left
                         margins: units.gu(2)
                     }
-                    text: modelData
+                    text: modelData !== "" ? modelData : i18n.tr("Uncategorized")
 
                     color: Theme.palette.normal.overlayText
                 }
 
                 onClicked: {
-                    caller.text = modelData;
+                    caller.text = label.text;
 
                     hide();
                 }

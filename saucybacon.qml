@@ -66,6 +66,7 @@ MainView {
             pageStack.push(recipeListPage)
         else
             console.log("Switch to tablet factor")
+        loadCategories();
     }
 
     /* Database */
@@ -79,16 +80,36 @@ MainView {
         id: newRecipe
         database: db
         create: false
-        defaults: { "title": "", "category": [ ], "difficulty": "normal",
+        defaults: { "title": "", "category": "", "difficulty": "normal",
             "preptime": "0", "cooktime": "0", "totaltime": "0", "ingredients": [ ],
             "directions": "", "servings": 4, "photos" : [ ] }
     }
 
     /* Recipe addons */
     property var difficultyModel: [ i18n.tr("Easy"), i18n.tr("Medium"), i18n.tr("Hard") ]
+    property var categories: [ ]
+
+    function loadCategories() {
+        // FIXME: use u1db query to retrieve categories
+        var docs = db.listDocs();
+        var ctgrs = { };
+        for (var i = 0; i < docs.length; i++) {
+            var category = db.getDoc(docs[i]).category;
+            if (ctgrs.hasOwnProperty(category))
+                continue;
+            ctgrs[category] = 1;
+        }
+        categories = Object.keys(ctgrs);
+        console.log(JSON.stringify(categories))
+    }
 
     // Helper functions
     function icon(name) {
         return "/usr/share/icons/ubuntu-mobile/actions/scalable/" + name + ".svg"
+    }
+    function onlyUnique(value, index, self) {
+        // Usage:   var a = ['a', 1, 'a', 2, '1'];
+        //          var unique = a.filter( onlyUnique ); -> ['a', 1, 2, '1']
+        return self.indexOf(value) === index;
     }
 }

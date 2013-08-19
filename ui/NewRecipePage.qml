@@ -59,14 +59,13 @@ Page {
                 spacing: units.gu(2)
 
                 // TODO: Change this to a combobox-like widget
-                Button {
+                Selector {
                     id: recipeCategory
                     width: parent.width / 2 - units.gu(1)
                     height: units.gu(4)
-                    text: i18n.tr("Select category")
+                    defaultText: i18n.tr("Select category")
 
-                    property var model: categories
-                    onClicked: PopupUtils.open(Qt.resolvedUrl("../components/DifficultySelector.qml"), recipeCategory)
+                    model: categories
                 }
 //                ValueSelector {
 //                    width: parent.width / 2 - units.gu(1)
@@ -74,15 +73,14 @@ Page {
 //                    values: ["Value 1", "Value 2", "Value 3", "Value 4", "Value 5", "Value 6", "Value 7"]
 //                }
 
-                Button {
+                Selector {
                     id: recipeDifficulty
                     width: parent.width / 2 - units.gu(1)
                     height: units.gu(4)
 
-                    text: i18n.tr("Select difficulty")
+                    defaultText: i18n.tr("Select difficulty")
 
-                    property var model: difficultyModel
-                    onClicked: PopupUtils.open(Qt.resolvedUrl("../components/DifficultySelector.qml"), recipeDifficulty)
+                    model: difficultyModel
                 }
 //                ValueSelector {
 //                    width: parent.width / 2 - units.gu(1)

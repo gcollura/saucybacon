@@ -95,7 +95,7 @@ MainView {
         var ctgrs = { };
         for (var i = 0; i < docs.length; i++) {
             var category = db.getDoc(docs[i]).category;
-            if (ctgrs.hasOwnProperty(category))
+            if (ctgrs[category] || category == "")
                 continue;
             ctgrs[category] = 1;
         }

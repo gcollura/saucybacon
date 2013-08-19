@@ -16,21 +16,22 @@ Popover {
             id: popoverRepetear
             clip: true
 
-            model: [ i18n.tr("Easy"), i18n.tr("Medium"), i18n.tr("Hard") ]
+            model: difficultyModel
             Standard {
                 Label {
+                    // FIXME: Hack because of Suru theme!
                     anchors {
                         verticalCenter: parent.verticalCenter
                         left: parent.left
                         margins: units.gu(2)
                     }
-                    text: popoverRepetear.model[index]
+                    text: modelData
+
                     color: Theme.palette.normal.overlayText
                 }
 
-                // FIXME: Hack because of Suru theme!
                 onClicked: {
-                    caller.text = popoverRepetear.model[index];
+                    caller.text = modelData;
 
                     hide();
                 }

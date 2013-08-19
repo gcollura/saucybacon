@@ -138,10 +138,6 @@ Page {
 
                 }
 
-                add: Transition {
-                    // Smooth animation
-                    NumberAnimation { property: "opacity"; from: 0; to: 100; duration: 1000 }
-                }
             }
 
             Button {

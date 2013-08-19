@@ -19,6 +19,7 @@ MainView {
     applicationName: "SaucyBacon"
 
     automaticOrientation: true
+    property bool wideAspect: width > units.gu(80)
 
     width: units.gu(60)
     height: units.gu(85)
@@ -67,10 +68,6 @@ MainView {
             console.log("Switch to tablet factor")
     }
 
-    onWidthChanged: {
-
-    }
-
     /* Database */
     U1db.Database {
         id: db
@@ -86,6 +83,9 @@ MainView {
             "preptime": "0", "cooktime": "0", "totaltime": "0", "ingredients": [ ],
             "directions": "", "servings": 4, "photos" : [ ] }
     }
+
+    /* Recipe addons */
+    property var difficultyModel: [ i18n.tr("Easy"), i18n.tr("Medium"), i18n.tr("Hard") ]
 
     // Helper functions
     function icon(name) {

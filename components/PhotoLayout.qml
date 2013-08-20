@@ -52,6 +52,7 @@ Flickable {
 
                 image: Image {
                     source: modelData
+                    asynchronous: true
                     fillMode: Image.PreserveAspectCrop
                 }
 
@@ -66,7 +67,7 @@ Flickable {
                     }
                 }
 
-                UbuntuNumberAnimation on opacity { from: 0; to: 100 }
+                // UbuntuNumberAnimation on opacity { from: 0; to: 100 }
 
             }
         }

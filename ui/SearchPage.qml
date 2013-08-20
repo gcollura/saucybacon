@@ -9,13 +9,13 @@ Page {
     U1db.Index {
         database: db
         id: searchIndex
-        expression: [ "title", "ingredients.name" ]
+        expression: [ "name", "ingredients.name" ]
     }
 
     U1db.Query {
         id: searchQuery
         index: searchIndex
-        query: [{"title": "*"}, {"name": "*" }]
+        query: [{"name": "*"}, {"name": "*" }]
     }
 
     Column {
@@ -70,7 +70,7 @@ Page {
 
             /* A delegate will be created for each Document retrieved from the Database */
             delegate: ListItem.Standard {
-                text: "%1".arg(contents.title)
+                text: "%1".arg(contents.name)
             }
         }
 

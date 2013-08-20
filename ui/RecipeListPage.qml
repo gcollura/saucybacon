@@ -29,12 +29,13 @@ Page {
         anchors.fill: parent
 
         model: db
-        section.property: "contents.title"
+        section.property: "contents.category"
         section.criteria: ViewSection.FullString
         section.delegate: sectionDelegate
 
         /* A delegate will be created for each Document retrieved from the Database */
         delegate: RecipeListItem {
+            height: units.gu(8)
         }
     }
 

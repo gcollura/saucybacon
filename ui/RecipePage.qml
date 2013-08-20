@@ -6,16 +6,12 @@ import Ubuntu.Components.ListItems 0.1 as ListItem
 import "../components"
 
 Page {
-    title: i18n.tr("")
+    title: truncate(recipe.name)
 
-    property var recipeId
-    property string name
-    property alias directions: directionsLabel.text
-    property alias ingredients: ingredientsList.model
-    property string preptime
-    property string cooktime
-    property string totaltime
-    property string difficulty
+    property alias recipe: recipe
+    Recipe {
+        id: recipe
+    }
 
     tools: RecipePageToolbar {
         objectName: "recipePageToolbar"
@@ -42,12 +38,12 @@ Page {
 
             Label {
                 id: totaltimeLabel
-                text: i18n.tr("<b>%1</b> \t (Prep: %2 mins, Cook: %3 mins)".arg(totaltime).arg(preptime).arg(cooktime))
+                text: i18n.tr("<b>%1</b> \t (Prep: %2 mins, Cook: %3 mins)".arg(recipe.totaltime).arg(recipe.preptime).arg(recipe.cooktime))
             }
 
             Label {
                 id: difficultyLabel
-                text: i18n.tr("Difficulty: %1".arg(difficulty))
+                text: i18n.tr("Difficulty: %1".arg(difficulties[recipe.difficulty]))
             }
 
             ListItem.ThinDivider { }
@@ -64,10 +60,10 @@ Page {
                 Repeater {
                     id: ingredientsList
                     width: parent.width
-                    model: 0
+                    model: recipe.ingredients
 
                     delegate: Label {
-                        text: "%1 %2 %3".arg(ingredientsList.model[index].quantity).arg(ingredientsList.model[index].type).arg(ingredientsList.model[index].name)
+                        text: "%1 %2 %3".arg(modelData.quantity).arg(modelData.type).arg(modelData.name)
                     }
                 }
             }
@@ -85,6 +81,8 @@ Page {
                 id: directionsLabel
                 width: parent.width
 
+                text: recipe.directions
+
                 wrapMode: Text.Wrap
             }
 
@@ -94,34 +92,10 @@ Page {
                 id: photoLayout
                 editable: false
                 iconSize: units.gu(12)
+
+                photos: recipe.photos
             }
         }
-    }
-
-    function setRecipe(id) {
-        var recipe = db.getDoc(id);
-
-        if (recipe) {
-            name = recipe.title;
-            directions = recipe.directions;
-            ingredients = recipe.ingredients;
-            preptime = recipe.preptime;
-            cooktime = recipe.cooktime;
-            totaltime = recipe.totaltime;
-            difficulty = recipe.difficulty;
-            photoLayout.photos = recipe.photos
-
-            recipeId = id;
-            title = truncate(name);
-        } else {
-            console.log("Error while opening recipe with id: %1".arg(id));
-        }
-    }
-
-    function deleteRecipe(id) {
-        var recipe = db.putDoc("", id);
-
-        console.log("FIXME: Delete this entry please!");
     }
 
     function truncate(name) {
@@ -132,7 +106,4 @@ Page {
         return name;
     }
 
-    onWidthChanged: {
-        title = truncate(name);
-    }
 }

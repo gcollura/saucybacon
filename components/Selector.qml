@@ -6,8 +6,8 @@ import Ubuntu.Components.ListItems 0.1
 Item {
     id: item
 
-    property string defaultText
     property alias text: button.text
+    property int index
     property var model
 
     Button {
@@ -17,14 +17,7 @@ Item {
         width: parent.width
         height: parent.height
 
-        text: defaultText
         onClicked: PopupUtils.open(popover, item)
-    }
-
-    onDefaultTextChanged: button.text = defaultText
-
-    function reset() {
-        button.text = defaultText
     }
 
     Component {

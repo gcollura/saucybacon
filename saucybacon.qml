@@ -3,6 +3,7 @@ import Ubuntu.Components 0.1
 import U1db 1.0 as U1db
 
 import "ui"
+import "components"
 
 /*!
     \brief MainView with Tabs element.
@@ -32,7 +33,7 @@ MainView {
         id: pageStack
 
         RecipeListPage {
-            objectName: "recipesPage"
+            objectName: "recipeListPage"
             id: recipeListPage
 
             visible: false
@@ -45,9 +46,9 @@ MainView {
             visible: false
         }
 
-        NewRecipePage {
+        EditRecipePage {
             objectName: "newRecipePage"
-            id: newRecipePage
+            id: editRecipePage
 
             visible: false
         }
@@ -77,16 +78,15 @@ MainView {
 
     /* Base recipe document */
     U1db.Document {
-        id: newRecipe
         database: db
         create: false
-        defaults: { "title": "", "category": "", "difficulty": "normal",
+        defaults: { "name": "", "category": "", "difficulty": 1, "veg": 0,
             "preptime": "0", "cooktime": "0", "totaltime": "0", "ingredients": [ ],
             "directions": "", "servings": 4, "photos" : [ ] }
     }
 
     /* Recipe addons */
-    property var difficultyModel: [ i18n.tr("Easy"), i18n.tr("Medium"), i18n.tr("Hard") ]
+    property var difficulties: [ i18n.tr("Easy"), i18n.tr("Medium"), i18n.tr("Hard") ] // FIXME: Strange name
     property var categories: [ ]
 
     function loadCategories() {

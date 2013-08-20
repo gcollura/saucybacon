@@ -6,25 +6,34 @@ ListItem.Subtitled {
     id: item
     progression: true
 
-    text: contents.title
-    subText: i18n.tr("%1\nDifficulty: %2\nIngredients: %3"
-                     .arg(contents.totaltime).arg(contents.difficulty).arg(listElement(contents.ingredients)))
+    text: contents.name
+    subText: i18n.tr("%1\nIngredients: %2"
+                     .arg(contents.totaltime).arg(listElement(contents.ingredients)))
     icon: Qt.resolvedUrl(contents.photos[0])
 
+    Row {
+        anchors {
+            verticalCenter: parent.verticalCenter
+            right: parent.right
+        }
+        Repeater {
+            model: contents.difficulty + 1
+            Text {
+                color: "white"
+                text: "\u2605"
+                font.pixelSize: units.gu(2)
+            }
+        }
+    }
 
     onClicked: openRecipe(docId)
 
     function openRecipe(id) {
+        recipePage.recipe.docId = id;
         pageStack.push(recipePage);
-        recipePage.setRecipe(id);
     }
 
     function listElement(array) {
-//        var retlist = [];
-//        for (var i = 0; i < array.length; i++)
-//            retlist[i] = array[i].name;
-//        return retlist;
-
         var result = "";
 
         if (!array) // recipe without ingredients

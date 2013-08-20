@@ -105,7 +105,9 @@ MainView {
     }
 
     // Helper functions
-    function icon(name) {
+    function icon(name, local) {
+        if (local)
+            return Qt.resolvedUrl("graphics/icons/" + name + ".png")
         return "/usr/share/icons/ubuntu-mobile/actions/scalable/" + name + ".svg"
     }
     function onlyUnique(value, index, self) {

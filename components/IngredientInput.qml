@@ -39,7 +39,7 @@ Row {
         width: units.gu(4)
         height: width
 
-        iconSource: icon("close")
+        iconSource: icon("delete", true)
 
         onClicked: object.destroy()
     }

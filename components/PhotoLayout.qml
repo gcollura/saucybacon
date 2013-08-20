@@ -30,7 +30,7 @@ Flickable {
         spacing: units.gu(2)
 
         Button {
-            iconSource: icon("import-image")
+            iconSource: icon("import-image", true)
             height: iconSize
             width: height
 

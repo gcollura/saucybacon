@@ -80,14 +80,15 @@ MainView {
     U1db.Document {
         database: db
         create: false
-        defaults: { "name": "", "category": "", "difficulty": 1, "veg": 0,
+        defaults: { "name": "", "category": "", "difficulty": 1, "restriction": 0,
             "preptime": "0", "cooktime": "0", "totaltime": "0", "ingredients": [ ],
             "directions": "", "servings": 4, "photos" : [ ] }
     }
 
     /* Recipe addons */
-    property var difficulties: [ i18n.tr("Easy"), i18n.tr("Medium"), i18n.tr("Hard") ] // FIXME: Strange name
+    property var difficulties: [ i18n.tr("No difficulty"), i18n.tr("Easy"), i18n.tr("Medium"), i18n.tr("Hard") ] // FIXME: Strange name
     property var categories: [ ]
+    property var restrictions: [ i18n.tr("None"), i18n.tr("Vegetarian"), i18n.tr("Vegan") ]
 
     function loadCategories() {
         // FIXME: use u1db query to retrieve categories

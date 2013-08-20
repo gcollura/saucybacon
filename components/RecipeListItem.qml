@@ -16,14 +16,20 @@ ListItem.Subtitled {
             verticalCenter: parent.verticalCenter
             right: parent.right
         }
-        Repeater {
-            model: contents.difficulty + 1
-            Text {
-                color: "white"
-                text: "\u2605"
-                font.pixelSize: units.gu(2)
-            }
+        spacing: units.gu(1)
+
+        Label {
+            visible: contents.restriction > 0
+            text: restrictions[contents.restriction]
+            font.pixelSize: units.gu(1.5)
+            color: Theme.palette.normal.backgroundText
         }
+
+        Label {
+            text: Array(contents.difficulty + 1).join("\u1605")
+            font.pixelSize: units.gu(2)
+        }
+
     }
 
     onClicked: openRecipe(docId)

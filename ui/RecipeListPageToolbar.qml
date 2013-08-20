@@ -15,8 +15,8 @@ ToolbarItems {
         text: i18n.tr("New")
 
         onTriggered: {
+            editRecipePage.recipe.reset();
             pageStack.push(editRecipePage);
-            editRecipePage.recipe.docId = "";
         }
     }
 }

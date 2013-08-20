@@ -28,7 +28,7 @@ Dialog {
             id: folderModel
             folder: folderPath
             showDotAndDotDot: true
-            nameFilters: [ "*.png", "*.jpg" ]
+            nameFilters: [ "*.png", "*.jpg", ".jpeg" ]
             showDirsFirst: true
         }
 
@@ -56,13 +56,10 @@ Dialog {
                         folderPath = newFolder
                         file = "";
                     } else {
-                        if (fileName.split(".").pop() === "png"
-                                || fileName.split(".").pop() === "jpg") {
-                            file = "/" + fileName
+                        file = "/" + fileName
 
-                            caller.addPhoto(folderPath + file);
-                            PopupUtils.close(dialogue)
-                        }
+                        caller.addPhoto(folderPath + file);
+                        PopupUtils.close(dialogue)
                     }
                 }
             }

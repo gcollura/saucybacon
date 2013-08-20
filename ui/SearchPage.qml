@@ -4,18 +4,22 @@ import Ubuntu.Components.ListItems 0.1 as ListItem
 import U1db 1.0 as U1db
 
 Page {
-    title: i18n.tr("Search")
+    title: i18n.tr("Search is not implemented, due to some u1db bugs")
 
     U1db.Index {
         database: db
         id: searchIndex
-        expression: [ "name", "ingredients.name" ]
+        expression: [ "name", "category", "difficulty", "veg",
+                      "preptime", "cooktime", "totaltime", "ingredients",
+                      "directions", "servings", "photos" ]
     }
 
     U1db.Query {
         id: searchQuery
         index: searchIndex
-        query: [{"name": "*"}, {"name": "*" }]
+        query: [{"name":"*"},{ "category":"*"}, {"difficulty":"*", "veg":"*",
+                "preptime":"*", "cooktime":"*", "totaltime":"*", "ingredients":"*",
+                "directions":"*", "servings":"*", "photos":"*"}]
     }
 
     Column {
@@ -70,7 +74,8 @@ Page {
 
             /* A delegate will be created for each Document retrieved from the Database */
             delegate: ListItem.Standard {
-                text: "%1".arg(contents.name)
+                text: "%1".arg(contents.difficulty)
+                onClicked: console.log(JSON.stringify(contents))
             }
         }
 
@@ -88,7 +93,8 @@ Page {
         // Perform a local search on our personal db
         // this function can be called everytime the user write text in the entry
 
-        searchQuery.query = [ {"title": querystr + "*" , "name": querystr + "*" }]
+        //searchQuery.query = [ {"title": querystr + "*" , "name": querystr + "*" }]
         resultList.model = searchQuery.query
+        console.log(JSON.stringify(searchQuery))
     }
 }

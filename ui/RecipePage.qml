@@ -25,77 +25,104 @@ Page {
         contentHeight: layout.height
         interactive: contentHeight > height
 
-        Column {
+        Grid {
             id: layout
-
+            columns: wideAspect ? 2 : 1
             width: parent.width
+            spacing: units.gu(2)
             anchors {
                 margins: units.gu(2)
                 left: parent.left
                 right: parent.right
             }
-            spacing: units.gu(2)
 
-            Label {
-                id: totaltimeLabel
-                text: i18n.tr("<b>%1</b> \t (Prep: %2 mins, Cook: %3 mins)".arg(recipe.totaltime).arg(recipe.preptime).arg(recipe.cooktime))
-            }
+            Column {
 
-            Label {
-                id: difficultyLabel
-                text: i18n.tr("Difficulty: %1".arg(difficulties[recipe.difficulty]))
-            }
+                width: wideAspect ? parent.width / 2 - units.gu(2): parent.width
+                spacing: units.gu(2)
 
-            ListItem.ThinDivider { }
+                Label {
+                    id: totaltimeLabel
+                    text: i18n.tr("<b>%1</b> \t (Prep: %2 mins, Cook: %3 mins)".arg(recipe.totaltime).arg(recipe.preptime).arg(recipe.cooktime))
+                }
 
-            Label {
-                text: i18n.tr("Ingredients")
-                fontSize: "large"
-                font.bold: true
+                Item {
+                    width: parent.width
+                    height: difficultyLabel.height
+
+                    Label {
+                        id: difficultyLabel
+                        anchors.left: parent.left
+                        text: i18n.tr("Difficulty: %1".arg(difficulties[recipe.difficulty]))
+                    }
+
+                    Label {
+                        id: veganLabel
+                        anchors.right: parent.right
+                        visible: recipe.veg > 0
+                        text: i18n.tr("Vegan Friendly")
+                    }
+                }
+
+                ListItem.ThinDivider { }
+
+                Label {
+                    text: i18n.tr("Ingredients")
+                    fontSize: "large"
+                    font.bold: true
+                }
+
+                Column {
+                    width: parent.width
+
+                    Repeater {
+                        id: ingredientsList
+                        width: parent.width
+                        model: recipe.ingredients
+
+                        delegate: Label {
+                            text: "%1 %2 %3".arg(modelData.quantity).arg(modelData.type).arg(modelData.name)
+                        }
+                    }
+                }
+
+                ListItem.ThinDivider { visible: recipe.photos.length > 0 }
+
+                PhotoLayout {
+                    id: photoLayout
+                    editable: false
+                    iconSize: units.gu(12)
+
+                    photos: recipe.photos
+                }
+
+                ListItem.ThinDivider { visible: !wideAspect }
+
             }
 
             Column {
-                width: parent.width
+                width: wideAspect ? parent.width / 2 : parent.width
+                spacing: units.gu(2)
 
-                Repeater {
-                    id: ingredientsList
-                    width: parent.width
-                    model: recipe.ingredients
+                Label {
+                    text: i18n.tr("Directions")
 
-                    delegate: Label {
-                        text: "%1 %2 %3".arg(modelData.quantity).arg(modelData.type).arg(modelData.name)
-                    }
+                    fontSize: "large"
+                    font.bold: true
                 }
-            }
 
-            ListItem.ThinDivider { }
+                Label {
+                    id: directionsLabel
+                    width: parent.width
 
-            Label {
-                text: i18n.tr("Directions")
+                    text: recipe.directions
 
-                fontSize: "large"
-                font.bold: true
-            }
+                    wrapMode: Text.Wrap
+                }
 
-            Label {
-                id: directionsLabel
-                width: parent.width
-
-                text: recipe.directions
-
-                wrapMode: Text.Wrap
-            }
-
-            ListItem.ThinDivider { }
-
-            PhotoLayout {
-                id: photoLayout
-                editable: false
-                iconSize: units.gu(12)
-
-                photos: recipe.photos
             }
         }
+
     }
 
     function truncate(name) {

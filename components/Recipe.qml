@@ -7,8 +7,8 @@ QtObject {
 
     property string name
     property string category
-    property int difficulty: -1
-    property int veg: 0
+    property int difficulty: 0
+    property int restriction: 0
 
     property string preptime
     property string cooktime
@@ -39,8 +39,8 @@ QtObject {
         name = "";
 
         category = "";
-        difficulty = -1;
-        veg = 0;
+        difficulty = 0;
+        restriction = 0;
 
         preptime = 0;
         cooktime = 0;
@@ -58,7 +58,7 @@ QtObject {
 
         category = contents.category;
         difficulty = contents.difficulty;
-        veg = contents.veg;
+        restriction = contents.restrition ? 0 : 0;
 
         preptime = contents.preptime;
         cooktime = contents.cooktime;
@@ -77,7 +77,7 @@ QtObject {
             "name": name,
             "category": category,
             "difficulty": difficulty,
-            "veg": veg,
+            "restriction": restriction,
             "preptime": preptime,
             "cooktime": cooktime,
             "totaltime": totaltime,

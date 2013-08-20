@@ -20,6 +20,8 @@ Item {
         onClicked: PopupUtils.open(popover, item)
     }
 
+    onIndexChanged: text = model[index]
+
     Component {
         id: popover
         Popover {

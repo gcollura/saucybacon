@@ -7,6 +7,8 @@ import U1db 1.0 as U1db
 import "../components"
 
 Page {
+    id: page
+
     title: recipe.exists() ? i18n.tr("Edit recipe") : i18n.tr("New recipe")
 
     property var recipe: Recipe { }
@@ -49,11 +51,6 @@ Page {
 
                 text: recipe.name
                 placeholderText: i18n.tr("Enter a name for your recipe")
-
-                onFocusChanged: {
-                    // FIXME
-                    focus ? __styleInstance.color = Theme.palette.normal.overlayText : __styleInstance.color = "white"
-                }
             }
 
             Row {
@@ -75,7 +72,7 @@ Page {
                     width: parent.width / 2 - units.gu(.5)
                     height: units.gu(4)
 
-                    text: recipe.difficulty >= 0 ? difficulties[recipe.difficulty] : i18n.tr("Select difficulty")
+                    index: recipe.difficulty
 
                     model: difficulties
                 }
@@ -118,13 +115,6 @@ Page {
                     width: text.length * units.gu(2)
                     text: i18n.tr("Ingredients")
                 }
-//                Slider {
-//                    height: units.gu(4)
-//                    value: 4
-//                    minimumValue: 1
-//                    maximumValue: 10
-//                    live: true
-//                }
             }
 
             IngredientLayout {
@@ -157,6 +147,15 @@ Page {
                 photos: recipe.photos
             }
 
+            ValueSelector {
+                id: recipeRestriction
+                width: parent.width
+                text: i18n.tr("Restriction")
+                values: restrictions
+                selectedIndex: recipe.restriction
+            }
+
+
         }
 
     }
@@ -175,14 +174,18 @@ Page {
     function saveRecipe() {
 
         recipe.name = recipeName.text ? recipeName.text : i18n.tr("Misterious Recipe");
-        recipe.directions = recipeDirections.text;
+        recipe.category = recipeCategory.text;
+        recipe.difficulty = difficulties.indexOf(recipeDifficulty.text);
+        recipe.restriction = recipeRestriction.selectedIndex;
+
         recipe.preptime = prepTime.text;
         recipe.cooktime = cookTime.text;
         recipe.totaltime = totalTime.text;
-        recipe.category = recipeCategory.text;
-        recipe.difficulty = difficulties.indexOf(recipeDifficulty.text);
 
         recipe.ingredients = ingredientsLayout.getIngredients();
+
+        recipe.directions = recipeDirections.text;
+
         recipe.photos = photoLayout.photos;
 
         recipe.save();
@@ -190,6 +193,22 @@ Page {
 
     }
 
+    onVisibleChanged: {
+        if (!visible)
+            return;
+
+        // WORKAROUND: Refresh some widgets that may forget they configuration
+        // for example when they cleared using the clear button
+        recipeName.text = recipe.name
+        recipeCategory.text = recipe.category;
+        recipeDifficulty.text = difficulties[recipe.difficulty];
+        recipeRestriction.selectedIndex = recipe.restriction;
+
+        prepTime.text = recipe.preptime;
+        cookTime.text = recipe.cooktime;
+
+        recipeDirections.text = recipe.directions;
+    }
 
 }
 

@@ -67,22 +67,41 @@ MainView {
             pageStack.push(recipeListPage)
         else
             console.log("Switch to tablet factor")
+
         loadCategories();
     }
 
-    /* Database */
-    U1db.Database {
-        id: db
-        path: "saucybacondb"
+    Component.onDestruction: {
+        saveCategories();
     }
 
-    /* Base recipe document */
+    /* Recipe Database */
+    U1db.Database {
+        id: db
+        path: "sb-recipesdb"
+    }
+
+    /* Base recipe document - just for reference */
+//    U1db.Document {
+//        database: db
+//        create: false
+//        defaults: { "name": "", "category": "", "difficulty": 1, "restriction": 0,
+//            "preptime": "0", "cooktime": "0", "totaltime": "0", "ingredients": [ ],
+//            "directions": "", "servings": 4, "photos" : [ ] }
+//    }
+
+    /* Settings and other configuration Database */
+    U1db.Database {
+        id: settingsdb
+        path: "sb-settingsdb"
+    }
+
+    // Categories
     U1db.Document {
-        database: db
-        create: false
-        defaults: { "name": "", "category": "", "difficulty": 1, "restriction": 0,
-            "preptime": "0", "cooktime": "0", "totaltime": "0", "ingredients": [ ],
-            "directions": "", "servings": 4, "photos" : [ ] }
+        database: settingsdb
+        docId: "categories"
+        create: true
+        defaults: { "categories": [ ] }
     }
 
     /* Recipe addons */
@@ -91,17 +110,13 @@ MainView {
     property var restrictions: [ i18n.tr("None"), i18n.tr("Vegetarian"), i18n.tr("Vegan") ]
 
     function loadCategories() {
-        // FIXME: use u1db query to retrieve categories
-        var docs = db.listDocs();
-        var ctgrs = { };
-        for (var i = 0; i < docs.length; i++) {
-            var category = db.getDoc(docs[i]).category;
-            if (ctgrs[category] || category == "")
-                continue;
-            ctgrs[category] = 1;
-        }
-        categories = Object.keys(ctgrs);
-        console.log(JSON.stringify(categories))
+        categories = categories.concat(settingsdb.getDoc("categories").categories)
+    }
+
+    function saveCategories() {
+        var cat = settingsdb.getDoc("categories")
+        cat.categories = categories
+        settingsdb.putDoc(cat, "categories")
     }
 
     // Helper functions

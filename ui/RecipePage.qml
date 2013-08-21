@@ -57,10 +57,10 @@ Page {
                     }
 
                     Label {
-                        id: veganLabel
+                        id: restrictionLabel
                         anchors.right: parent.right
-                        visible: recipe.veg > 0
-                        text: i18n.tr("Vegan Friendly")
+                        visible: recipe.restriction > 0
+                        text: restrictions[recipe.restriction]
                     }
                 }
 

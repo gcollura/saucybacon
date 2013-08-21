@@ -5,7 +5,6 @@ import Ubuntu.Components.Popups 0.1
 // Delete dialog
 
 Dialog {
-
     id: dialogue
     title: i18n.tr("Confirm deletion")
     text: i18n.tr("Are you sure you want to delete this recipe?")
@@ -16,11 +15,12 @@ Dialog {
         gradient: UbuntuColors.greyGradient
         onClicked: PopupUtils.close(dialogue)
     }
+
     Button {
         text: i18n.tr("Delete")
 
         onClicked: {
-            deleteRecipe(recipeId);
+            recipe.remove();
             PopupUtils.close(dialogue);
             pageStack.push(recipeListPage);
         }

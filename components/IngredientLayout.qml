@@ -6,7 +6,6 @@ Column {
     spacing: units.gu(1)
 
     property var ingredients
-    property var component: Qt.createComponent("../components/IngredientInput.qml")
 
     onIngredientsChanged: {
         loadIngredients();
@@ -49,6 +48,7 @@ Column {
 
     function resetIngredients(length) {
         // Length parameter avoid useless object.destroy() calls
+        // Destroy only the objects we don't need at the moment
         length = typeof length !== 'undefined' ? length : 0
 
         for (var i = container.children.length - 1; i >= length; i--) {
@@ -57,12 +57,18 @@ Column {
     }
 
     function addIngredient(setfocus) {
-        var component = Qt.createComponent("../components/IngredientInput.qml");
-        var object = component.createObject(container);
+        var object = ingredientComponent.createObject(container);
 
-        if (typeof object === 'undefined')
+        if (typeof object === 'undefined' || object === null)
             console.log("Error while creating the object")
         if (setfocus)
             object.focus()
+    }
+
+    Component {
+        id: ingredientComponent
+        IngredientInput {
+
+        }
     }
 }

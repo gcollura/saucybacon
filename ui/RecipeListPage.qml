@@ -8,6 +8,7 @@ Page {
 
     tools: RecipeListPageToolbar {
         objectName: "recipesTabToolbar"
+        opened: wideAspect
     }
 
     Component {
@@ -41,6 +42,5 @@ Page {
 
     Scrollbar {
         flickableItem: listView
-        align: Qt.AlignTrailing
     }
 }

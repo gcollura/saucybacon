@@ -6,6 +6,7 @@ ListItem.Subtitled {
     id: item
     progression: true
 
+    visible: contents.name ? true : false
     text: contents.name
     subText: i18n.tr("%1\nIngredients: %2"
                      .arg(contents.totaltime).arg(listElement(contents.ingredients)))

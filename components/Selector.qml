@@ -10,6 +10,8 @@ Item {
     property int index
     property var model
 
+    property Item action
+
     Button {
         id: button
 
@@ -25,7 +27,17 @@ Item {
     Component {
         id: popover
         Popover {
+            id: root
+            property Item action
+
+            onCallerChanged: {
+                action = caller.action ? caller.action : null
+                if (action)
+                    action.parent = column
+            }
+
             Column {
+                id: column
                 anchors {
                     top: parent.top
                     left: parent.left
@@ -34,9 +46,7 @@ Item {
 
                 Repeater {
                     id: popoverRepetear
-                    clip: true
-
-                    model: caller ? caller.model : []
+                    model: caller ? caller.model : 0
 
                     Standard {
                         Label {
@@ -54,10 +64,15 @@ Item {
 
                         onClicked: {
                             caller.text = label.text;
-
-                            hide();
+                            root.hide();
                         }
                     }
+                }
+                ThinDivider { visible: action && action.visible }
+
+                function hide() {
+                    // Provide a hide() method accessible from the children
+                    root.hide();
                 }
             }
         }

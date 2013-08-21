@@ -2,7 +2,6 @@ import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.Popups 0.1
 import Ubuntu.Components.ListItems 0.1
-import U1db 1.0 as U1db
 
 import "../components"
 
@@ -32,7 +31,7 @@ Page {
         anchors.bottomMargin: units.gu(2)
 
         contentHeight: newRecipeColumn.height
-        interactive: contentHeight > height
+        interactive: contentHeight + units.gu(10) > height // hack due to ValueSelection at the end of the page
 
         Column {
             id: newRecipeColumn
@@ -62,9 +61,22 @@ Page {
                     width: parent.width / 2 - units.gu(.5)
                     height: units.gu(4)
 
-                    text: recipe.category.length > 0 ? recipe.category : i18n.tr("Select category")
-
                     model: categories
+                    action: Standard {
+                        Label {
+                            // FIXME: Hack because of Suru theme!
+                            anchors {
+                                verticalCenter: parent.verticalCenter
+                                left: parent.left
+                                margins: units.gu(2)
+                            }
+                            text: i18n.tr("New category...")
+                            font.italic: true
+
+                            color: Theme.palette.normal.overlayText
+                        }
+                        onClicked: { parent.hide(); PopupUtils.open(Qt.resolvedUrl("NewCategoryDialog.qml"), recipeCategory) }
+                    }
                 }
 
                 Selector {
@@ -187,6 +199,7 @@ Page {
         recipe.directions = recipeDirections.text;
 
         recipe.photos = photoLayout.photos;
+        recipe.restriction = recipeRestriction.selectedIndex;
 
         recipe.save();
         pageStack.push(recipeListPage);
@@ -200,7 +213,7 @@ Page {
         // WORKAROUND: Refresh some widgets that may forget they configuration
         // for example when they cleared using the clear button
         recipeName.text = recipe.name
-        recipeCategory.text = recipe.category;
+        recipeCategory.text = recipe.category.length > 0 ? recipe.category : i18n.tr("Select category")
         recipeDifficulty.text = difficulties[recipe.difficulty];
         recipeRestriction.selectedIndex = recipe.restriction;
 

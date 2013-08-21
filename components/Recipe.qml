@@ -96,12 +96,18 @@ QtObject {
         // Save consists in writing the changes to the db
         var result;
         if (exists)
-            result = db.putDoc(getContents(), docId)
+            result = db.putDoc(getContents(), docId);
         else
-            result = db.putDoc(getContents())
+            result = db.putDoc(getContents());
 
         if (result)
-            saved();
+            saved(); // emit signal
+
         return result;
+    }
+
+    function remove() {
+        console.log("Cannot delete this recipe at the moment.");
+        console.log("U1db does not support Document deletetion.")
     }
 }

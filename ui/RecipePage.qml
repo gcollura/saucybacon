@@ -41,9 +41,19 @@ Page {
                 width: wideAspect ? parent.width / 2 - units.gu(2): parent.width
                 spacing: units.gu(2)
 
-                Label {
-                    id: totaltimeLabel
-                    text: i18n.tr("<b>%1</b> \t (Prep: %2 mins, Cook: %3 mins)".arg(recipe.totaltime).arg(recipe.preptime).arg(recipe.cooktime))
+                Item {
+                    width: parent.width
+                    height: totaltimeLabel.height
+
+                    Label {
+                        id: totaltimeLabel
+                        anchors.left: parent.left
+                        text: i18n.tr("%1".arg(recipe.totaltime))
+                    }
+                    Label {
+                        anchors.right: parent.right
+                        text: i18n.tr("Prep: %1 mins, Cook: %2 mins".arg(recipe.preptime).arg(recipe.cooktime))
+                    }
                 }
 
                 Item {
@@ -59,7 +69,6 @@ Page {
                     Label {
                         id: restrictionLabel
                         anchors.right: parent.right
-                        visible: recipe.restriction > 0
                         text: restrictions[recipe.restriction]
                     }
                 }

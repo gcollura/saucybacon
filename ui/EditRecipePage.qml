@@ -36,13 +36,12 @@ Page {
         Column {
             id: newRecipeColumn
 
-            width: parent.width
-            spacing: units.gu(2)
             anchors {
                 left: parent.left
                 right: parent.right
                 margins: units.gu(2)
             }
+            spacing: units.gu(2)
 
             TextField {
                 id: recipeName
@@ -88,6 +87,14 @@ Page {
 
                     model: difficulties
                 }
+            }
+
+            ValueSelector {
+                id: recipeRestriction
+                width: parent.width
+                text: i18n.tr("Restriction")
+                values: restrictions
+                selectedIndex: recipe.restriction
             }
 
             Row {
@@ -158,16 +165,6 @@ Page {
                 id: photoLayout
                 photos: recipe.photos
             }
-
-            ValueSelector {
-                id: recipeRestriction
-                width: parent.width
-                text: i18n.tr("Restriction")
-                values: restrictions
-                selectedIndex: recipe.restriction
-            }
-
-
         }
 
     }

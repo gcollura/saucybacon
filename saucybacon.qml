@@ -100,7 +100,7 @@ MainView {
     /* Recipe addons */
     property var difficulties: [ i18n.tr("No difficulty"), i18n.tr("Easy"), i18n.tr("Medium"), i18n.tr("Hard") ] // FIXME: Strange name
     property var categories: [ ]
-    property var restrictions: [ i18n.tr("None"), i18n.tr("Vegetarian"), i18n.tr("Vegan") ]
+    property var restrictions: [ i18n.tr("Non-veg"), i18n.tr("Vegetarian"), i18n.tr("Vegan") ]
 
     function loadCategories() {
         categories = categories.concat(settingsdb.getDoc("categories").categories)

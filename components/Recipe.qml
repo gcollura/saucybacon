@@ -58,7 +58,7 @@ QtObject {
 
         category = contents.category;
         difficulty = contents.difficulty;
-        restriction = contents.restrition ? 0 : 0;
+        restriction = contents.restriction;
 
         preptime = contents.preptime;
         cooktime = contents.cooktime;

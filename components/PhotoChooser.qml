@@ -28,7 +28,7 @@ Dialog {
             id: folderModel
             folder: folderPath
             showDotAndDotDot: true
-            nameFilters: [ "*.png", "*.jpg", ".jpeg" ]
+            nameFilters: [ "*.png", "*.jpg", "*.jpeg" ]
             showDirsFirst: true
         }
 

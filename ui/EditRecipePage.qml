@@ -46,6 +46,8 @@ Page {
             spacing: wideAspect ? units.gu(4) : units.gu(2)
             columns: wideAspect ? 2 : 1
 
+            Behavior on columns { UbuntuNumberAnimation { duration: UbuntuAnimation.SlowDuration } }
+
             Column {
                 width: wideAspect ? parent.width / 2 - units.gu(2) : parent.width
                 spacing: units.gu(2)
@@ -143,6 +145,7 @@ Page {
                     id: ingredientsLayout
                     width: parent.width
                     ingredients: recipe.ingredients
+
                 }
 
                 Button {
@@ -157,6 +160,8 @@ Page {
                     anchors.margins: units.gu(-2)
                     visible: !wideAspect
                 }
+
+                Behavior on width { UbuntuNumberAnimation { duration: UbuntuAnimation.SlowDuration } }
             }
 
             Column {
@@ -178,6 +183,8 @@ Page {
                     width: parent.width
                     photos: recipe.photos
                 }
+
+                Behavior on width { UbuntuNumberAnimation { duration: UbuntuAnimation.SlowDuration } }
             }
         }
 

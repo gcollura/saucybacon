@@ -2,7 +2,7 @@ import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.Popups 0.1
 
-// Delete dialog
+// New category dialog
 
 Dialog {
     id: dialogue
@@ -12,7 +12,6 @@ Dialog {
     TextField {
         id: nameField
         placeholderText: i18n.tr("Name your category...")
-        focus: true
     }
 
     Button {
@@ -36,4 +35,6 @@ Dialog {
             PopupUtils.close(dialogue)
         }
     }
+
+    Component.onCompleted: nameField.forceActiveFocus()
 }

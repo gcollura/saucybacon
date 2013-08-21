@@ -15,8 +15,8 @@ MainView {
     automaticOrientation: true
     property bool wideAspect: width > units.gu(80)
 
-    width: units.gu(60)
-    height: units.gu(85)
+    width: units.gu(50)
+    height: units.gu(75)
 
     headerColor: "#640707"
     backgroundColor: "#790f0f"
@@ -128,7 +128,7 @@ MainView {
     function truncate(name, width, unit) {
         unit = typeof unit === "undefined" ? units.gu(2) : unit
         if (name.length > width / unit) {
-            name = name.substring(0, width / (unit));
+            name = name.substring(0, width / (unit + units.gu(0.2)));
             name += "...";
         }
         return name;

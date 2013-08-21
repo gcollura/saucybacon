@@ -8,10 +8,7 @@ import "../components"
 Page {
     title: truncate(recipe.name, parent.width)
 
-    property alias recipe: recipe
-    Recipe {
-        id: recipe
-    }
+    property Recipe recipe: Recipe { }
 
     tools: RecipePageToolbar {
         objectName: "recipePageToolbar"
@@ -19,26 +16,29 @@ Page {
 
     Flickable {
         id: flickable
-        anchors.fill: parent
-        anchors.topMargin: units.gu(2)
-        anchors.bottomMargin: units.gu(2)
+
+        anchors {
+            fill: parent
+            topMargin: units.gu(2)
+            bottomMargin: units.gu(2)
+        }
+
         contentHeight: layout.height
-        interactive: contentHeight > height
+        interactive: contentHeight + units.gu(10) > height
 
         Grid {
             id: layout
-            columns: wideAspect ? 2 : 1
-            width: parent.width
-            spacing: units.gu(2)
+
             anchors {
-                margins: units.gu(2)
                 left: parent.left
                 right: parent.right
+                margins: units.gu(2)
             }
+            spacing: wideAspect ? units.gu(4) : units.gu(2)
+            columns: wideAspect ? 2 : 1
 
             Column {
-
-                width: wideAspect ? parent.width / 2 - units.gu(2): parent.width
+                width: wideAspect ? parent.width / 2 - units.gu(2) : parent.width
                 spacing: units.gu(2)
 
                 Item {
@@ -66,7 +66,9 @@ Page {
                     text: i18n.tr("Restriction: %1".arg(restrictions[recipe.restriction]));
                 }
 
-                ListItem.ThinDivider { }
+                ListItem.ThinDivider {
+                    anchors.margins: units.gu(-2)
+                }
 
                 Label {
                     text: i18n.tr("Ingredients")
@@ -88,7 +90,10 @@ Page {
                     }
                 }
 
-                ListItem.ThinDivider { visible: recipe.photos.length > 0 }
+                ListItem.ThinDivider {
+                    visible: recipe.photos.length > 0
+                    anchors.margins: units.gu(-2)
+                }
 
                 PhotoLayout {
                     id: photoLayout
@@ -98,12 +103,16 @@ Page {
                     photos: recipe.photos
                 }
 
-                ListItem.ThinDivider { visible: !wideAspect }
+                ListItem.ThinDivider {
+                    visible: !wideAspect
+                    anchors.margins: units.gu(-2)
+                }
 
             }
 
             Column {
-                width: wideAspect ? parent.width / 2 : parent.width
+                id: secondColumn
+                width: wideAspect ? parent.width / 2 - units.gu(2) : parent.width
                 spacing: units.gu(2)
 
                 Label {
@@ -122,7 +131,9 @@ Page {
                     wrapMode: Text.Wrap
                 }
 
+                Behavior on y { UbuntuNumberAnimation { duration: UbuntuAnimation.SlowDuration } }
             }
+
         }
 
     }

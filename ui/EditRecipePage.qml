@@ -26,146 +26,158 @@ Page {
     Flickable {
         id: flickable
 
-        anchors.fill: parent
-        anchors.topMargin: units.gu(2)
-        anchors.bottomMargin: units.gu(2)
+        anchors {
+            fill: parent
+            topMargin: units.gu(2)
+            bottomMargin: units.gu(2)
+        }
 
-        contentHeight: newRecipeColumn.height
-        interactive: contentHeight + units.gu(10) > height // hack due to ValueSelection at the end of the page
+        contentHeight: layout.height
+        interactive: contentHeight + units.gu(10) > height // +10 because of strange ValueSelector height
 
-        Column {
-            id: newRecipeColumn
+        Grid {
+            id: layout
 
             anchors {
                 left: parent.left
                 right: parent.right
                 margins: units.gu(2)
             }
-            spacing: units.gu(2)
+            spacing: wideAspect ? units.gu(4) : units.gu(2)
+            columns: wideAspect ? 2 : 1
 
-            TextField {
-                id: recipeName
-                width: parent.width
+            Column {
+                width: wideAspect ? parent.width / 2 - units.gu(2) : parent.width
+                spacing: units.gu(2)
 
-                text: recipe.name
-                placeholderText: i18n.tr("Enter a name for your recipe")
+                TextField {
+                    id: recipeName
+                    width: parent.width
+
+                    text: recipe.name
+                    placeholderText: i18n.tr("Enter a name for your recipe")
+                }
+
+                Column {
+                    anchors { left: parent.left; right: parent.right; margins: units.gu(-2) }
+
+                    ValueSelector {
+                        id: recipeCategory
+                        width: parent.width
+                        text: i18n.tr("Category")
+
+                        selectedIndex: recipe.category ? categories.indexOf(recipe.category) : 0
+                        values: update()
+
+                        onSelectedIndexChanged: {
+                            if (selectedIndex == categories.length)
+                                PopupUtils.open(Qt.resolvedUrl("NewCategoryDialog.qml"), recipeCategory)
+                        }
+
+                        function update() {
+                            return categories.concat([i18n.tr("<i>New category...</i>")])
+                        }
+                    }
+
+                    ValueSelector {
+                        id: recipeDifficulty
+                        width: parent.width
+                        text: i18n.tr("Difficulty")
+                        values: difficulties
+                        selectedIndex: recipe.difficulty
+                    }
+
+                    ValueSelector {
+                        id: recipeRestriction
+                        width: parent.width
+                        text: i18n.tr("Restriction")
+                        values: restrictions
+                        selectedIndex: recipe.restriction
+                    }
+                }
+
+                Row {
+                    width: parent.width
+                    spacing: units.gu(1)
+
+                    Label {
+                        id: totalTime
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: parent.width / 2 - units.gu(2)
+
+                        text: i18n.tr("Total time: %1 minutes").arg(computeTotalTime(prepTime.text, cookTime.text))
+                    }
+
+                    TextField {
+                        id: prepTime
+                        width: parent.width / 4
+                        placeholderText: i18n.tr("Prep time")
+                        inputMethodHints: Qt.ImhPreferNumbers
+
+                        text: recipe.preptime
+                    }
+
+                    TextField {
+                        id: cookTime
+                        width: parent.width / 4
+                        placeholderText: i18n.tr("Cook time")
+                        inputMethodHints: Qt.ImhPreferNumbers
+
+                        text: recipe.cooktime
+                    }
+                }
+
+                ThinDivider {
+                    anchors.margins: units.gu(-2)
+                }
+
+                Row {
+                    width: parent.width
+                    Label {
+                        text: i18n.tr("Ingredients")
+                    }
+                    // FIXME: Add servings feature
+                }
+
+                IngredientLayout {
+                    id: ingredientsLayout
+                    width: parent.width
+                    ingredients: recipe.ingredients
+                }
+
+                Button {
+                    width: parent.width
+                    height: units.gu(4)
+                    text: i18n.tr("Add new ingredient")
+
+                    onClicked: ingredientsLayout.addIngredient(true)
+                }
+
+                ThinDivider {
+                    anchors.margins: units.gu(-2)
+                    visible: !wideAspect
+                }
             }
 
             Column {
-                id: propertyColumn
-                anchors { left: parent.left; right: parent.right; margins: units.gu(-2) }
+                width: wideAspect ? parent.width / 2 - units.gu(2): parent.width
+                spacing: units.gu(2)
 
-                ValueSelector {
-                    id: recipeCategory
+                TextArea {
+                    id: recipeDirections
+                    text: recipe.directions
                     width: parent.width
-                    text: i18n.tr("Category")
 
-                    selectedIndex: recipe.category ? categories.indexOf(recipe.category) : 0
-                    values: update()
-
-                    onSelectedIndexChanged: {
-                        if (selectedIndex == categories.length)
-                            PopupUtils.open(Qt.resolvedUrl("NewCategoryDialog.qml"), recipeCategory)
-                    }
-
-                    function update() {
-                        return categories.concat([i18n.tr("<i>New category...</i>")])
-                    }
+                    placeholderText: i18n.tr("Write your directions")
+                    maximumLineCount: 0
+                    autoSize: true
                 }
 
-                ValueSelector {
-                    id: recipeDifficulty
+                PhotoLayout {
+                    id: photoLayout
                     width: parent.width
-                    text: i18n.tr("Difficulty")
-                    values: difficulties
-                    selectedIndex: recipe.difficulty
+                    photos: recipe.photos
                 }
-
-                ValueSelector {
-                    id: recipeRestriction
-                    width: parent.width
-                    text: i18n.tr("Restriction")
-                    values: restrictions
-                    selectedIndex: recipe.restriction
-                }
-            }
-
-            Row {
-                width: parent.width
-                spacing: units.gu(1)
-
-                Label {
-                    id: totalTime
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: parent.width / 2 - units.gu(2)
-
-                    text: i18n.tr("Total time: %1 minutes").arg(computeTotalTime(prepTime.text, cookTime.text))
-                }
-
-                TextField {
-                    id: prepTime
-                    width: parent.width / 4
-                    placeholderText: i18n.tr("Prep time")
-                    inputMethodHints: Qt.ImhPreferNumbers
-
-                    text: recipe.preptime
-                }
-
-                TextField {
-                    id: cookTime
-                    width: parent.width / 4
-                    placeholderText: i18n.tr("Cook time")
-                    inputMethodHints: Qt.ImhPreferNumbers
-
-                    text: recipe.cooktime
-                }
-            }
-
-            ThinDivider {
-                anchors.margins: units.gu(-2)
-            }
-
-            Row {
-                width: parent.width
-                Label {
-                    width: text.length * units.gu(2)
-                    text: i18n.tr("Ingredients")
-                }
-                // FIXME: Add servings feature
-            }
-
-            IngredientLayout {
-                id: ingredientsLayout
-                width: parent.width
-
-                ingredients: recipe.ingredients
-            }
-
-            Button {
-                width: parent.width
-                height: units.gu(4)
-                text: i18n.tr("Add new ingredient")
-
-                onClicked: ingredientsLayout.addIngredient(true)
-            }
-
-            ThinDivider {
-                anchors.margins: units.gu(-2)
-            }
-
-            TextArea {
-                id: recipeDirections
-                width: parent.width
-                text: recipe.directions
-
-                placeholderText: i18n.tr("Write your directions")
-                maximumLineCount: 0
-                autoSize: true
-            }
-
-            PhotoLayout {
-                id: photoLayout
-                photos: recipe.photos
             }
         }
 

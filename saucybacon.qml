@@ -94,7 +94,7 @@ MainView {
         database: settingsdb
         docId: "categories"
         create: true
-        defaults: { "categories": [ ] }
+        defaults: { "categories": [ i18n.tr("Uncategorized") ] }
     }
 
     /* Recipe addons */

@@ -51,42 +51,32 @@ Page {
                 placeholderText: i18n.tr("Enter a name for your recipe")
             }
 
-            Row {
+            ValueSelector {
+                id: recipeCategory
                 width: parent.width
-                spacing: units.gu(1)
+                text: i18n.tr("Category")
 
-                Selector {
-                    id: recipeCategory
-                    width: parent.width / 2 - units.gu(.5)
-                    height: units.gu(4)
+                selectedIndex: recipe.category ? categories.indexOf(recipe.category) : 0
+                values: update()
 
-                    model: categories
-                    action: Standard {
-                        Label {
-                            // FIXME: Hack because of Suru theme!
-                            anchors {
-                                verticalCenter: parent.verticalCenter
-                                left: parent.left
-                                margins: units.gu(2)
-                            }
-                            text: i18n.tr("New category...")
-                            font.italic: true
-
-                            color: Theme.palette.normal.overlayText
-                        }
-                        onClicked: { parent.hide(); PopupUtils.open(Qt.resolvedUrl("NewCategoryDialog.qml"), recipeCategory) }
-                    }
+                onSelectedIndexChanged: {
+                    if (selectedIndex == categories.length)
+                        PopupUtils.open(Qt.resolvedUrl("NewCategoryDialog.qml"), recipeCategory)
                 }
 
-                Selector {
-                    id: recipeDifficulty
-                    width: parent.width / 2 - units.gu(.5)
-                    height: units.gu(4)
-
-                    index: recipe.difficulty
-
-                    model: difficulties
+                function update() {
+                    return categories.concat([i18n.tr("<i>New category...</i>")])
                 }
+            }
+
+            ValueSelector {
+                id: recipeDifficulty
+                width: parent.width
+                text: i18n.tr("Difficulty")
+
+                selectedIndex: recipe.difficulty
+
+                values: difficulties
             }
 
             ValueSelector {
@@ -128,12 +118,15 @@ Page {
 
             }
 
+            ThinDivider { }
+
             Row {
                 width: parent.width
                 Label {
                     width: text.length * units.gu(2)
                     text: i18n.tr("Ingredients")
                 }
+                // FIXME: Add servings feature
             }
 
             IngredientLayout {
@@ -150,6 +143,8 @@ Page {
 
                 onClicked: ingredientsLayout.addIngredient(true)
             }
+
+            ThinDivider { }
 
             TextArea {
                 id: recipeDirections
@@ -183,8 +178,8 @@ Page {
     function saveRecipe() {
 
         recipe.name = recipeName.text ? recipeName.text : i18n.tr("Misterious Recipe");
-        recipe.category = recipeCategory.text;
-        recipe.difficulty = difficulties.indexOf(recipeDifficulty.text);
+        recipe.category = categories[recipeCategory.selectedIndex];
+        recipe.difficulty = recipeDifficulty.selectedIndex;
         recipe.restriction = recipeRestriction.selectedIndex;
 
         recipe.preptime = prepTime.text;
@@ -210,8 +205,8 @@ Page {
         // WORKAROUND: Refresh some widgets that may forget they configuration
         // for example when they cleared using the clear button
         recipeName.text = recipe.name
-        recipeCategory.text = recipe.category.length > 0 ? recipe.category : i18n.tr("Select category")
-        recipeDifficulty.text = difficulties[recipe.difficulty];
+        recipeCategory.selectedIndex = recipe.category ? categories.indexOf(recipe.category) : 0;
+        recipeDifficulty.selectedIndex = recipe.difficulty;
         recipeRestriction.selectedIndex = recipe.restriction;
 
         prepTime.text = recipe.preptime > 0 ? recipe.preptime : "";

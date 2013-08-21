@@ -56,21 +56,14 @@ Page {
                     }
                 }
 
-                Item {
-                    width: parent.width
-                    height: difficultyLabel.height
+                Label {
+                    id: difficultyLabel
+                    text: i18n.tr("Difficulty: %1".arg(difficulties[recipe.difficulty]))
+                }
 
-                    Label {
-                        id: difficultyLabel
-                        anchors.left: parent.left
-                        text: i18n.tr("Difficulty: %1".arg(difficulties[recipe.difficulty]))
-                    }
-
-                    Label {
-                        id: restrictionLabel
-                        anchors.right: parent.right
-                        text: restrictions[recipe.restriction]
-                    }
+                Label {
+                    id: restrictionLabel
+                    text: i18n.tr("Restriction: %1".arg(restrictions[recipe.restriction]));
                 }
 
                 ListItem.ThinDivider { }

@@ -19,15 +19,20 @@ Dialog {
         text: i18n.tr("Cancel")
 
         gradient: UbuntuColors.greyGradient
-        onClicked: PopupUtils.close(dialogue)
+        onClicked: {
+            caller.selectedIndex = 0;
+            PopupUtils.close(dialogue);
+        }
     }
 
     Button {
         text: i18n.tr("Create")
 
         onClicked: {
-            categories.push(nameField.text)
-            caller.text = nameField.text
+            if (categories.indexOf(nameField.text) < 0)
+                categories.push(nameField.text)
+            caller.values = caller.update()
+            caller.selectedIndex = categories.indexOf(nameField.text)
             PopupUtils.close(dialogue)
         }
     }

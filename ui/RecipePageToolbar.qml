@@ -5,6 +5,16 @@ import Ubuntu.Components.Popups 0.1
 ToolbarItems {
 
     ToolbarButton {
+        text: i18n.tr("Favorite")
+        iconSource: recipe.favorite ? icon("favorite-selected") : icon("favorite-unselected")
+
+        onTriggered: {
+            recipe.favorite = !recipe.favorite;
+            recipe.save();
+        }
+    }
+
+    ToolbarButton {
         text: i18n.tr("Share")
         iconSource: icon("share")
 

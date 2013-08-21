@@ -45,10 +45,11 @@ Flickable {
 
             delegate: UbuntuShape {
                 id: photo
-                height: iconSize
-                width: height
+                width: iconSize
+                height: width
 
                 property int idx;
+                property bool expanded: false
 
                 image: Image {
                     source: modelData
@@ -62,8 +63,17 @@ Flickable {
                         idx = index;
                         if (editable)
                             PopupUtils.open(popoverComponent, photo);
-                        else
-                            photoRow.showPhoto(idx);
+                        else {
+                            //photoRow.showPhoto(idx);
+                            if (!photo.expanded) {
+                                width = flickable.parent.width;
+                                photo.expanded = !photo.expanded;
+                                console.log(flickable.parent.width)
+                            } else {
+                                width = iconSize;
+                                photo.expanded = !photo.expanded;
+                            }
+                        }
                     }
                 }
 

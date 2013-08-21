@@ -51,40 +51,43 @@ Page {
                 placeholderText: i18n.tr("Enter a name for your recipe")
             }
 
-            ValueSelector {
-                id: recipeCategory
-                width: parent.width
-                text: i18n.tr("Category")
+            Column {
+                id: propertyColumn
+                anchors { left: parent.left; right: parent.right; margins: units.gu(-2) }
 
-                selectedIndex: recipe.category ? categories.indexOf(recipe.category) : 0
-                values: update()
+                ValueSelector {
+                    id: recipeCategory
+                    width: parent.width
+                    text: i18n.tr("Category")
 
-                onSelectedIndexChanged: {
-                    if (selectedIndex == categories.length)
-                        PopupUtils.open(Qt.resolvedUrl("NewCategoryDialog.qml"), recipeCategory)
+                    selectedIndex: recipe.category ? categories.indexOf(recipe.category) : 0
+                    values: update()
+
+                    onSelectedIndexChanged: {
+                        if (selectedIndex == categories.length)
+                            PopupUtils.open(Qt.resolvedUrl("NewCategoryDialog.qml"), recipeCategory)
+                    }
+
+                    function update() {
+                        return categories.concat([i18n.tr("<i>New category...</i>")])
+                    }
                 }
 
-                function update() {
-                    return categories.concat([i18n.tr("<i>New category...</i>")])
+                ValueSelector {
+                    id: recipeDifficulty
+                    width: parent.width
+                    text: i18n.tr("Difficulty")
+                    values: difficulties
+                    selectedIndex: recipe.difficulty
                 }
-            }
 
-            ValueSelector {
-                id: recipeDifficulty
-                width: parent.width
-                text: i18n.tr("Difficulty")
-
-                selectedIndex: recipe.difficulty
-
-                values: difficulties
-            }
-
-            ValueSelector {
-                id: recipeRestriction
-                width: parent.width
-                text: i18n.tr("Restriction")
-                values: restrictions
-                selectedIndex: recipe.restriction
+                ValueSelector {
+                    id: recipeRestriction
+                    width: parent.width
+                    text: i18n.tr("Restriction")
+                    values: restrictions
+                    selectedIndex: recipe.restriction
+                }
             }
 
             Row {
@@ -95,6 +98,7 @@ Page {
                     id: totalTime
                     anchors.verticalCenter: parent.verticalCenter
                     width: parent.width / 2 - units.gu(2)
+
                     text: i18n.tr("Total time: %1 minutes").arg(computeTotalTime(prepTime.text, cookTime.text))
                 }
 
@@ -115,10 +119,11 @@ Page {
 
                     text: recipe.cooktime
                 }
-
             }
 
-            ThinDivider { }
+            ThinDivider {
+                anchors.margins: units.gu(-2)
+            }
 
             Row {
                 width: parent.width
@@ -144,7 +149,9 @@ Page {
                 onClicked: ingredientsLayout.addIngredient(true)
             }
 
-            ThinDivider { }
+            ThinDivider {
+                anchors.margins: units.gu(-2)
+            }
 
             TextArea {
                 id: recipeDirections

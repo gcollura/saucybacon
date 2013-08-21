@@ -80,7 +80,7 @@ MainView {
         create: false
         defaults: { "name": "", "category": "", "difficulty": 1, "restriction": 0,
             "preptime": "0", "cooktime": "0", "totaltime": "0", "ingredients": [ ],
-            "directions": "", "servings": 4, "photos" : [ ] }
+            "directions": "", "servings": 4, "photos" : [ ], "favorite": false }
     } */
 
     /* Settings and other configuration Database */
@@ -123,5 +123,14 @@ MainView {
         // Usage:   var a = ['a', 1, 'a', 2, '1'];
         //          var unique = a.filter( onlyUnique ); -> ['a', 1, 2, '1']
         return self.indexOf(value) === index;
+    }
+
+    function truncate(name, width, unit) {
+        unit = typeof unit === "undefined" ? units.gu(2) : unit
+        if (name.length > width / unit) {
+            name = name.substring(0, width / (unit));
+            name += "...";
+        }
+        return name;
     }
 }

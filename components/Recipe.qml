@@ -6,6 +6,7 @@ QtObject {
     property string docId: ""
 
     property string name
+    property bool favorite
     property string category
     property int difficulty: 0
     property int restriction: 0
@@ -37,6 +38,7 @@ QtObject {
 
     function reset() {
         name = "";
+        favorite = false;
 
         category = "";
         difficulty = 0;
@@ -55,6 +57,7 @@ QtObject {
 
     function setContents(contents) {
         name = contents.name;
+        favorite = contents.favorite ? contents.favorite : false;
 
         category = contents.category;
         difficulty = contents.difficulty;
@@ -75,6 +78,7 @@ QtObject {
     function getContents() {
         return {
             "name": name,
+            "favorite": favorite,
             "category": category,
             "difficulty": difficulty,
             "restriction": restriction,

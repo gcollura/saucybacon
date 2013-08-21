@@ -6,7 +6,7 @@ import Ubuntu.Components.ListItems 0.1 as ListItem
 import "../components"
 
 Page {
-    title: truncate(recipe.name)
+    title: truncate(recipe.name, parent.width)
 
     property alias recipe: recipe
     Recipe {
@@ -125,14 +125,6 @@ Page {
             }
         }
 
-    }
-
-    function truncate(name) {
-        if (name.length > parent.width / units.gu(2)) {
-            name = name.substring(0, parent.width / units.gu(2.1));
-            name += "...";
-        }
-        return name;
     }
 
 }

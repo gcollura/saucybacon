@@ -7,7 +7,7 @@ Page {
     title: i18n.tr("Search is not implemented, due to some u1db bugs")
 
     U1db.Index {
-        database: db
+        database: recipesdb
         id: searchIndex
         expression: [ "name", "category", "difficulty", "veg",
                       "preptime", "cooktime", "totaltime", "ingredients",

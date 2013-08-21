@@ -27,7 +27,7 @@ QtObject {
 
     onDocIdChanged: {
         if (exists()) {
-            setContents(db.getDoc(docId));
+            setContents(recipesdb.getDoc(docId));
         } else {
             reset();
         }
@@ -96,9 +96,9 @@ QtObject {
         // Save consists in writing the changes to the db
         var result;
         if (exists)
-            result = db.putDoc(getContents(), docId);
+            result = recipesdb.putDoc(getContents(), docId);
         else
-            result = db.putDoc(getContents());
+            result = recipesdb.putDoc(getContents());
 
         if (result)
             saved(); // emit signal

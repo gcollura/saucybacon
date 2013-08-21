@@ -29,7 +29,7 @@ Page {
 
         anchors.fill: parent
 
-        model: db
+        model: recipesdb
         section.property: "contents.category"
         section.criteria: ViewSection.FullString
         section.delegate: sectionDelegate

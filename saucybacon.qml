@@ -3,13 +3,6 @@ import Ubuntu.Components 0.1
 import U1db 1.0 as U1db
 
 import "ui"
-import "components"
-
-/*!
-    \brief MainView with Tabs element.
-           First Tab has a single Label and
-           second Tab has a single ToolbarAction.
-*/
 
 MainView {
     // objectName for functional testing purposes (autopilot-qt5)
@@ -77,18 +70,18 @@ MainView {
 
     /* Recipe Database */
     U1db.Database {
-        id: db
+        id: recipesdb
         path: "sb-recipesdb"
     }
 
-    /* Base recipe document - just for reference */
-//    U1db.Document {
-//        database: db
-//        create: false
-//        defaults: { "name": "", "category": "", "difficulty": 1, "restriction": 0,
-//            "preptime": "0", "cooktime": "0", "totaltime": "0", "ingredients": [ ],
-//            "directions": "", "servings": 4, "photos" : [ ] }
-//    }
+    /* Base recipe document - just for reference
+    U1db.Document {
+        database: db
+        create: false
+        defaults: { "name": "", "category": "", "difficulty": 1, "restriction": 0,
+            "preptime": "0", "cooktime": "0", "totaltime": "0", "ingredients": [ ],
+            "directions": "", "servings": 4, "photos" : [ ] }
+    } */
 
     /* Settings and other configuration Database */
     U1db.Database {
@@ -125,6 +118,7 @@ MainView {
             return Qt.resolvedUrl("graphics/icons/" + name + ".png")
         return "/usr/share/icons/ubuntu-mobile/actions/scalable/" + name + ".svg"
     }
+
     function onlyUnique(value, index, self) {
         // Usage:   var a = ['a', 1, 'a', 2, '1'];
         //          var unique = a.filter( onlyUnique ); -> ['a', 1, 2, '1']

@@ -217,8 +217,8 @@ Page {
         recipeDifficulty.text = difficulties[recipe.difficulty];
         recipeRestriction.selectedIndex = recipe.restriction;
 
-        prepTime.text = recipe.preptime;
-        cookTime.text = recipe.cooktime;
+        prepTime.text = recipe.preptime > 0 ? recipe.preptime : "";
+        cookTime.text = recipe.cooktime > 0 ? recipe.cooktime : "";
 
         recipeDirections.text = recipe.directions;
     }

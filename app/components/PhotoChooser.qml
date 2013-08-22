@@ -9,7 +9,7 @@ Dialog {
     title: i18n.tr("Add a Photo")
     text: i18n.tr("Locate the photo file.")
 
-    property string folderPath: "/home" // TODO: Write c++ plugin to retrieve user informations
+    property string folderPath: utils.homePath()
     property string file: ""
 
     onFileChanged: {

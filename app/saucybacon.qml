@@ -23,10 +23,6 @@ MainView {
     backgroundColor: "#790f0f"
     footerColor: "#641616"
 
-    Utils {
-        id: utils
-    }
-
     PageStack {
         id: pageStack
 
@@ -67,9 +63,6 @@ MainView {
             console.log("Switch to tablet factor")
 
         loadCategories();
-        utils.createDir("/home/random/SaucyBacon")
-        utils.helloWorld = "Ciao"
-        console.log(utils.helloWorld)
     }
 
     Component.onDestruction: {
@@ -105,19 +98,24 @@ MainView {
         defaults: { "categories": [ i18n.tr("Uncategorized") ] }
     }
 
+    // SaucyBacon library
+    Utils {
+        id: utils
+    }
+
     /* Recipe addons */
     property var difficulties: [ i18n.tr("No difficulty"), i18n.tr("Easy"), i18n.tr("Medium"), i18n.tr("Hard") ] // FIXME: Strange name
     property var categories: [ ]
     property var restrictions: [ i18n.tr("Non-veg"), i18n.tr("Vegetarian"), i18n.tr("Vegan") ]
 
     function loadCategories() {
-        categories = categories.concat(settingsdb.getDoc("categories").categories)
+        categories = categories.concat(settingsdb.getDoc("categories").categories);
     }
 
     function saveCategories() {
-        var cat = settingsdb.getDoc("categories")
-        cat.categories = categories
-        settingsdb.putDoc(cat, "categories")
+        var cat = settingsdb.getDoc("categories");
+        cat.categories = categories;
+        settingsdb.putDoc(cat, "categories");
     }
 
     // Helper functions

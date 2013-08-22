@@ -15,11 +15,16 @@ $ mkdir build && cd build
 $ cmake ..
 $ make
 ```
+If you get some strange/error/warning output here, contact me on IRC or open an issue.
+
 Then to run SaucyBacon:
 ```
 $ cd -
 $ qmlscene -I modules app/saucybacon.qml
 ```
+
+***Known problems***
+ * If your default compiler is clang, you have to switch back to gcc. Clang seems to be not supported at the moment.
 
 ## License
 GPLv3 - See `LICENSE` for more information.

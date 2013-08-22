@@ -4,14 +4,14 @@
 #include "Utils.h"
 
 
-void BackendPlugin::registerTypes(const char *uri)
+void SaucyBaconPlugin::registerTypes(const char *uri)
 {
     Q_ASSERT(uri == QLatin1String("SaucyBacon"));
 
     qmlRegisterType<Utils>(uri, 0, 1, "Utils");
 }
 
-void BackendPlugin::initializeEngine(QQmlEngine *engine, const char *uri)
+void SaucyBaconPlugin::initializeEngine(QQmlEngine *engine, const char *uri)
 {
     QQmlExtensionPlugin::initializeEngine(engine, uri);
 }

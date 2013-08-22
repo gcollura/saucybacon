@@ -1,3 +1,5 @@
-file(GLOB_RECURSE QMLFILES              RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.qml)
-file(GLOB_RECURSE QMLFILES_COMPONENTS   RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/components *.qml)
-file(GLOB_RECURSE QMLFILES_UI           RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/ui *.qml)
+# Make the qml file show in the QtCreator tree
+
+file(GLOB_RECURSE Qml *.qml)
+
+add_custom_target(QmlFiles ALL ${CMAKE_COMMAND} -E echo SOURCES ${Qml})

@@ -1,7 +1,7 @@
 import QtQuick 2.0
 import Ubuntu.Components 0.1
 import U1db 1.0 as U1db
-import SaucyBacon 1.0
+import SaucyBacon 0.1
 
 import "ui"
 
@@ -23,8 +23,8 @@ MainView {
     backgroundColor: "#790f0f"
     footerColor: "#641616"
 
-    MyType {
-        id: hello
+    Utils {
+        id: utils
     }
 
     PageStack {
@@ -67,6 +67,9 @@ MainView {
             console.log("Switch to tablet factor")
 
         loadCategories();
+        utils.createDir("/home/random/SaucyBacon")
+        utils.helloWorld = "Ciao"
+        console.log(utils.helloWorld)
     }
 
     Component.onDestruction: {

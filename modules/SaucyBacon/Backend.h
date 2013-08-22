@@ -6,30 +6,30 @@
 
 /*
  ----8<-----
- 
+
  import UbuntuApp 1.0
- 
+
  Rectangle {
    width: 200
    height: 200
-   
+
    MyType {
       id: helloType
    }
-   
+
    Text {
      anchors.centerIn: parent
      text: helloType.helloworld
    }
  }
- 
+
  -----8<------
 */
 class BackendPlugin : public QQmlExtensionPlugin
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface")
-    
+    Q_PLUGIN_METADATA(IID "org.random-cpp.SaucyBacon")
+
 public:
     void registerTypes(const char *uri);
     void initializeEngine(QQmlEngine *engine, const char *uri);

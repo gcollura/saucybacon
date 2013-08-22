@@ -120,7 +120,7 @@ MainView {
     // Helper functions
     function icon(name, local) {
         if (local)
-            return Qt.resolvedUrl("graphics/icons/" + name + ".png")
+            return Qt.resolvedUrl("../graphics/icons/" + name + ".png")
         return "/usr/share/icons/ubuntu-mobile/actions/scalable/" + name + ".svg"
     }
 

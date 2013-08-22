@@ -1,3 +1,5 @@
 *.user
 *.tmp
 *.pyc
+*.swp
+build/

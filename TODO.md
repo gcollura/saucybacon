@@ -9,4 +9,4 @@
 - [ ] Niceties
 - [ ] Some fashion for the contest
 - [ ] Create menus
-- [ ] Categories
+- [-] Categories

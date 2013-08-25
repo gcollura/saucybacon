@@ -73,6 +73,13 @@ MainView {
             visible: false
         }
 
+        WebPage {
+            objectName: "webPage"
+            id: webPage
+
+            visible: false
+        }
+
     }
 
     Component.onCompleted: {
@@ -84,6 +91,7 @@ MainView {
         }
 
         loadCategories();
+        utils.set("firstLoad", 1);
     }
 
     Component.onDestruction: {
@@ -105,21 +113,7 @@ MainView {
             "directions": "", "servings": 4, "photos" : [ ], "favorite": false }
     } */
 
-    /* Settings and other configuration Database */
-    U1db.Database {
-        id: settingsdb
-        path: "sb-settingsdb"
-    }
-
-    // Categories
-    U1db.Document {
-        database: settingsdb
-        docId: "categories"
-        create: true
-        defaults: { "categories": [ i18n.tr("Uncategorized") ] }
-    }
-
-    // SaucyBacon library
+    // SaucyBacon Utils library
     Utils {
         id: utils
     }
@@ -130,13 +124,14 @@ MainView {
     property var restrictions: [ i18n.tr("Non-veg"), i18n.tr("Vegetarian"), i18n.tr("Vegan") ]
 
     function loadCategories() {
-        categories = categories.concat(settingsdb.getDoc("categories").categories);
+        if (!utils.get("firstLoad"))
+            categories = [ i18n.tr("Uncategorized") ]
+        else
+            categories = utils.get("categories");
     }
 
     function saveCategories() {
-        var cat = settingsdb.getDoc("categories");
-        cat.categories = categories;
-        settingsdb.putDoc(cat, "categories");
+        utils.set("categories", categories);
     }
 
     // Helper functions

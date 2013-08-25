@@ -19,17 +19,20 @@
 
 #include "Utils.h"
 
-#include <QtCore>
 #include <QTextDocument>
 #include <QtPrintSupport/QPrinter>
 
 Utils::Utils(QObject *parent) :
     QObject(parent) {
 
+    auto json = QJsonDocument::fromJson(read(homePath(), "sb-settings.json").toUtf8()).object();
+    m_settings = json.toVariantMap();
 }
 
 Utils::~Utils() {
-
+    auto json = QJsonObject::fromVariantMap(m_settings);
+    QJsonDocument document(json);
+    write(homePath(), "sb-settings.json", document.toJson());
 }
 
 bool Utils::createDir(const QString &dirName) {
@@ -44,7 +47,7 @@ QString Utils::homePath() const {
     return QDir::homePath();
 }
 
-bool Utils::write(const QString& dirName, const QString& fileName, const QString& contents) {
+bool Utils::write(const QString& dirName, const QString& fileName, const QByteArray& contents) {
     if (!createDir(dirName))
         return false;
     QString path = QDir(dirName).absoluteFilePath(fileName);
@@ -114,5 +117,17 @@ bool Utils::exportAsPdf(const QString &fileName, const QJsonObject &contents) {
     doc.print(&printer);
     printer.newPage();
 
+    return true;
+}
+
+QVariant Utils::get(QString key) {
+    if (m_settings.contains(key))
+        return m_settings[key];
+    else
+        return QVariant();
+}
+
+bool Utils::set(QString key, QVariant value) {
+    m_settings.insert(key, value);
     return true;
 }

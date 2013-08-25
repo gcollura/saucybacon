@@ -17,35 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-#ifndef UTILS_H
-#define UTILS_H
+import QtQuick 2.0
+import Ubuntu.Components 0.1
+import QtWebKit 3.0
 
-#include <QtCore>
+Page {
+    property alias url: view.url
+    WebView {
+        id: view
+        anchors.fill: parent
 
-class Utils : public QObject
-{
-    Q_OBJECT
-
-public:
-    explicit Utils(QObject *parent = 0);
-    ~Utils();
-
-    Q_INVOKABLE bool createDir(const QString& dirName);
-    Q_INVOKABLE QString homePath() const;
-
-    Q_INVOKABLE bool write(const QString& dirName, const QString& fileName, const QByteArray &contents);
-    Q_INVOKABLE QString read(const QString& dirName, const QString& fileName);
-
-    Q_INVOKABLE bool exportAsPdf(const QString& fileName, const QJsonObject& contents);
-
-    Q_INVOKABLE QVariant get(QString key);
-    Q_INVOKABLE bool set(QString key, QVariant value);
-
-Q_SIGNALS:
-
-protected:
-    QVariantMap m_settings;
-
-};
-
-#endif // UTILS_H
+        //loadStarted: indicator.running = true
+        //loadFinished: indicator.running = false
+    }
+    ActivityIndicator {
+        id: indicator
+        visible: running
+        anchors.fill: parent
+    }
+}

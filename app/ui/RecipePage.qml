@@ -156,9 +156,6 @@ Page {
                     wrapMode: Text.Wrap
                 }
             }
-
         }
-
     }
-
 }

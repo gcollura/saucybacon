@@ -125,6 +125,9 @@ Page {
                 subText: contents.publisher_url
                 onClicked: {
                     //console.log(recipe);
+                    webPage.title = contents.title
+                    webPage.url = contents.source_url
+                    pageStack.push(webPage);
                 }
             }
         }

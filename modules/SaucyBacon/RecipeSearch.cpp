@@ -69,10 +69,8 @@ void RecipeSearch::makeRequest() {
 
 void RecipeSearch::replyFinished(QNetworkReply *reply) {
     if (reply->error() == QNetworkReply::NoError) {
-        for (auto r : reply->rawHeaderPairs())
-            qDebug() << QString(r.second);
-        QByteArray data = reply->readAll();
-        QJsonDocument document = QJsonDocument::fromJson(data);
+
+        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
 
         parseJson(document);
 

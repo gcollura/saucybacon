@@ -68,7 +68,6 @@ Flickable {
                 width: iconSize
                 height: width
 
-                property int idx;
                 property bool expanded: false
 
                 image: Image {
@@ -80,7 +79,6 @@ Flickable {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        idx = index;
                         if (editable)
                             PopupUtils.open(popoverComponent, photo);
                         else {

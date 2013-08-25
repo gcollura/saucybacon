@@ -35,7 +35,7 @@ MainView {
     automaticOrientation: true
     property bool wideAspect: width > units.gu(80)
 
-    width: units.gu(50)
+    width: units.gu(100)
     height: units.gu(75)
 
     headerColor: "#640707"
@@ -78,8 +78,10 @@ MainView {
     Component.onCompleted: {
         if (width < units.gu(80))
             pageStack.push(recipeListPage)
-        else
+        else {
+            pageStack.push(recipeListPage)
             console.log("Switch to tablet factor")
+        }
 
         loadCategories();
     }

@@ -3,11 +3,13 @@ set(LIB SaucyBaconPlugin)
 set(HDRS
     SaucyBacon/Plugin.h
     SaucyBacon/Utils.h
+    SaucyBacon/RecipeSearch.h
 )
 
 set(SRCS
     SaucyBacon/Plugin.cpp
     SaucyBacon/Utils.cpp
+    SaucyBacon/RecipeSearch.cpp
 )
 
 add_library(${LIB} SHARED ${SRCS})

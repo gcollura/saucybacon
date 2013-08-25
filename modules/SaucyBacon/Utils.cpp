@@ -82,6 +82,11 @@ bool Utils::exportAsPdf(const QString &fileName, const QJsonObject &contents) {
     QTextStream stream(&html);
 
     stream << QString("<h1>%1</h1>").arg(contents["name"].toString());
+
+    stream << QString("<p>%1 <br>").arg(contents["totaltime"].toString());
+    stream << QString(tr("Difficulty: %1<br>")).arg(contents["difficulty"].toDouble()); // FIXME: how can I access the array?
+    stream << QString(tr("Restriction: %1</p>")).arg(contents["restriction"].toDouble());
+
     stream << QString(tr("<h2>Ingredients</h2>"));
 
     stream << "<ul>";

@@ -25,7 +25,7 @@ ToolbarItems {
 
     ToolbarButton {
         text: i18n.tr("Export")
-        iconSource: icon("export")
+        //iconSource: icon("export")
 
         onTriggered: {
             recipe.exportAsPdf();

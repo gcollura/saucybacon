@@ -28,7 +28,5 @@ add_subdirectory(graphics)
 
 # TODO: add translations
 
-file(GLOB QmlProjectFile ${CMAKE_SOURCE_DIR} *.qmlproject)
-add_custom_target(QmlProject SOURCES ${QmlProjectFile})
 
 install(FILES saucybacon.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications)

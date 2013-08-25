@@ -199,6 +199,7 @@ Page {
 
                 PhotoLayout {
                     id: photoLayout
+                    clip: wideAspect
                     width: parent.width
                     photos: recipe.photos
                 }

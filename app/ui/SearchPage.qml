@@ -21,9 +21,10 @@ import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
 import U1db 1.0 as U1db
+import SaucyBacon 0.1
 
 Page {
-    title: i18n.tr("Search is not implemented, due to some u1db bugs")
+    title: i18n.tr("Search")
 
     U1db.Index {
         database: recipesdb
@@ -43,69 +44,105 @@ Page {
 
     Column {
         anchors {
-            left: parent.left
-            right: parent.right
             fill: parent
+            margins: units.gu(2)
         }
+
+        spacing: units.gu(2)
 
         Row {
             id: searchRow
-            anchors.horizontalCenter: parent.horizontalCenter
 
-            width: parent.width - units.gu(4)
-            height: units.gu(8)
+            width: parent.width
             spacing: units.gu(2)
 
             TextField {
                 id: searchField
-                anchors.verticalCenter: parent.verticalCenter
 
-                width: parent.width - units.gu(7)
-                placeholderText: "Searching for a new recipe..."
+                width: parent.width - searchButton.width - parent.spacing
+                placeholderText: "Searching for a recipe..."
 
-                onAccepted: search(searchField.text)
+                onAccepted: searchOnline(searchField.text)
                 onTextChanged: searchLocally(searchField.text)
+
+                Behavior on width { UbuntuNumberAnimation { } }
             }
 
             Button {
                 id: searchButton
                 anchors.verticalCenter: parent.verticalCenter
+                visible: !search.searching
 
-                width: units.gu(5)
                 height: searchField.height
+                width: units.gu(5)
 
-                iconSource: icon("search")
+                Image {
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    source: icon("search", true)
+                    sourceSize {
+                        height: parent.height - units.gu(1.5)
+                        width: parent.width - units.gu(1.5)
+                    }
+                }
 
-                onClicked: search(searchField.text)
+                onClicked: searchOnline(searchField.text)
+                Behavior on visible { UbuntuNumberAnimation { } }
+            }
+
+            ActivityIndicator {
+                id: activity
+                anchors.verticalCenter: parent.verticalCenter
+                width: searchButton.width
+                running: search.searching
+                visible: running
             }
         }
+
+//        Label {
+//            id: instructions
+//            text: "Hello"
+//            font.pixelSize: units.gu(20)
+//        }
 
         ListView {
             id: resultList
-            width: parent.width
-            height: parent.height - searchRow.height
             anchors {
                 left: parent.left
                 right: parent.right
+                margins: units.gu(-2)
             }
 
-            model: searchQuery
+            height: parent.height - searchRow.height
+            clip: true
+
+            model: search
 
             /* A delegate will be created for each Document retrieved from the Database */
-            delegate: ListItem.Standard {
-                text: "%1".arg(contents.difficulty)
-                onClicked: console.log(JSON.stringify(contents))
+            delegate: ListItem.Subtitled {
+                icon: contents.image_url
+                text: contents.title
+                subText: contents.publisher_url
+                onClicked: {
+                    //console.log(recipe);
+                }
             }
         }
 
+
     }
 
-    function search(querystr) {
+    RecipeSearch {
+        id: search
+    }
+
+    function searchOnline(querystr) {
         // Since the number of the api calls is limited,
         // it's better to keep the online search a real request by the user
         // TODO: have money to buy an unlimited API
 
         console.log("Perfoming remote search...");
+        search.query = querystr;
     }
 
     function searchLocally(querystr) {
@@ -113,7 +150,6 @@ Page {
         // this function can be called everytime the user write text in the entry
 
         //searchQuery.query = [ {"title": querystr + "*" , "name": querystr + "*" }]
-        resultList.model = searchQuery.query
-        console.log(JSON.stringify(searchQuery))
+
     }
 }

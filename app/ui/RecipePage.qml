@@ -118,6 +118,7 @@ Page {
 
                 PhotoLayout {
                     id: photoLayout
+                    clip: wideAspect
                     editable: false
                     iconSize: units.gu(12)
 

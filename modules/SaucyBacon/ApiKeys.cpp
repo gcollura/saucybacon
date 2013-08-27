@@ -19,6 +19,7 @@
 
 #include "ApiKeys.h"
 
+const QString ApiKeys::F2FURL = QString("http://food2fork.com/api/");
 const QString ApiKeys::F2FKEY = QString("bed9a0385fc98548af8018eccda97e24");
-const QString ApiKeys::F2FGETURL = QString("http://food2fork.com/api/get");
-const QString ApiKeys::F2FSEARCHURL = QString("http://food2fork.com/api/search");
+const QString ApiKeys::F2FGETURL = QString(ApiKeys::F2FURL + "get");
+const QString ApiKeys::F2FSEARCHURL = QString(ApiKeys::F2FURL + "search");

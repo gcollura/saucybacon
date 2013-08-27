@@ -147,11 +147,13 @@ void RecipeParser::get(const QString &recipeId, const QString &urlRecipe, const 
 
 void RecipeParser::replyFinished(QNetworkReply *reply) {
     if (reply->error() == QNetworkReply::NoError) {
-        QString url = reply->url().toString().replace("www.", "");
-        if (url.contains(m_service))
-            parseHtml(reply->readAll());
-        else
+
+        bool apiResponse = QUrl(ApiKeys::F2FURL).isParentOf(reply->url());
+        if (apiResponse)
             parseJson(reply->readAll());
+        else
+            parseHtml(reply->readAll());
+
     } else {
         qDebug() << reply->errorString();
     }

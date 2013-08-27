@@ -23,6 +23,7 @@
 #include <QString>
 
 struct ApiKeys {
+    static const QString F2FURL;
     static const QString F2FKEY;
     static const QString F2FGETURL;
     static const QString F2FSEARCHURL;

@@ -133,7 +133,7 @@ Page {
                             function txt(quantity, type, name) {
                                 var output = "";
                                 output += quantity ? "%1 ".arg(quantity) : "";
-                                output += type + name;
+                                output += type + " " + name;
                                 return output;
                             }
                         }

@@ -120,14 +120,17 @@ bool Utils::exportAsPdf(const QString &fileName, const QJsonObject &contents) {
     return true;
 }
 
-QVariant Utils::get(QString key) {
+QVariant Utils::get(const QString &key) {
     if (m_settings.contains(key))
         return m_settings[key];
     else
         return QVariant();
 }
 
-bool Utils::set(QString key, QVariant value) {
-    m_settings.insert(key, value);
+bool Utils::set(const QString &key, const QVariant &value) {
+    if (m_settings.contains(key))
+        m_settings[key] = value;
+    else
+        m_settings.insert(key, value);
     return true;
 }

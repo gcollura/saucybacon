@@ -71,7 +71,7 @@ Page {
             Button {
                 id: searchButton
                 anchors.verticalCenter: parent.verticalCenter
-                visible: !search.searching
+                visible: !search.loading
 
                 height: searchField.height
                 width: units.gu(5)
@@ -94,7 +94,7 @@ Page {
                 id: activity
                 anchors.verticalCenter: parent.verticalCenter
                 width: searchButton.width
-                running: search.searching
+                running: search.loading
                 visible: running
             }
         }
@@ -120,14 +120,13 @@ Page {
 
             /* A delegate will be created for each Document retrieved from the Database */
             delegate: ListItem.Subtitled {
+                progression: true
                 icon: contents.image_url
                 text: contents.title
                 subText: contents.publisher_url
                 onClicked: {
-                    //console.log(recipe);
-                    webPage.title = contents.title
-                    webPage.url = contents.source_url
-                    pageStack.push(webPage);
+                    recipe.load(contents.recipe_id, contents.source_url, contents.publisher_url);
+                    pageStack.push(recipePage);
                 }
             }
         }
@@ -146,6 +145,7 @@ Page {
 
         console.log("Perfoming remote search...");
         search.query = querystr;
+        searches.push(querystr);
     }
 
     function searchLocally(querystr) {

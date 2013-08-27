@@ -23,6 +23,7 @@ import U1db 1.0 as U1db
 import SaucyBacon 0.1
 
 import "ui"
+import "components"
 
 MainView {
     // objectName for functional testing purposes (autopilot-qt5)
@@ -73,29 +74,28 @@ MainView {
             visible: false
         }
 
-        WebPage {
-            objectName: "webPage"
-            id: webPage
+//        WebPage {
+//            objectName: "webPage"
+//            id: webPage
 
-            visible: false
-        }
+//            visible: false
+//        }
 
     }
 
     Component.onCompleted: {
+        loadSettings();
+
         if (width < units.gu(80))
             pageStack.push(recipeListPage)
         else {
             pageStack.push(recipeListPage)
             console.log("Switch to tablet factor")
         }
-
-        loadCategories();
-        utils.set("firstLoad", 1);
     }
 
     Component.onDestruction: {
-        saveCategories();
+        saveSettings();
     }
 
     /* Recipe Database */
@@ -118,20 +118,31 @@ MainView {
         id: utils
     }
 
+    property Recipe recipe: Recipe { }
+
     /* Recipe addons */
     property var difficulties: [ i18n.tr("No difficulty"), i18n.tr("Easy"), i18n.tr("Medium"), i18n.tr("Hard") ] // FIXME: Strange name
     property var categories: [ ]
     property var restrictions: [ i18n.tr("Non-veg"), i18n.tr("Vegetarian"), i18n.tr("Vegan") ]
+    property var searches: [ ]
 
-    function loadCategories() {
-        if (!utils.get("firstLoad"))
-            categories = [ i18n.tr("Uncategorized") ]
-        else
+    function loadSettings() {
+        if (!utils.get("firstLoad")) {
+            categories = [ i18n.tr("Uncategorized") ];
+
+            utils.set("firstLoad", 1);
+        } else {
+            height = utils.get("windowSize").height;
+            width = utils.get("windowSize").width;
             categories = utils.get("categories");
+            searches = utils.get("searches");
+        }
     }
 
-    function saveCategories() {
+    function saveSettings() {
+        utils.set("windowSize", { "height": height, "width": width });
         utils.set("categories", categories);
+        utils.set("searches", searches);
     }
 
     // Helper functions
@@ -154,5 +165,16 @@ MainView {
             name += "...";
         }
         return name;
+    }
+
+    function computeTotalTime(time1, time2) {
+        var t1 = parseInt(time1);
+        var t2 = parseInt(time2);
+
+        var total = t1 + t2;
+        if (!total)
+            total = 0;
+
+        return total.toString();
     }
 }

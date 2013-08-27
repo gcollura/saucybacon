@@ -38,8 +38,8 @@ public:
 
     Q_INVOKABLE bool exportAsPdf(const QString& fileName, const QJsonObject& contents);
 
-    Q_INVOKABLE QVariant get(QString key);
-    Q_INVOKABLE bool set(QString key, QVariant value);
+    Q_INVOKABLE QVariant get(const QString &key);
+    Q_INVOKABLE bool set(const QString &key, const QVariant &value);
 
 Q_SIGNALS:
 

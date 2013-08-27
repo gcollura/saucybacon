@@ -17,20 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-import QtQuick 2.0
-import Ubuntu.Components 0.1
-import QtWebKit 3.0
+#ifndef APIKEYS_H
+#define APIKEYS_H
 
-Page {
-    title: "None"
+#include <QString>
 
-    property alias url: page.url
-    WebView {
-        id: page
-        anchors {
-            left: parent.left
-            right: parent.right
-        }
-        height: parent.height
-    }
-}
+struct ApiKeys {
+    static const QString F2FKEY;
+    static const QString F2FGETURL;
+    static const QString F2FSEARCHURL;
+
+private:
+    ApiKeys() { }
+};
+
+#endif // APIKEYS_H

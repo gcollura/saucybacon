@@ -27,10 +27,28 @@ import "../components"
 Page {
     title: truncate(recipe.name, parent.width)
 
-    property Recipe recipe: Recipe { }
-
     tools: RecipePageToolbar {
         objectName: "recipePageToolbar"
+    }
+
+    Item {
+        visible: !recipe.ready
+        anchors {
+            verticalCenter: parent.verticalCenter
+            horizontalCenter: parent.horizontalCenter
+        }
+        ActivityIndicator {
+            id: indicator
+            running: !recipe.ready
+        }
+        Label {
+            anchors {
+                top: indicator.bottom
+                horizontalCenter: parent.horizontalCenter
+            }
+            text: i18n.tr("I am loading your recipe, please hold still")
+            fontSize: "large"
+        }
     }
 
     Flickable {
@@ -44,6 +62,8 @@ Page {
 
         contentHeight: layout.height
         interactive: contentHeight + units.gu(10) > height
+
+        visible: recipe.ready
 
         Grid {
             id: layout
@@ -106,7 +126,16 @@ Page {
                         model: recipe.ingredients
 
                         delegate: Label {
-                            text: "%1 %2 %3".arg(modelData.quantity).arg(modelData.type).arg(modelData.name)
+                            width: parent.width
+                            text: txt(modelData.quantity, modelData.type, modelData.name)
+                            wrapMode: Text.Wrap
+
+                            function txt(quantity, type, name) {
+                                var output = "";
+                                output += quantity ? "%1 ".arg(quantity) : "";
+                                output += type + name;
+                                return output;
+                            }
                         }
                     }
                 }

@@ -17,55 +17,53 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-#ifndef RECIPESEARCH_H
-#define RECIPESEARCH_H
+#ifndef RECIPEPARSER_H
+#define RECIPEPARSER_H
 
-#include <QAbstractListModel>
-#include <QNetworkAccessManager>
-#include <QtCore>
+#include <QObject>
+#include <QtNetwork>
 
-class Q_DECL_EXPORT RecipeSearch : public QAbstractListModel {
+class QRegularExpression;
+typedef QMap<QString, QRegularExpression> RecipeRegex;
+
+class Q_DECL_EXPORT RecipeParser : public QObject {
 
     Q_OBJECT
-    Q_PROPERTY(QString query READ query WRITE setQuery NOTIFY queryChanged)
+    Q_PROPERTY(QVariant contents READ contents NOTIFY contentsChanged)
     Q_PROPERTY(bool loading READ loading NOTIFY loadingChanged)
 
 public:
-    explicit RecipeSearch(QObject *parent = 0);
-    virtual ~RecipeSearch();
+    explicit RecipeParser(QObject *parent = 0);
+    virtual ~RecipeParser();
 
-    // QAbstractListModel
-    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-    QHash<int, QByteArray>roleNames() const;
-    int rowCount(const QModelIndex & parent = QModelIndex()) const;
-    void resetModel();
+    Q_INVOKABLE void get(const QString &recipeId, const QString &urlRecipe, const QString &urlService);
 
 signals:
-    void queryChanged();
+    void ready();
+    void contentsChanged();
     void loadingChanged();
 
 public slots:
-
-private slots:
-    void makeRequest();
     void replyFinished(QNetworkReply *reply);
 
 private:
-    QString query() const { return m_query; }
-    void setQuery(const QString& query);
+    QVariant contents() const { return m_contents; }
+    void parseHtml(const QByteArray &html);
+    void parseJson(const QByteArray &json);
+    void hasFinishedParsing();
 
     bool loading() const { return m_loading; }
-    void setSearching(const bool loading) { m_loading = loading; loadingChanged(); }
-
-    void parseJson(const QJsonDocument &contents);
-
-    int m_count;
-    QJsonArray m_recipes;
+    void setLoading(const bool loading) { m_loading = loading; loadingChanged(); }
 
     QNetworkAccessManager *m_manager;
-    QString m_query;
+    QVariantMap m_contents;
     bool m_loading;
+    QString m_service;
 
+    QMap<QString, RecipeRegex> m_services;
+
+    bool m_parseJson;
+    bool m_parseHtml;
 };
 
-#endif // RECIPESEARCH_H
+#endif // RECIPEPARSER_H

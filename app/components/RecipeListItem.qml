@@ -25,7 +25,7 @@ ListItem.Subtitled {
     id: item
     progression: true
 
-    icon: contents.photos[0] ? Qt.resolvedUrl(contents.photos[0]) : Qt.resolvedUrl("../graphics/toolbarIcon@8.png")
+    icon: contents.photos[0] ? Qt.resolvedUrl(contents.photos[0]) : Qt.resolvedUrl("../../graphics/toolbarIcon@8.png")
 
     Column {
         id: right
@@ -37,6 +37,7 @@ ListItem.Subtitled {
             text: truncate(contents.name, item.width, units.gu(1.5))
         }
         Label {
+            visible: contents.preptime + contents.cooktime > 0
             text: i18n.tr("%1".arg(contents.totaltime))
             font.pixelSize: units.gu(1.5)
             color: Theme.palette.normal.backgroundText
@@ -74,7 +75,7 @@ ListItem.Subtitled {
     }
 
     onClicked: {
-        recipePage.recipe.docId = docId;
+        recipe.docId = docId;
         pageStack.push(recipePage);
     }
 }

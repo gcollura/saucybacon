@@ -27,6 +27,7 @@ ToolbarItems {
         text: i18n.tr("Export")
         //iconSource: icon("export")
 
+        visible: recipe.exists()
         onTriggered: {
             recipe.exportAsPdf();
         }
@@ -36,6 +37,7 @@ ToolbarItems {
         text: i18n.tr("Favorite")
         iconSource: recipe.favorite ? icon("favorite-selected") : icon("favorite-unselected")
 
+        visible: recipe.exists()
         onTriggered: {
             recipe.favorite = !recipe.favorite;
             recipe.save();
@@ -46,6 +48,7 @@ ToolbarItems {
         text: i18n.tr("Share")
         iconSource: icon("share")
 
+        visible: recipe.exists()
         onTriggered: {
 
         }
@@ -55,8 +58,8 @@ ToolbarItems {
         text: i18n.tr("Edit")
         iconSource: icon("edit")
 
+        visible: recipe.ready
         onTriggered: {
-            editRecipePage.recipe = recipe;
             pageStack.push(editRecipePage)
         }
     }
@@ -65,6 +68,7 @@ ToolbarItems {
         text: i18n.tr("Delete")
         iconSource: icon("delete")
 
+        visible: recipe.exists()
         onTriggered: PopupUtils.open(Qt.resolvedUrl("DeleteDialog.qml"))
     }
 

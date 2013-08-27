@@ -25,6 +25,9 @@ $ qmlscene -I modules app/saucybacon.qml
 
 ***Known problems***
  * If your default compiler is clang, you have to switch back to gcc. Clang seems to be not supported at the moment.
+ * Some recipe sites aren't supported yet and they aren't properly managed.
+ * Retrieving contents from website is done using stupid regex, because I couldn't get a proper XML/HTML tool to work,
+   if you have suggestion to improve this aspect, please open an issue.
 
 ## License
 GPLv3 - See `LICENSE` for more information.

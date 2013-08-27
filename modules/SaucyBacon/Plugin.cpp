@@ -19,14 +19,16 @@
 
 #include <QtQml>
 #include <QtQml/QQmlContext>
+
 #include "Plugin.h"
 #include "Utils.h"
 #include "RecipeSearch.h"
-
+#include "RecipeParser.h"
 
 void SaucyBaconPlugin::registerTypes(const char *uri) {
     Q_ASSERT(uri == QLatin1String("SaucyBacon"));
 
     qmlRegisterType<Utils>(uri, 0, 1, "Utils");
     qmlRegisterType<RecipeSearch>(uri, 0, 1, "RecipeSearch");
+    qmlRegisterType<RecipeParser>(uri, 0, 1, "RecipeParser");
 }

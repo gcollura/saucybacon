@@ -18,9 +18,25 @@
 **/
 
 import QtQuick 2.0
+import SaucyBacon 0.1
 
-QtObject {
+Item {
     id: recipe
+
+    RecipeParser {
+        id: parser
+
+        onContentsChanged: setContents(parser.contents);
+    }
+
+    property bool ready: !parser.loading
+    function load(recipeId, recipeUrl, serviceUrl) {
+        if (docId)
+            docId = "";
+        else
+            reset(); // hard reset, if the docId was already null
+        parser.get(recipeId, recipeUrl, serviceUrl);
+    }
 
     property string docId: ""
 
@@ -78,20 +94,20 @@ QtObject {
         name = contents.name;
         favorite = contents.favorite ? contents.favorite : false;
 
-        category = contents.category;
-        difficulty = contents.difficulty;
-        restriction = contents.restriction;
+        category = contents.category ? contents.category : categories[0];
+        difficulty = contents.difficulty ? contents.difficulty : 0;
+        restriction = contents.restriction ? contents.restriction : 0;
 
-        preptime = contents.preptime;
-        cooktime = contents.cooktime;
-        totaltime = contents.totaltime;
+        preptime = contents.preptime ? contents.preptime : "0";
+        cooktime = contents.cooktime ? contents.cooktime : "0";
+        totaltime = contents.totaltime ? contents.totaltime : i18n.tr("Total time: %1 minutes").arg(computeTotalTime(preptime, cooktime));
 
-        ingredients = contents.ingredients;
-        servings = contents.servings;
+        ingredients = contents.ingredients ? contents.ingredients : [ ];
+        servings = contents.servings ? contents.servings : 4;
 
-        directions = contents.directions;
+        directions = contents.directions ? contents.directions : "";
 
-        photos = contents.photos;
+        photos = contents.photos ? contents.photos : [ ];
     }
 
     function getContents() {

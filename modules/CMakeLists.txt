@@ -3,13 +3,17 @@ set(LIB SaucyBaconPlugin)
 set(HDRS
     SaucyBacon/Plugin.h
     SaucyBacon/Utils.h
+    SaucyBacon/ApiKeys.h
     SaucyBacon/RecipeSearch.h
+    SaucyBacon/RecipeParser.h
 )
 
 set(SRCS
     SaucyBacon/Plugin.cpp
     SaucyBacon/Utils.cpp
+    SaucyBacon/ApiKeys.cpp
     SaucyBacon/RecipeSearch.cpp
+    SaucyBacon/RecipeParser.cpp
 )
 
 add_library(${LIB} SHARED ${SRCS})
@@ -19,6 +23,7 @@ include_directories(
     ${Qt5Network_INCLUDE_DIRS}
     ${Qt5Quick_INCLUDE_DIRS}
     ${Qt5PrintSupport_INCLUDE_DIRS}
+    ${Qt5Script_INCLUDE_DIRS}
 )
 
 target_link_libraries(${LIB}
@@ -26,6 +31,7 @@ target_link_libraries(${LIB}
     ${Qt5Network_LIBRARIES}
     ${Qt5Quick_LIBRARIES}
     ${Qt5PrintSupport_LIBRARIES}
+    ${Qt5Script_LIBRARIES}
 )
 
 # copy qmldir file into build directory for shadow builds

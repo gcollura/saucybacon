@@ -29,8 +29,6 @@ Page {
 
     title: recipe.exists() ? i18n.tr("Edit recipe") : i18n.tr("New recipe")
 
-    property var recipe: Recipe { }
-
     tools: ToolbarItems {
         ToolbarButton {
             iconSource: icon('save')
@@ -208,17 +206,6 @@ Page {
             }
         }
 
-    }
-
-    function computeTotalTime(time1, time2) {
-        var t1 = parseInt(time1);
-        var t2 = parseInt(time2);
-
-        var total = t1 + t2;
-        if (!total)
-            total = 0;
-
-        return total.toString();
     }
 
     function saveRecipe() {

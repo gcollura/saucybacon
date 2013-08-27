@@ -11,6 +11,7 @@ find_package(Qt5Core            REQUIRED)
 find_package(Qt5PrintSupport    REQUIRED)
 find_package(Qt5Network         REQUIRED)
 find_package(Qt5Quick           REQUIRED)
+find_package(Qt5Script          REQUIRED)
 
 add_definitions(-DWITHQT5=1)
 

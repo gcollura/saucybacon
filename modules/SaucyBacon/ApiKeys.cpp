@@ -17,20 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-import QtQuick 2.0
-import Ubuntu.Components 0.1
-import QtWebKit 3.0
+#include "ApiKeys.h"
 
-Page {
-    title: "None"
-
-    property alias url: page.url
-    WebView {
-        id: page
-        anchors {
-            left: parent.left
-            right: parent.right
-        }
-        height: parent.height
-    }
-}
+const QString ApiKeys::F2FKEY = QString("bed9a0385fc98548af8018eccda97e24");
+const QString ApiKeys::F2FGETURL = QString("http://food2fork.com/api/get");
+const QString ApiKeys::F2FSEARCHURL = QString("http://food2fork.com/api/search");

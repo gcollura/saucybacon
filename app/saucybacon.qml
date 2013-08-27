@@ -137,6 +137,8 @@ MainView {
             categories = utils.get("categories");
             searches = utils.get("searches");
         }
+
+        console.log(utils.path(Utils.DesktopLocation));
     }
 
     function saveSettings() {

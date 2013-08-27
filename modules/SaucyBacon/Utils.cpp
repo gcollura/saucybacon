@@ -25,14 +25,14 @@
 Utils::Utils(QObject *parent) :
     QObject(parent) {
 
-    auto json = QJsonDocument::fromJson(read(homePath(), "sb-settings.json").toUtf8()).object();
+    auto json = QJsonDocument::fromJson(read(path(Utils::HomeLocation), "sb-settings.json").toUtf8()).object();
     m_settings = json.toVariantMap();
 }
 
 Utils::~Utils() {
     auto json = QJsonObject::fromVariantMap(m_settings);
     QJsonDocument document(json);
-    write(homePath(), "sb-settings.json", document.toJson());
+    write(path(Utils::HomeLocation), "sb-settings.json", document.toJson());
 }
 
 bool Utils::createDir(const QString &dirName) {
@@ -43,8 +43,8 @@ bool Utils::createDir(const QString &dirName) {
     return dir.exists();
 }
 
-QString Utils::homePath() const {
-    return QDir::homePath();
+QString Utils::path(StandardLocation location) const {
+    return QStandardPaths::standardLocations((QStandardPaths::StandardLocation) location)[0];
 }
 
 bool Utils::write(const QString& dirName, const QString& fileName, const QByteArray& contents) {

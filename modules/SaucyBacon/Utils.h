@@ -25,13 +25,22 @@
 class Utils : public QObject
 {
     Q_OBJECT
+    Q_ENUMS(StandardLocation)
 
 public:
     explicit Utils(QObject *parent = 0);
     ~Utils();
 
+    enum StandardLocation {
+        DesktopLocation = QStandardPaths::DesktopLocation,
+        DocumentsLocation = QStandardPaths::DocumentsLocation,
+        PicturesLocation = QStandardPaths::PicturesLocation,
+        HomeLocation = QStandardPaths::HomeLocation,
+        ConfigLocation = QStandardPaths::ConfigLocation
+    };
+
     Q_INVOKABLE bool createDir(const QString& dirName);
-    Q_INVOKABLE QString homePath() const;
+    Q_INVOKABLE QString path(StandardLocation location) const;
 
     Q_INVOKABLE bool write(const QString& dirName, const QString& fileName, const QByteArray &contents);
     Q_INVOKABLE QString read(const QString& dirName, const QString& fileName);

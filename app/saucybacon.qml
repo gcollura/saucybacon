@@ -19,6 +19,7 @@
 
 import QtQuick 2.0
 import Ubuntu.Components 0.1
+import Ubuntu.Layouts 0.1
 import U1db 1.0 as U1db
 import SaucyBacon 0.1
 
@@ -36,7 +37,7 @@ MainView {
     automaticOrientation: true
     property bool wideAspect: width > units.gu(80)
 
-    width: units.gu(100)
+    width: units.gu(70)
     height: units.gu(75)
 
     headerColor: "#640707"
@@ -73,24 +74,16 @@ MainView {
 
             visible: false
         }
-
-//        WebPage {
-//            objectName: "webPage"
-//            id: webPage
-
-//            visible: false
-//        }
-
     }
 
     Component.onCompleted: {
         loadSettings();
 
-        if (width < units.gu(80))
-            pageStack.push(recipeListPage)
-        else {
+        if (wideAspect) {
             pageStack.push(recipeListPage)
             console.log("Switch to tablet factor")
+        } else {
+            pageStack.push(recipeListPage)
         }
     }
 
@@ -132,13 +125,9 @@ MainView {
 
             utils.set("firstLoad", 1);
         } else {
-            height = utils.get("windowSize").height;
-            width = utils.get("windowSize").width;
             categories = utils.get("categories");
             searches = utils.get("searches");
         }
-
-        console.log(utils.path(Utils.DesktopLocation));
     }
 
     function saveSettings() {

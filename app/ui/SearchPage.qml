@@ -20,119 +20,177 @@
 import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
+import Ubuntu.Layouts 0.1
 import U1db 1.0 as U1db
 import SaucyBacon 0.1
+
+import "../components"
 
 Page {
     title: i18n.tr("Search")
 
-    U1db.Index {
-        database: recipesdb
-        id: searchIndex
-        expression: [ "name", "category", "difficulty", "veg",
-                      "preptime", "cooktime", "totaltime", "ingredients",
-                      "directions", "servings", "photos" ]
-    }
+    Layouts {
+        id: layouts
+        anchors.fill: parent
 
-    U1db.Query {
-        id: searchQuery
-        index: searchIndex
-        query: [{"name":"*"},{ "category":"*"}, {"difficulty":"*", "veg":"*",
-                "preptime":"*", "cooktime":"*", "totaltime":"*", "ingredients":"*",
-                "directions":"*", "servings":"*", "photos":"*"}]
-    }
+        layouts: [
+            ConditionalLayout {
+                name: "singleColumnLayout"
+                when: !wideAspect
 
-    Column {
-        anchors {
-            fill: parent
-            margins: units.gu(2)
-        }
+                ItemLayout {
+                    anchors {
+                        fill: parent
+                        margins: units.gu(2)
+                    }
+                    item: "searchColumn"
+                }
 
-        spacing: units.gu(2)
+            },
+            ConditionalLayout {
+                name: "landscapeLayout"
+                when: wideAspect
 
-        Row {
-            id: searchRow
-
-            width: parent.width
-            spacing: units.gu(2)
-
-            TextField {
-                id: searchField
-
-                width: parent.width - searchButton.width - parent.spacing
-                placeholderText: "Searching for a recipe..."
-
-                onAccepted: searchOnline(searchField.text)
-                onTextChanged: searchLocally(searchField.text)
-
-                Behavior on width { UbuntuNumberAnimation { } }
+                Row {
+                    anchors.fill: parent
+                    spacing: units.gu(2)
+                    ItemLayout {
+                        anchors {
+                            top: parent.top
+                            bottom: parent.bottom
+                        }
+                        width: units.gu(35)
+                        item: "searchSidebar"
+                    }
+                    ItemLayout {
+                        anchors {
+                            top: parent.top
+                            bottom: parent.bottom
+                            margins: units.gu(2)
+                        }
+                        width: parent.width - units.gu(35) - units.gu(4)
+                        item: "searchColumn"
+                    }
+                }
             }
 
-            Button {
-                id: searchButton
-                anchors.verticalCenter: parent.verticalCenter
-                visible: !search.loading
+        ]
 
-                height: searchField.height
-                width: units.gu(5)
+        Column {
+            id: searchColumn
+            Layouts.item: "searchColumn"
 
-                Image {
+            anchors.fill: parent
+            spacing: units.gu(2)
+
+            Row {
+                id: searchRow
+
+                width: parent.width
+                spacing: units.gu(2)
+
+                TextField {
+                    id: searchField
+
+                    width: parent.width - searchButton.width - parent.spacing
+                    placeholderText: "Search for a recipe..."
+
+                    onAccepted: searchOnline(searchField.text)
+                    onTextChanged: searchLocally(searchField.text)
+
+                    Behavior on width { UbuntuNumberAnimation { } }
+                }
+
+                Button {
+                    id: searchButton
                     anchors.verticalCenter: parent.verticalCenter
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    source: icon("search", true)
-                    sourceSize {
-                        height: parent.height - units.gu(1.5)
-                        width: parent.width - units.gu(1.5)
+                    visible: !search.loading
+
+                    height: searchField.height
+                    width: units.gu(5)
+
+                    Image {
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        source: icon("search", true)
+                        sourceSize {
+                            height: parent.height - units.gu(1.5)
+                            width: parent.width - units.gu(1.5)
+                        }
+                    }
+
+                    onClicked: searchOnline(searchField.text)
+                    Behavior on visible { UbuntuNumberAnimation { } }
+                }
+
+                ActivityIndicator {
+                    id: activity
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: searchButton.width
+                    running: search.loading
+                    visible: running
+                }
+            }
+
+            ListView {
+                id: resultList
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    margins: units.gu(-2)
+                }
+
+                height: parent.height - searchRow.height
+                clip: true
+
+                model: search
+
+                /* A delegate will be created for each Document retrieved from the Database */
+                delegate: ListItem.Subtitled {
+                    progression: true
+                    icon: contents.image_url
+                    text: contents.title
+                    subText: contents.publisher_url
+                    onClicked: {
+                        recipe.load(contents.recipe_id, contents.source_url, contents.publisher_url);
+                        pageStack.push(recipePage);
                     }
                 }
 
-                onClicked: searchOnline(searchField.text)
-                Behavior on visible { UbuntuNumberAnimation { } }
-            }
-
-            ActivityIndicator {
-                id: activity
-                anchors.verticalCenter: parent.verticalCenter
-                width: searchButton.width
-                running: search.loading
-                visible: running
-            }
-        }
-
-//        Label {
-//            id: instructions
-//            text: "Hello"
-//            font.pixelSize: units.gu(20)
-//        }
-
-        ListView {
-            id: resultList
-            anchors {
-                left: parent.left
-                right: parent.right
-                margins: units.gu(-2)
-            }
-
-            height: parent.height - searchRow.height
-            clip: true
-
-            model: search
-
-            /* A delegate will be created for each Document retrieved from the Database */
-            delegate: ListItem.Subtitled {
-                progression: true
-                icon: contents.image_url
-                text: contents.title
-                subText: contents.publisher_url
-                onClicked: {
-                    recipe.load(contents.recipe_id, contents.source_url, contents.publisher_url);
-                    pageStack.push(recipePage);
+                Scrollbar {
+                    flickableItem: resultList
                 }
             }
         }
 
+        Rectangle {
+            id: searchSidebar
+            Layouts.item: "searchSidebar"
+            anchors.fill: parent
 
-    }
+            color: Qt.rgba(0.1, 0.1, 0.1, 0.2)
+
+            property alias model: repeater.model
+
+            Column {
+                anchors.fill: parent
+
+                Repeater {
+                    id: repeater
+                    model: searches
+
+                    ListItem.Standard {
+                        text: modelData
+                        onClicked: {
+                            searchField.text = modelData;
+                            searchOnline(modelData);
+                        }
+                    }
+                }
+            }
+        }
+
+    } // Layouts
 
     RecipeSearch {
         id: search
@@ -145,7 +203,10 @@ Page {
 
         console.log("Perfoming remote search...");
         search.query = querystr;
-        searches.push(querystr);
+        if (searches.indexOf(querystr) < 0) {
+            searches.push(querystr);
+            searchSidebar.model = searches;
+        }
     }
 
     function searchLocally(querystr) {

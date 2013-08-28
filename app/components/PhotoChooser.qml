@@ -18,6 +18,7 @@
 **/
 
 import QtQuick 2.0
+import SaucyBacon 0.1
 import Ubuntu.Components 0.1
 import Ubuntu.Components.Popups 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
@@ -28,7 +29,7 @@ Dialog {
     title: i18n.tr("Add a Photo")
     text: i18n.tr("Locate the photo file.")
 
-    property string folderPath: utils.homePath()
+    property string folderPath: utils.path(Utils.PicturesLocation);
     property string file: ""
 
     onFileChanged: {

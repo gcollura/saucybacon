@@ -78,7 +78,10 @@ Item {
     }
 
     function newRecipe() {
-        docId = "";
+        if (docId)
+            docId = "";
+        else
+            reset();
     }
 
     function reset() {
@@ -168,7 +171,7 @@ Item {
     }
 
     function exportAsPdf() {
-        var fileName = utils.homePath() + "/" + name + ".pdf";
+        var fileName = utils.path(Utils.DocumentsLocation) + "/" + name + ".pdf";
 
         if (utils.exportAsPdf(fileName, getContents()))
             console.log("Saved PDF: " + fileName);

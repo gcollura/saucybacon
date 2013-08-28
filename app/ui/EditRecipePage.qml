@@ -211,9 +211,8 @@ Page {
                 Behavior on width { UbuntuNumberAnimation { duration: UbuntuAnimation.SlowDuration } }
             }
         }
-
-
     }
+
     function saveRecipe() {
 
         recipe.name = recipeName.text ? recipeName.text : i18n.tr("Misterious Recipe");
@@ -232,8 +231,8 @@ Page {
         recipe.photos = photoLayout.photos;
         recipe.restriction = recipeRestriction.selectedIndex;
 
+        pageStack.back();
         recipe.save();
-        pageStack.push(tabs);
 
     }
 

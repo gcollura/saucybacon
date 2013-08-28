@@ -24,6 +24,7 @@ import Ubuntu.Components.Popups 0.1
 //import Friends 0.1
 
 ToolbarItems {
+    id: toolbar
 
     ToolbarButton {
         text: i18n.tr("Export")
@@ -32,6 +33,7 @@ ToolbarItems {
         visible: recipe.exists()
         onTriggered: {
             recipe.exportAsPdf();
+            toolbar.opened = false;
         }
     }
 
@@ -42,6 +44,7 @@ ToolbarItems {
         visible: recipe.exists()
         onTriggered: {
             recipe.favorite = !recipe.favorite;
+            toolbar.opened = false;
             recipe.save();
         }
     }
@@ -69,7 +72,10 @@ ToolbarItems {
         iconSource: icon("save")
 
         visible: recipe.ready && !recipe.exists()
-        onTriggered: recipe.save()
+        onTriggered: {
+            toolbar.opened = false;
+            recipe.save()
+        }
     }
 
     ToolbarButton {

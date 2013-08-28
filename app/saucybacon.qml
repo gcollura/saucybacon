@@ -82,6 +82,10 @@ MainView {
 
             visible: false
         }
+
+        function back() {
+            pageStack.currentPage.tools.back.trigger();
+        }
     }
 
     Component.onCompleted: {

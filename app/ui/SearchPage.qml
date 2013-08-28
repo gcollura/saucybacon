@@ -20,7 +20,6 @@
 import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
-import Ubuntu.Layouts 0.1
 import U1db 1.0 as U1db
 import SaucyBacon 0.1
 
@@ -29,68 +28,45 @@ import "../components"
 Page {
     title: i18n.tr("Search")
 
-    Layouts {
-        id: layouts
-        anchors.fill: parent
+    Sidebar {
+        id: searchSidebar
+        autoFlick: false
+        expanded: wideAspect
+        header: i18n.tr("Search history")
 
-        layouts: [
-            ConditionalLayout {
-                name: "singleColumnLayout"
-                when: !wideAspect
+        property alias model: sidebarListView.model
 
-                Row {
-                    anchors.fill: parent
-                    spacing: units.gu(2)
-                    anchors.margins: units.gu(2)
-                    ItemLayout {
-                        // FIXME: I should not list this widget
-                        width: 0
-                        item: "searchSidebar"
-                    }
-                    ItemLayout {
-                        anchors {
-                            top: parent.top
-                            bottom: parent.bottom
-                        }
-                        width: parent.width
-                        item: "searchColumn"
-                        visible: true
-                    }
-                }
+        ListView {
+            id: sidebarListView
+            anchors.fill: parent
 
-            },
-            ConditionalLayout {
-                name: "landscapeLayout"
-                when: wideAspect
+            model: searches
 
-                Row {
-                    anchors.fill: parent
-                    spacing: units.gu(2)
-                    ItemLayout {
-                        anchors {
-                            top: parent.top
-                            bottom: parent.bottom
-                        }
-                        width: units.gu(35)
-                        item: "searchSidebar"
-                    }
-                    ItemLayout {
-                        anchors {
-                            top: parent.top
-                            bottom: parent.bottom
-                            margins: units.gu(2)
-                        }
-                        width: parent.width - units.gu(35) - units.gu(4)
-                        item: "searchColumn"
-                        visible: true
-                    }
+            delegate: ListItem.Standard {
+                text: modelData
+                onClicked: {
+                    searchField.text = modelData;
+                    searchOnline(modelData);
                 }
             }
-        ]
+
+        }
+    }
+
+    Item {
+        anchors {
+            left: searchSidebar.right
+            right: parent.right
+        }
+        height: parent.height
 
         Column {
             id: searchColumn
-            Layouts.item: "searchColumn"
+
+            anchors {
+                margins: units.gu(2)
+                fill: parent
+            }
             spacing: units.gu(2)
 
             Row {
@@ -172,33 +148,7 @@ Page {
                 }
             }
         }
-
-        Sidebar {
-            id: searchSidebar
-            Layouts.item: "searchSidebar"
-            autoFlick: false
-            expanded: wideAspect
-
-            property alias model: sidebarListView.model
-
-            ListView {
-                id: sidebarListView
-                anchors.fill: parent
-
-                model: searches
-
-                delegate: ListItem.Standard {
-                    text: modelData
-                    onClicked: {
-                        searchField.text = modelData;
-                        searchOnline(modelData);
-                    }
-                }
-
-            }
-        }
-
-    } // Layouts
+    }
 
     RecipeSearch {
         id: search

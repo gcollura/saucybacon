@@ -82,7 +82,6 @@ MainView {
 
         if (wideAspect) {
             pageStack.push(recipeListPage)
-            console.log("Switch to tablet factor")
         } else {
             pageStack.push(recipeListPage)
         }
@@ -126,6 +125,9 @@ MainView {
 
             utils.set("firstLoad", 1);
         } else {
+            // Restore previous size
+            height = utils.get("windowSize").height;
+            width = utils.get("windowSize").width;
             categories = utils.get("categories");
             searches = utils.get("searches");
         }

@@ -59,6 +59,12 @@ RecipeParser::RecipeParser(QObject *parent) :
     QObject(parent) {
 
     RecipeRegex recipeRegex;
+    // Default regex
+    recipeRegex["directions"] = QRegularExpression("a^");
+    recipeRegex["preptime"] = QRegularExpression("a^");
+    recipeRegex["cooktime"] = QRegularExpression("a^");
+    m_services["default"] = recipeRegex;
+
     // Allrecipes
     recipeRegex["directions"] = QRegularExpression("<li><span class=\"plaincharacterwrap break\">(.*)</span></li>");
     recipeRegex["preptime"] = QRegularExpression("<span id=\"prepMinsSpan\"><em>(\\d+)</em>");
@@ -166,10 +172,8 @@ void RecipeParser::parseHtml(const QByteArray &html) {
     if (m_services.contains(m_service))
         defaultRegex = m_services[m_service];
     else {
+        defaultRegex = m_services["default"];
         qDebug() << "Site not supported yet.";
-        m_parseHtml = true;
-        hasFinishedParsing();
-        return;
     }
 
     QRegularExpressionMatchIterator matchDirections = defaultRegex["directions"].globalMatch(html);

@@ -67,7 +67,7 @@ Page {
             focus: true
             delegate: RecipeListItem {
                 minimal: true
-                progression: ListView.isCurrentItem
+                progression: docId === recipe.docId
             }
         }
     }
@@ -90,7 +90,7 @@ Page {
             }
 
             contentHeight: layout.height
-            interactive: contentHeight + units.gu(10) > height
+            interactive: contentHeight > height
 
             visible: recipe.ready
             clip: true

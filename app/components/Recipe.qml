@@ -26,13 +26,16 @@ Item {
     RecipeParser {
         id: parser
 
-        onContentsChanged: setContents(parser.contents);
+        onContentsChanged: {
+            if (contents)
+                setContents(parser.contents);
+        }
     }
 
     property bool ready: !parser.loading
     function load(recipeId, recipeUrl, serviceUrl) {
         if (docId)
-            docId = "";
+            newRecipe();
         else
             reset(); // hard reset, if the docId was already null
         parser.get(recipeId, recipeUrl, serviceUrl);
@@ -60,6 +63,7 @@ Item {
     // Signals
     signal changed
     signal saved
+    signal deleted
 
     onDocIdChanged: {
         if (exists()) {
@@ -69,6 +73,10 @@ Item {
         }
 
         changed();
+    }
+
+    function newRecipe() {
+        docId = "";
     }
 
     function reset() {
@@ -146,8 +154,10 @@ Item {
     }
 
     function remove() {
-        console.log("Cannot delete this recipe at the moment.");
-        console.log("U1db does not support Document deletetion.")
+        if (docId) {
+            recipesdb.putDoc("", docId);
+            deleted();
+        }
     }
 
     function exportAsPdf() {

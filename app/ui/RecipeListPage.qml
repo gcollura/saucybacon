@@ -27,39 +27,61 @@ Page {
 
     tools: RecipeListPageToolbar {
         objectName: "recipesTabToolbar"
-        opened: wideAspect
     }
 
-    Component {
-        id: sectionDelegate
-        Rectangle {
-            width: parent.width
-            height: units.gu(5)
+    Sidebar {
+        id: sidebar
+        expanded: wideAspect
 
-            Text {
-                text: section
+        Column {
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+
+            Standard {
+                text: i18n.tr("Favorites")
+            }
+
+            Header {
+                text: i18n.tr("Categories")
+            }
+
+            Repeater {
+                model: categories
+                Standard {
+                    text: modelData
+                }
             }
         }
     }
 
-    ListView {
-        objectName: "recipesListView"
-        id: listView
-
-        anchors.fill: parent
-
-        model: recipesdb
-        section.property: "contents.category"
-        section.criteria: ViewSection.FullString
-        section.delegate: sectionDelegate
-
-        /* A delegate will be created for each Document retrieved from the Database */
-        delegate: RecipeListItem {
-            height: units.gu(8)
+    Item {
+        anchors {
+            left: sidebar.right
+            top: parent.top
+            right: parent.right
+            bottom: parent.bottom
         }
+
+        ListView {
+            objectName: "recipesListView"
+            id: listView
+
+            anchors.fill: parent
+            clip: true
+
+            model: recipesdb
+
+            /* A delegate will be created for each Document retrieved from the Database */
+            delegate: RecipeListItem {
+            }
+
+            Scrollbar {
+                flickableItem: listView
+            }
+        }
+
     }
 
-    Scrollbar {
-        flickableItem: listView
-    }
 }

@@ -34,7 +34,7 @@ ToolbarItems {
         text: i18n.tr("New")
 
         onTriggered: {
-            recipe.reset();
+            recipe.newRecipe();
             pageStack.push(editRecipePage);
         }
     }

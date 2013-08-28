@@ -21,7 +21,6 @@ import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.Popups 0.1
 import Ubuntu.Components.ListItems 0.1
-import Ubuntu.Layouts 0.1
 
 import "../components"
 
@@ -49,77 +48,24 @@ Page {
             topMargin: units.gu(2)
             bottomMargin: units.gu(2)
         }
-        contentHeight: layouts.childrenRect.height
-        interactive: contentHeight + units.gu(5) > height // +10 because of strange ValueSelector height
+        contentHeight: layout.height
+        interactive: contentHeight + units.gu(5) > height // +5 because of strange ValueSelector height
 
-        Layouts {
-            id: layouts
-            anchors.fill: parent
+        Grid {
+            id: layout
+            anchors {
+                left: parent.left
+                right: parent.right
+                margins: units.gu(2)
+            }
+            spacing: wideAspect ? units.gu(4) : units.gu(2)
+            columns: wideAspect ? 2 : 1
 
-            layouts: [
-                ConditionalLayout {
-                    name: "singleColumnLayout"
-                    when: !wideAspect
-
-                    Column {
-                        id: column
-                        anchors {
-                            left: parent.left
-                            right: parent.right
-                            margins: units.gu(2)
-                        }
-                        spacing: units.gu(2)
-
-                        ItemLayout {
-                            item: "firstColumn"
-                            anchors {
-                                left: parent.left
-                                right: parent.right
-                            }
-                            height: firstColumn.childrenRect.height
-                        }
-                        ItemLayout {
-                            item: "secondColumn"
-                            anchors {
-                                left: parent.left
-                                right: parent.right
-                            }
-                            height: secondColumn.childrenRect.height
-                        }
-                    }
-
-                },
-                ConditionalLayout {
-                    name: "landscapeLayout"
-                    when: wideAspect
-
-                    Row {
-                        anchors {
-                            left: parent.left
-                            right: parent.right
-                            margins: units.gu(2)
-                        }
-                        spacing: units.gu(4)
-
-                        ItemLayout {
-                            item: "firstColumn"
-                            width: parent.width / 2 - units.gu(2)
-                            height: firstColumn.childrenRect.height
-                        }
-
-                        ItemLayout {
-                            item: "secondColumn"
-                            width: parent.width / 2 - units.gu(2)
-                            height: secondColumn.childrenRect.height
-                        }
-                    }
-                }
-
-            ]
+            Behavior on columns { UbuntuNumberAnimation { duration: UbuntuAnimation.SlowDuration } }
 
             Column {
                 id: firstColumn
-                Layouts.item: "firstColumn"
+                width: wideAspect ? parent.width / 2 - units.gu(2) : parent.width
                 spacing: units.gu(2)
 
                 TextField {
@@ -240,7 +186,7 @@ Page {
 
             Column {
                 id: secondColumn
-                Layouts.item: "secondColumn"
+                width: wideAspect ? parent.width / 2 - units.gu(2) : parent.width
                 spacing: units.gu(2)
 
                 TextArea {

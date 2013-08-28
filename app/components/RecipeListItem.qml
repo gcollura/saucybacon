@@ -27,6 +27,8 @@ ListItem.Subtitled {
 
     icon: contents.photos[0] ? Qt.resolvedUrl(contents.photos[0]) : Qt.resolvedUrl("../../graphics/toolbarIcon@8.png")
 
+    property bool minimal: false
+
     Column {
         id: right
         anchors {
@@ -51,6 +53,7 @@ ListItem.Subtitled {
             verticalCenter: parent.verticalCenter
             right: parent.right
         }
+        visible: !minimal
         Label {
             anchors.verticalCenter: parent.verticalCenter
             text: restrictions[contents.restriction]

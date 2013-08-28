@@ -32,6 +32,10 @@ import Ubuntu.Components.ListItems 0.1
 
     To show or hide, set the expanded property.
 
+    By default, the sidebar has a flickable built in, and whatever contents are added
+    will be placed in the flickable. When you want this disabled, or want to fill the
+    entire sidebar, set the autoFill property to false.
+
     Examples:
     \qml
         property bool wideAspect: width > units.gu(80)
@@ -46,7 +50,7 @@ import Ubuntu.Components.ListItems 0.1
 Rectangle {
     id: root
 
-    color: Qt.rgba(0.1,0.1,0.1,0.2)
+    color: Qt.rgba(0.2,0.2,0.2,0.4)
 
     property bool expanded: true
 
@@ -59,7 +63,7 @@ Rectangle {
         top: parent.top
         bottom: parent.bottom
     }
-/*
+
     VerticalDivider {
         mode: root.mode
 
@@ -70,21 +74,21 @@ Rectangle {
             left: mode === "right" ? parent.left : undefined
             rightMargin: -1
         }
-    }*/
+    }
 
     width: units.gu(35)
 
 
-//    anchors.leftMargin: expanded ? 0 : -width
-//    anchors.rightMargin: expanded ? 0 : -width
+    anchors.leftMargin: expanded ? 0 : -width
+    anchors.rightMargin: expanded ? 0 : -width
 
-//    Behavior on anchors.leftMargin {
-//        UbuntuNumberAnimation {}
-//    }
+    Behavior on anchors.leftMargin {
+        UbuntuNumberAnimation {}
+    }
 
-//    Behavior on anchors.rightMargin {
-//        UbuntuNumberAnimation {}
-//    }
+    Behavior on anchors.rightMargin {
+        UbuntuNumberAnimation {}
+    }
 
     default property alias contents: contents.data
 
@@ -93,6 +97,8 @@ Rectangle {
 
         visible: text !== ""
     }
+
+    property bool autoFlick: true
 
     Flickable {
         id: flickable
@@ -109,14 +115,28 @@ Rectangle {
         }
 
         contentWidth: width
-        contentHeight: contents.height
+        contentHeight: autoFlick ? contents.height : height
         interactive: contentHeight > height
 
         Item {
             id: contents
 
             width: flickable.width
-            height: childrenRect.height
+            height: autoFlick ? childrenRect.height : flickable.height
+        }
+
+        function getFlickableChild(item) {
+            if (item && item.hasOwnProperty("children")) {
+                for (var i=0; i < item.children.length; i++) {
+                    var child = item.children[i];
+                    if (internal.isVerticalFlickable(child)) {
+                        if (child.anchors.top === page.top || child.anchors.fill === page) {
+                            return item.children[i];
+                        }
+                    }
+                }
+            }
+            return null;
         }
     }
 

@@ -38,12 +38,24 @@ Page {
                 name: "singleColumnLayout"
                 when: !wideAspect
 
-                ItemLayout {
-                    anchors {
-                        fill: parent
-                        margins: units.gu(2)
+                Row {
+                    anchors.fill: parent
+                    spacing: units.gu(2)
+                    anchors.margins: units.gu(2)
+                    ItemLayout {
+                        // FIXME: I should not list this widget
+                        width: 0
+                        item: "searchSidebar"
                     }
-                    item: "searchColumn"
+                    ItemLayout {
+                        anchors {
+                            top: parent.top
+                            bottom: parent.bottom
+                        }
+                        width: parent.width
+                        item: "searchColumn"
+                        visible: true
+                    }
                 }
 
             },
@@ -70,17 +82,15 @@ Page {
                         }
                         width: parent.width - units.gu(35) - units.gu(4)
                         item: "searchColumn"
+                        visible: true
                     }
                 }
             }
-
         ]
 
         Column {
             id: searchColumn
             Layouts.item: "searchColumn"
-
-            anchors.fill: parent
             spacing: units.gu(2)
 
             Row {
@@ -163,30 +173,28 @@ Page {
             }
         }
 
-        Rectangle {
+        Sidebar {
             id: searchSidebar
             Layouts.item: "searchSidebar"
-            anchors.fill: parent
+            autoFlick: false
+            expanded: wideAspect
 
-            color: Qt.rgba(0.1, 0.1, 0.1, 0.2)
+            property alias model: sidebarListView.model
 
-            property alias model: repeater.model
-
-            Column {
+            ListView {
+                id: sidebarListView
                 anchors.fill: parent
 
-                Repeater {
-                    id: repeater
-                    model: searches
+                model: searches
 
-                    ListItem.Standard {
-                        text: modelData
-                        onClicked: {
-                            searchField.text = modelData;
-                            searchOnline(modelData);
-                        }
+                delegate: ListItem.Standard {
+                    text: modelData
+                    onClicked: {
+                        searchField.text = modelData;
+                        searchOnline(modelData);
                     }
                 }
+
             }
         }
 

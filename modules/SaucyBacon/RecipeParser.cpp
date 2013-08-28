@@ -44,7 +44,7 @@ QJsonArray parseIngredients(const QJsonArray &ingredients) {
             ingredient["quantity"] = evaluate(match.captured("quantity").replace("-", "+"));
             ingredient["type"] = match.captured("type");
         } else {
-            ingredient["name"] = ingredients[i].toString();
+            ingredient["name"] = ingredients[i].toString().trimmed();
             ingredient["quantity"] = 0;
             ingredient["type"] = QString();
         }

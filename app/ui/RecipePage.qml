@@ -45,144 +45,176 @@ Page {
             anchors {
                 top: indicator.bottom
                 horizontalCenter: parent.horizontalCenter
+                topMargin: units.gu(4)
             }
             text: i18n.tr("I am loading your recipe, please hold still")
             fontSize: "large"
         }
     }
 
-    Flickable {
-        id: flickable
-
+    Sidebar {
+        id: sidebar
+        expanded: extraWideAspect && recipe.ready
+        autoFlick: false
+        header: i18n.tr("Recipes")
         anchors {
-            fill: parent
-            topMargin: units.gu(2)
-            bottomMargin: units.gu(2)
+            top: parent.top
         }
 
-        contentHeight: layout.height
-        interactive: contentHeight + units.gu(10) > height
+        ListView {
+            anchors.fill: parent
+            model: recipesdb
+            focus: true
+            delegate: RecipeListItem {
+                minimal: true
+                progression: ListView.isCurrentItem
+            }
+        }
+    }
 
-        visible: recipe.ready
+    Item {
+        anchors {
+            left: sidebar.right
+            top: parent.top
+            right: parent.right
+            bottom: parent.bottom
+        }
 
-        Grid {
-            id: layout
+        Flickable {
+            id: flickable
 
             anchors {
-                left: parent.left
-                right: parent.right
-                margins: units.gu(2)
+                fill: parent
+                topMargin: units.gu(2)
+                bottomMargin: units.gu(2)
             }
-            spacing: wideAspect ? units.gu(4) : units.gu(2)
-            columns: wideAspect ? 2 : 1
 
-            Behavior on columns { UbuntuNumberAnimation { duration: UbuntuAnimation.SlowDuration } }
+            contentHeight: layout.height
+            interactive: contentHeight + units.gu(10) > height
 
-            Column {
-                width: wideAspect ? parent.width / 2 - units.gu(2) : parent.width
-                spacing: units.gu(2)
+            visible: recipe.ready
+            clip: true
 
-                Item {
-                    width: parent.width
-                    height: totaltimeLabel.height
+            Grid {
+                id: layout
 
-                    Label {
-                        id: totaltimeLabel
-                        anchors.left: parent.left
-                        text: i18n.tr("%1".arg(recipe.totaltime))
-                    }
-                    Label {
-                        anchors.right: parent.right
-                        text: i18n.tr("Prep: %1 mins, Cook: %2 mins".arg(recipe.preptime).arg(recipe.cooktime))
-                    }
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    margins: units.gu(2)
                 }
+                spacing: wideAspect ? units.gu(4) : units.gu(2)
+                columns: wideAspect ? 2 : 1
 
-                Label {
-                    id: difficultyLabel
-                    text: i18n.tr("Difficulty: %1".arg(difficulties[recipe.difficulty]))
-                }
-
-                Label {
-                    id: restrictionLabel
-                    text: i18n.tr("Restriction: %1".arg(restrictions[recipe.restriction]));
-                }
-
-                ListItem.ThinDivider {
-                    anchors.margins: units.gu(-2)
-                }
-
-                Label {
-                    text: i18n.tr("Ingredients")
-                    fontSize: "large"
-                    font.bold: true
-                }
+                Behavior on columns { UbuntuNumberAnimation { duration: UbuntuAnimation.SlowDuration } }
 
                 Column {
-                    width: parent.width
+                    width: wideAspect ? parent.width / 2 - units.gu(2) : parent.width
+                    anchors.margins: units.gu(2)
+                    spacing: units.gu(2)
 
-                    Repeater {
-                        id: ingredientsList
+                    Item {
                         width: parent.width
-                        model: recipe.ingredients
+                        height: totaltimeLabel.height
 
-                        delegate: Label {
+                        Label {
+                            id: totaltimeLabel
+                            anchors.left: parent.left
+                            text: i18n.tr("%1".arg(recipe.totaltime))
+                        }
+                        Label {
+                            anchors.right: parent.right
+                            text: i18n.tr("Prep: %1 mins, Cook: %2 mins".arg(recipe.preptime).arg(recipe.cooktime))
+                        }
+                    }
+
+                    Label {
+                        id: difficultyLabel
+                        text: i18n.tr("Difficulty: %1".arg(difficulties[recipe.difficulty]))
+                    }
+
+                    Label {
+                        id: restrictionLabel
+                        text: i18n.tr("Restriction: %1".arg(restrictions[recipe.restriction]));
+                    }
+
+                    ListItem.ThinDivider {
+                        anchors.margins: units.gu(-2)
+                    }
+
+                    Label {
+                        text: i18n.tr("Ingredients")
+                        fontSize: "large"
+                        font.bold: true
+                    }
+
+                    Column {
+                        width: parent.width
+
+                        Repeater {
+                            id: ingredientsList
                             width: parent.width
-                            text: txt(modelData.quantity, modelData.type, modelData.name)
-                            wrapMode: Text.Wrap
+                            model: recipe.ingredients
 
-                            function txt(quantity, type, name) {
-                                var output = "";
-                                output += quantity ? "%1 ".arg(quantity) : "";
-                                output += type + " " + name;
-                                return output;
+                            delegate: Label {
+                                width: parent.width
+                                text: txt(modelData.quantity, modelData.type, modelData.name)
+                                wrapMode: Text.Wrap
+
+                                function txt(quantity, type, name) {
+                                    var output = "";
+                                    output += quantity ? "%1 ".arg(quantity) : "";
+                                    output += type + " " + name;
+                                    return output;
+                                }
                             }
                         }
                     }
+
+                    ListItem.ThinDivider {
+                        visible: recipe.photos.length > 0
+                        anchors.margins: units.gu(-2)
+                    }
+
+                    PhotoLayout {
+                        id: photoLayout
+                        clip: wideAspect
+                        editable: false
+                        iconSize: units.gu(12)
+
+                        photos: recipe.photos
+                    }
+
+                    ListItem.ThinDivider {
+                        visible: !wideAspect
+                        anchors.margins: units.gu(-2)
+                    }
+
+                    Behavior on width { UbuntuNumberAnimation { duration: UbuntuAnimation.SlowDuration } }
+
                 }
 
-                ListItem.ThinDivider {
-                    visible: recipe.photos.length > 0
-                    anchors.margins: units.gu(-2)
-                }
+                Column {
+                    id: secondColumn
+                    width: wideAspect ? parent.width / 2 - units.gu(2) : parent.width
+                    spacing: units.gu(2)
 
-                PhotoLayout {
-                    id: photoLayout
-                    clip: wideAspect
-                    editable: false
-                    iconSize: units.gu(12)
+                    Label {
+                        id: label
+                        text: i18n.tr("Directions")
 
-                    photos: recipe.photos
-                }
+                        fontSize: "large"
+                        font.bold: true
+                    }
 
-                ListItem.ThinDivider {
-                    visible: !wideAspect
-                    anchors.margins: units.gu(-2)
-                }
+                    Label {
+                        id: directionsLabel
+                        width: parent.width
 
-                Behavior on width { UbuntuNumberAnimation { duration: UbuntuAnimation.SlowDuration } }
+                        text: recipe.directions
 
-            }
-
-            Column {
-                id: secondColumn
-                width: wideAspect ? parent.width / 2 - units.gu(2) : parent.width
-                spacing: units.gu(2)
-
-                Label {
-                    id: label
-                    text: i18n.tr("Directions")
-
-                    fontSize: "large"
-                    font.bold: true
-                }
-
-                Label {
-                    id: directionsLabel
-                    width: parent.width
-
-                    text: recipe.directions
-
-                    wrapMode: Text.Wrap
+                        wrapMode: Text.Wrap
+                    }
                 }
             }
         }

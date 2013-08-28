@@ -20,8 +20,8 @@
 import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.Popups 0.1
-import Ubuntu.OnlineAccounts 0.1
-import Friends 0.1
+//import Ubuntu.OnlineAccounts 0.1
+//import Friends 0.1
 
 ToolbarItems {
 

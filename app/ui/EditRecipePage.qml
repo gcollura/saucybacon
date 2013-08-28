@@ -43,20 +43,18 @@ Page {
 
     Flickable {
         id: flickable
+
         anchors {
+            fill: parent
             topMargin: units.gu(2)
             bottomMargin: units.gu(2)
-            fill: parent
         }
-        contentHeight: layouts.height
-        interactive: contentHeight + units.gu(10) > height // +10 because of strange ValueSelector height
+        contentHeight: layouts.childrenRect.height
+        interactive: contentHeight + units.gu(5) > height // +10 because of strange ValueSelector height
 
         Layouts {
             id: layouts
-            anchors {
-                left: parent.left
-                right: parent.right
-            }
+            anchors.fill: parent
 
             layouts: [
                 ConditionalLayout {
@@ -64,6 +62,7 @@ Page {
                     when: !wideAspect
 
                     Column {
+                        id: column
                         anchors {
                             left: parent.left
                             right: parent.right
@@ -73,13 +72,22 @@ Page {
 
                         ItemLayout {
                             item: "firstColumn"
-                            width: parent.width
+                            anchors {
+                                left: parent.left
+                                right: parent.right
+                            }
+                            height: firstColumn.childrenRect.height
                         }
                         ItemLayout {
                             item: "secondColumn"
-                            width: parent.width
+                            anchors {
+                                left: parent.left
+                                right: parent.right
+                            }
+                            height: secondColumn.childrenRect.height
                         }
                     }
+
                 },
                 ConditionalLayout {
                     name: "landscapeLayout"
@@ -87,40 +95,47 @@ Page {
 
                     Row {
                         anchors {
+                            left: parent.left
+                            right: parent.right
                             margins: units.gu(2)
-                            fill: parent
                         }
-                        spacing: units.gu(2)
+                        spacing: units.gu(4)
+
                         ItemLayout {
-                            width: parent.width / 2
                             item: "firstColumn"
+                            width: parent.width / 2 - units.gu(2)
+                            height: firstColumn.childrenRect.height
                         }
+
                         ItemLayout {
-                            width: parent.width / 2
                             item: "secondColumn"
+                            width: parent.width / 2 - units.gu(2)
+                            height: secondColumn.childrenRect.height
                         }
                     }
                 }
+
             ]
 
             Column {
                 id: firstColumn
                 Layouts.item: "firstColumn"
-
-                anchors.fill: parent
                 spacing: units.gu(2)
 
                 TextField {
                     id: recipeName
                     width: parent.width
 
-
                     text: recipe.name
                     placeholderText: i18n.tr("Enter a name for your recipe")
                 }
 
                 Column {
-                    anchors { left: parent.left; right: parent.right; margins: units.gu(-2) }
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                        margins: units.gu(-2)
+                    }
 
                     ValueSelector {
                         id: recipeCategory
@@ -224,9 +239,8 @@ Page {
             }
 
             Column {
+                id: secondColumn
                 Layouts.item: "secondColumn"
-
-                anchors.fill: parent
                 spacing: units.gu(2)
 
                 TextArea {
@@ -253,44 +267,44 @@ Page {
         }
 
 
-        function saveRecipe() {
+    }
+    function saveRecipe() {
 
-            recipe.name = recipeName.text ? recipeName.text : i18n.tr("Misterious Recipe");
-            recipe.category = categories[recipeCategory.selectedIndex];
-            recipe.difficulty = recipeDifficulty.selectedIndex;
-            recipe.restriction = recipeRestriction.selectedIndex;
+        recipe.name = recipeName.text ? recipeName.text : i18n.tr("Misterious Recipe");
+        recipe.category = categories[recipeCategory.selectedIndex];
+        recipe.difficulty = recipeDifficulty.selectedIndex;
+        recipe.restriction = recipeRestriction.selectedIndex;
 
-            recipe.preptime = prepTime.text;
-            recipe.cooktime = cookTime.text;
-            recipe.totaltime = totalTime.text;
+        recipe.preptime = prepTime.text;
+        recipe.cooktime = cookTime.text;
+        recipe.totaltime = totalTime.text;
 
-            recipe.ingredients = ingredientsLayout.getIngredients();
+        recipe.ingredients = ingredientsLayout.getIngredients();
 
-            recipe.directions = recipeDirections.text;
+        recipe.directions = recipeDirections.text;
 
-            recipe.photos = photoLayout.photos;
-            recipe.restriction = recipeRestriction.selectedIndex;
+        recipe.photos = photoLayout.photos;
+        recipe.restriction = recipeRestriction.selectedIndex;
 
-            recipe.save();
-            pageStack.push(recipeListPage);
+        recipe.save();
+        pageStack.push(recipeListPage);
 
-        }
+    }
 
-        onVisibleChanged: {
-            if (!visible)
-                return;
+    onVisibleChanged: {
+        if (!visible)
+            return;
 
-            // WORKAROUND: Refresh some widgets that may forget they configuration
-            // for example when they cleared using the clear button
-            recipeName.text = recipe.name
-            recipeCategory.selectedIndex = recipe.category ? categories.indexOf(recipe.category) : 0;
-            recipeDifficulty.selectedIndex = recipe.difficulty;
-            recipeRestriction.selectedIndex = recipe.restriction;
+        // WORKAROUND: Refresh some widgets that may forget they configuration
+        // for example when they cleared using the clear button
+        recipeName.text = recipe.name
+        recipeCategory.selectedIndex = recipe.category ? categories.indexOf(recipe.category) : 0;
+        recipeDifficulty.selectedIndex = recipe.difficulty;
+        recipeRestriction.selectedIndex = recipe.restriction;
 
-            prepTime.text = recipe.preptime > 0 ? recipe.preptime : "";
-            cookTime.text = recipe.cooktime > 0 ? recipe.cooktime : "";
+        prepTime.text = recipe.preptime > 0 ? recipe.preptime : "";
+        cookTime.text = recipe.cooktime > 0 ? recipe.cooktime : "";
 
-            recipeDirections.text = recipe.directions;
-        }
+        recipeDirections.text = recipe.directions;
     }
 }

@@ -233,7 +233,7 @@ Page {
         recipe.restriction = recipeRestriction.selectedIndex;
 
         recipe.save();
-        pageStack.push(recipeListPage);
+        pageStack.push(tabs);
 
     }
 

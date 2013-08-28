@@ -48,11 +48,25 @@ MainView {
     PageStack {
         id: pageStack
 
-        RecipeListPage {
-            objectName: "recipeListPage"
-            id: recipeListPage
+        Tabs {
+            objectName: "tabs"
+            id: tabs
 
-            visible: false
+            Tab {
+                title: page.title
+                page: RecipeListPage {
+                    objectName: "recipeListPage"
+                    id: recipeListPage
+                }
+            }
+
+            Tab {
+                title: page.title
+                page: SearchPage {
+                    objectName: "searchPage"
+                    id: searchPage
+                }
+            }
         }
 
         RecipePage {
@@ -68,23 +82,12 @@ MainView {
 
             visible: false
         }
-
-        SearchPage {
-            objectName: "searchPage"
-            id: searchPage
-
-            visible: false
-        }
     }
 
     Component.onCompleted: {
         loadSettings();
 
-        if (wideAspect) {
-            pageStack.push(recipeListPage)
-        } else {
-            pageStack.push(recipeListPage)
-        }
+        pageStack.push(tabs)
     }
 
     Component.onDestruction: {

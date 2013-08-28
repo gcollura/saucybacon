@@ -155,10 +155,12 @@ void RecipeParser::replyFinished(QNetworkReply *reply) {
     if (reply->error() == QNetworkReply::NoError) {
 
         bool apiResponse = QUrl(ApiKeys::F2FURL).isParentOf(reply->url());
-        if (apiResponse)
+        if (apiResponse) {
             parseJson(reply->readAll());
-        else
+        } else {
+            m_contents["source"] = reply->url().toString();
             parseHtml(reply->readAll());
+        }
 
     } else {
         qDebug() << reply->errorString();

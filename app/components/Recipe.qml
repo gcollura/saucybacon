@@ -60,6 +60,8 @@ Item {
 
     property var photos: new Array()
 
+    property string source
+
     // Signals
     signal changed
     signal saved
@@ -96,6 +98,8 @@ Item {
         directions = "";
 
         photos = new Array();
+
+        source = "";
     }
 
     function setContents(contents) {
@@ -116,6 +120,8 @@ Item {
         directions = contents.directions ? contents.directions : "";
 
         photos = contents.photos ? contents.photos : [ ];
+
+        source = contents.source ? contents.source : "";
     }
 
     function getContents() {
@@ -131,7 +137,8 @@ Item {
             "ingredients": ingredients,
             "servings": servings,
             "directions": directions,
-            "photos": photos
+            "photos": photos,
+            "source": source
         }
     }
 

@@ -57,6 +57,22 @@ ToolbarItems {
     }
 
     ToolbarButton {
+        text: i18n.tr("Source")
+        //iconSource: icon("open")
+
+        visible: recipe.source.length > 0
+        onTriggered: console.log("Open " + recipe.source)
+    }
+
+    ToolbarButton {
+        text: i18n.tr("Save")
+        iconSource: icon("save")
+
+        visible: recipe.ready && !recipe.exists()
+        onTriggered: recipe.save()
+    }
+
+    ToolbarButton {
         text: i18n.tr("Edit")
         iconSource: icon("edit")
 

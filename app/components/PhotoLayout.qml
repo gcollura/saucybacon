@@ -110,7 +110,7 @@ Flickable {
         }
 
         function addPhoto(filename) {
-            photos.push(filename);
+            photos.pushBack(filename);
             photosChanged();
         }
 

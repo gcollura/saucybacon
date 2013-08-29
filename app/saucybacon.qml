@@ -128,10 +128,19 @@ MainView {
 
     function loadSettings() {
 
-        Array.prototype.push = function(item) {
+        Array.prototype.pushBack = function(item) {
             // Reimplement Array.push(..) to have always unique arrays
             if (this.indexOf(item) < 0)
-                this[this.length] = item;
+                this.push(item);
+        }
+
+        Array.prototype.unique = function() {
+            var o = {}, i, l = this.length, r = [];
+            for (i = 0; i < l; i += 1)
+                o[this[i]] = this[i];
+            for (i in o)
+                r.push(o[i]);
+            return r;
         }
 
         if (!utils.get("firstLoad")) {
@@ -158,16 +167,6 @@ MainView {
         if (local)
             return Qt.resolvedUrl("../graphics/icons/" + name + ".png")
         return "/usr/share/icons/ubuntu-mobile/actions/scalable/" + name + ".svg"
-    }
-
-    function settingsPath() {
-        return utils.path(Utils.ConfigLocation) + "/SaucyBacon/";
-    }
-
-    function onlyUnique(value, index, self) {
-        // Usage:   var a = ['a', 1, 'a', 2, '1'];
-        //          var unique = a.filter( onlyUnique ); -> ['a', 1, 2, '1']
-        return self.indexOf(value) === index;
     }
 
     function truncate(name, width, unit) {

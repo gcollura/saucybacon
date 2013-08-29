@@ -25,11 +25,10 @@
 
 // -------------------------------------------------------------
 
-double evaluate(const QString &expr) {
-    double result;
+QJsonValue evaluate(const QString &expr) {
     QScriptEngine myEngine;
-    result = myEngine.evaluate(expr).toNumber();
-    return result;
+    auto result = myEngine.evaluate(expr);
+    return result.isNumber() ? result.toNumber() : 0;
 }
 
 QJsonArray parseIngredients(const QJsonArray &ingredients) {
@@ -73,52 +72,102 @@ RecipeParser::RecipeParser(QObject *parent) :
 
     // SimplyRecipes
     recipeRegex["directions"] = QRegularExpression("<div itemprop=\"recipeInstructions\">(.+?)</div>",
-                                                            QRegularExpression::DotMatchesEverythingOption);
+                                                   QRegularExpression::DotMatchesEverythingOption);
     recipeRegex["preptime"] = QRegularExpression("class=\"preptime\".*?>(\\d+) ([mM]inutes|[hH]ours)<span");
     recipeRegex["cooktime"] = QRegularExpression("class=\"cooktime\".*?>(\\d+) ([mM]inutes|[hH]ours)<span");
     m_services["http://simplyrecipes.com"] = recipeRegex;
 
     // PioneerWoman
     recipeRegex["directions"] = QRegularExpression("<div itemprop=\"instructions\">(.*?)</div>",
-                                                     QRegularExpression::DotMatchesEverythingOption);
+                                                   QRegularExpression::DotMatchesEverythingOption);
     recipeRegex["preptime"] = QRegularExpression("itemprop=\'prepTime\'.*?>(\\d+) ([mM]inutes|[hH]ours)</time");
     recipeRegex["cooktime"] = QRegularExpression("itemprop=\'cookTime\'.*?>(\\d+) ([mM]inutes|[hH]ours)</time");
     m_services["http://thepioneerwoman.com"] = recipeRegex;
 
     // Two peas and their pot
     recipeRegex["directions"] = QRegularExpression("<div class=\"instructions\">(.*?)</div>",
-                                                        QRegularExpression::DotMatchesEverythingOption);
+                                                   QRegularExpression::DotMatchesEverythingOption);
     recipeRegex["preptime"] = QRegularExpression("class=\"preptime\".*?>(\\d+) ([mM]inutes|[hH]ours)</span");
     recipeRegex["cooktime"] = QRegularExpression("class=\"cooktime\".*?>(\\d+) ([mM]inutes|[hH]ours)</span");
     m_services["http://www.twopeasandtheirpod.com"] = recipeRegex;
 
     // Tasty Kitchen
     recipeRegex["directions"] = QRegularExpression("<span itemprop=\"instructions\">(.*?)</span>",
-                                                           QRegularExpression::DotMatchesEverythingOption);
+                                                   QRegularExpression::DotMatchesEverythingOption);
     recipeRegex["preptime"] = QRegularExpression("itemprop=\'prepTime\'.*?>(\\d+) ([mM]inutes|[hH]ours)</time");
     recipeRegex["cooktime"] = QRegularExpression("itemprop=\'cookTime\'.*?>(\\d+) ([mM]inutes|[hH]ours)</time");
     m_services["http://tastykitchen.com"] = recipeRegex;
 
     // Jamie Oliver's Recipes
     recipeRegex["directions"] = QRegularExpression("<p class=\"instructions\">(.*?)</p>",
-                                                          QRegularExpression::DotMatchesEverythingOption);
+                                                   QRegularExpression::DotMatchesEverythingOption);
     recipeRegex["preptime"] = QRegularExpression("class=\"preptime\".*?>(\\d+) ([mM]inutes|[hH]ours)</span");
     recipeRegex["cooktime"] = QRegularExpression("class=\"cooktime\".*?>(\\d+) ([mM]inutes|[hH]ours)</span");
     m_services["http://www.jamieoliver.com"] = recipeRegex;
 
     // Closet cooking
     recipeRegex["directions"] = QRegularExpression("<ol class=\"instructions\">(.*?)</ol>",
-                                                            QRegularExpression::DotMatchesEverythingOption);
+                                                   QRegularExpression::DotMatchesEverythingOption);
     recipeRegex["preptime"] = QRegularExpression("class=\"prepTime\".*?>(\\d+) ([mM]inutes|[hH]ours)</span");
     recipeRegex["cooktime"] = QRegularExpression("class=\"cookTime\".*?>(\\d+) ([mM]inutes|[hH]ours)</span");
     m_services["http://closetcooking.com"] = recipeRegex;
 
     // 101 Cookbooks
     recipeRegex["directions"] = QRegularExpression("</blockquote>(.*?)<div class=\"recipetimes\">",
-                                                           QRegularExpression::DotMatchesEverythingOption);
+                                                   QRegularExpression::DotMatchesEverythingOption);
     recipeRegex["preptime"] = QRegularExpression("class=\"preptime\".*?>(\\d+) ([mM]in|[hH]ours)");
     recipeRegex["cooktime"] = QRegularExpression("class=\"cooktime\".*?>(\\d+) ([mM]in|[hH]ours)");
     m_services["http://www.101cookbooks.com"] = recipeRegex;
+
+    // Epicurious
+    recipeRegex["directions"] = QRegularExpression("<div id=\"preparation\".+?>(.+?)</div>",
+                                                   QRegularExpression::DotMatchesEverythingOption |
+                                                   QRegularExpression::CaseInsensitiveOption);
+    recipeRegex["preptime"] = QRegularExpression("class=\"prepTime\">.+?(\\d+) (hour[s]?|min[a-z+]?).+?<span",
+                                                 QRegularExpression::DotMatchesEverythingOption);
+    recipeRegex["cooktime"] = QRegularExpression("a^");
+    m_services["http://www.epicurious.com"] = recipeRegex;
+
+    // BBC good food
+    recipeRegex["directions"] = QRegularExpression("section id=\"recipe-method\".+?>(.+?)</section",
+                                                   QRegularExpression::DotMatchesEverythingOption);
+    recipeRegex["preptime"] = QRegularExpression("class=\"cooking-time-prep\".+?>.+?(\\d+) (hour[s]?|min[a-z+]+).+?</span",
+                                                 QRegularExpression::DotMatchesEverythingOption);
+    recipeRegex["cooktime"] = QRegularExpression("class=\"cooking-time-cook\".+?>.+?(\\d+) (hour[s]?|min[a-z+]+).+?</span",
+                                                 QRegularExpression::DotMatchesEverythingOption);
+    m_services["http://www.bbcgoodfood.com"] = recipeRegex;
+
+    // BBC.co.uk Food
+    recipeRegex["directions"] = QRegularExpression("div id=\"preparation\".+?>(.+?)</div",
+                                                   QRegularExpression::DotMatchesEverythingOption);
+    recipeRegex["preptime"] = QRegularExpression("class=\"prepTime\".+?>.+?(\\d+) (hour[s]?|min[a-z+]+).?</span",
+                                                 QRegularExpression::DotMatchesEverythingOption);
+    recipeRegex["cooktime"] = QRegularExpression("class=\"cookTime\".+?>.+?(\\d+) (hour[s]?|min[a-z+]+).?</span",
+                                                 QRegularExpression::DotMatchesEverythingOption);
+    m_services["http://www.bbc.co.uk/food"] = recipeRegex;
+
+    // BonAppetit
+    recipeRegex["directions"] = QRegularExpression("class=\"prep-steps\".+?>(.+?)<div class=\"recipe-footer",
+                                                   QRegularExpression::DotMatchesEverythingOption);
+    recipeRegex["preptime"] = QRegularExpression("itemprop=\"prepTime\".+?>.+?(\\d+) (hour[s]?|min[a-z+]+).?</span",
+                                                 QRegularExpression::DotMatchesEverythingOption);
+    recipeRegex["cooktime"] = QRegularExpression("itemprop=\"totalTime\".+?>.+?(\\d+) (hour[s]?|min[a-z+]+).?</span",
+                                                 QRegularExpression::DotMatchesEverythingOption);
+    m_services["http://www.bonappetit.com"] = recipeRegex;
+
+    // Cookstr
+    recipeRegex["directions"] = QRegularExpression("itemprop=\"recipeInstructions\".+?>(.+?)</div",
+                                                   QRegularExpression::DotMatchesEverythingOption);
+    recipeRegex["preptime"] = QRegularExpression("a^");
+    recipeRegex["cooktime"] = QRegularExpression("a^");
+    m_services["http://www.cookstr.com"] = recipeRegex;
+
+    // Chow
+    recipeRegex["directions"] = QRegularExpression("itemprop=\"instructions\".+?>(.+?)</div",
+                                                   QRegularExpression::DotMatchesEverythingOption);
+    recipeRegex["preptime"] = QRegularExpression("a^");
+    recipeRegex["cooktime"] = QRegularExpression("a^");
+    m_services["http://www.chow.com"] = recipeRegex;
 
     // And more soon...
 
@@ -183,7 +232,7 @@ void RecipeParser::parseHtml(const QByteArray &html) {
 
     while (matchDirections.hasNext()) {
         QRegularExpressionMatch match = matchDirections.next();
-        directions.append(match.captured(1).replace(QRegularExpression("<.+?>"), "").trimmed());
+        directions.append(match.captured(1).replace(QRegularExpression("<.+?>"), "").simplified());
         directions.append("\n");
     }
     directions.append(tr("\nRecipe from %1").arg(m_service));

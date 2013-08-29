@@ -162,8 +162,10 @@ Page {
         console.log("Perfoming remote search...");
         search.query = querystr;
 
-        searches.push(querystr);
-        searchesChanged();
+        if (querystr.length > 0) {
+            searches.pushBack(querystr);
+            searchesChanged();
+        }
     }
 
     function searchLocally(querystr) {

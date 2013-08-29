@@ -117,6 +117,7 @@ Page {
                     Item {
                         width: parent.width
                         height: totaltimeLabel.height
+                        visible: recipe.preptime + recipe.cooktime > 0
 
                         Label {
                             id: totaltimeLabel

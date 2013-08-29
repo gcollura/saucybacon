@@ -47,7 +47,7 @@ Dialog {
         text: i18n.tr("Create")
 
         onClicked: {
-            categories.push(nameField.text)
+            categories.pushBack(nameField.text)
             categoriesChanged()
 
             caller.selectedIndex = categories.indexOf(nameField.text)

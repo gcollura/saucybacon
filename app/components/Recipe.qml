@@ -23,23 +23,7 @@ import SaucyBacon 0.1
 Item {
     id: recipe
 
-    RecipeParser {
-        id: parser
-
-        onContentsChanged: {
-            if (contents)
-                setContents(parser.contents);
-        }
-    }
-
     property bool ready: !parser.loading
-    function load(recipeId, recipeUrl, serviceUrl) {
-        if (docId)
-            newRecipe();
-        else
-            reset(); // hard reset, if the docId was already null
-        parser.get(recipeId, recipeUrl, serviceUrl);
-    }
 
     property string docId: ""
 
@@ -65,7 +49,16 @@ Item {
     // Signals
     signal changed
     signal saved
-    signal deleted
+    signal removed
+
+    RecipeParser {
+        id: parser
+
+        onContentsChanged: {
+            if (contents)
+                setContents(parser.contents);
+        }
+    }
 
     onDocIdChanged: {
         if (exists()) {
@@ -77,6 +70,11 @@ Item {
         changed();
     }
 
+    function load(recipeId, recipeUrl, serviceUrl) {
+        newRecipe();
+        parser.get(recipeId, recipeUrl, serviceUrl);
+    }
+
     function newRecipe() {
         if (docId)
             docId = "";
@@ -85,24 +83,7 @@ Item {
     }
 
     function reset() {
-        name = "";
-        favorite = false;
-
-        category = "";
-        difficulty = 0;
-        restriction = 0;
-
-        preptime = 0;
-        cooktime = 0;
-
-        ingredients = new Array();
-        servings = 4;
-
-        directions = "";
-
-        photos = new Array();
-
-        source = "";
+        setContents(defaultContents());
     }
 
     function setContents(contents) {
@@ -128,20 +109,38 @@ Item {
     }
 
     function getContents() {
+        var contents = defaultContents();
+        contents.name = name;
+        contents.favorite = favorite ? favorite : false;
+        contents.category = category ? category : categories[0];
+        contents.difficulty = difficulty ? difficulty : 0;
+        contents.restriction = restriction ? restriction : 0;
+        contents.preptime = preptime ? preptime : "0";
+        contents.cooktime = cooktime ? cooktime : "0";
+        contents.totaltime = totaltime ? totaltime : i18n.tr("Total time: %1 minutes").arg(computeTotalTime(preptime, cooktime));
+        contents.ingredients = ingredients ? ingredients : [ ];
+        contents.servings = servings ? servings : 4;
+        contents.directions = directions ? directions : "";
+        contents.photos = photos ? photos : [ ];
+        contents.source = source ? source : "";
+        return contents;
+    }
+
+    function defaultContents() {
         return {
-            "name": name,
-            "favorite": favorite,
-            "category": category,
-            "difficulty": difficulty,
-            "restriction": restriction,
-            "preptime": preptime,
-            "cooktime": cooktime,
-            "totaltime": totaltime,
-            "ingredients": ingredients,
-            "servings": servings,
-            "directions": directions,
-            "photos": photos,
-            "source": source
+            "name": "",
+            "favorite": false,
+            "category": categories[0],
+            "difficulty": 0,
+            "restriction": 0,
+            "preptime": "0",
+            "cooktime": "0",
+            "totaltime": i18n.tr("Total time: %1 minutes").arg(computeTotalTime(preptime, cooktime)),
+            "ingredients": [ ],
+            "servings": 4,
+            "directions": "",
+            "photos": [ ],
+            "source": ""
         }
     }
 
@@ -152,10 +151,12 @@ Item {
     function save() {
         // Save consists in writing the changes to the db
         var result;
-        if (exists)
-            result = recipesdb.putDoc(getContents(), docId);
+        var contents = getContents();
+
+        if (exists())
+            result = recipesdb.putDoc(contents, docId);
         else
-            result = recipesdb.putDoc(getContents());
+            result = recipesdb.putDoc(contents);
 
         if (result)
             saved(); // emit signal
@@ -166,7 +167,7 @@ Item {
     function remove() {
         if (docId) {
             recipesdb.putDoc("", docId);
-            deleted();
+            removed();
         }
     }
 

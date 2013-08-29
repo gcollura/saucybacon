@@ -32,13 +32,6 @@ Row {
     property alias type: ingredientQuantityType.text
 
     TextField {
-        id: ingredientName
-        width: parent.width - units.gu(23)
-
-        placeholderText: i18n.tr("Insert ingredient name")
-    }
-
-    TextField {
         id: ingredientQuantity
         width: units.gu(8)
 
@@ -51,6 +44,13 @@ Row {
         width: units.gu(8)
 
         placeholderText: i18n.tr("Type")
+    }
+
+    TextField {
+        id: ingredientName
+        width: parent.width - units.gu(23)
+
+        placeholderText: i18n.tr("Insert ingredient name")
     }
 
     Button {

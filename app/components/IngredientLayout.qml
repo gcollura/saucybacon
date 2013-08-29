@@ -31,7 +31,7 @@ Column {
     }
 
     function getIngredients() {
-        var result = new Array()
+        var result = new Array();
         for (var i = 0; i < container.children.length; i++) {
             if (container.children[i].name.length < 1) // Don't push non-sense ingredients
                 continue;

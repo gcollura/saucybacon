@@ -89,15 +89,11 @@ Page {
                         text: i18n.tr("Category")
 
                         selectedIndex: recipe.category ? categories.indexOf(recipe.category) : 0
-                        values: update()
+                        values: categories.concat([i18n.tr("<i>New category...</i>")])
 
                         onSelectedIndexChanged: {
                             if (selectedIndex == categories.length)
                                 PopupUtils.open(Qt.resolvedUrl("NewCategoryDialog.qml"), recipeCategory)
-                        }
-
-                        function update() {
-                            return categories.concat([i18n.tr("<i>New category...</i>")])
                         }
                     }
 

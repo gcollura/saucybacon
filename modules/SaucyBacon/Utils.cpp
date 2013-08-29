@@ -25,17 +25,18 @@
 Utils::Utils(QObject *parent) :
     QObject(parent) {
 
-    auto json = QJsonDocument::fromJson(read(path(Utils::HomeLocation), "sb-settings.json").toUtf8()).object();
+    mkdir(path(Utils::SettingsLocation));
+    auto json = QJsonDocument::fromJson(read(path(Utils::SettingsLocation), "sb-settings.json").toUtf8()).object();
     m_settings = json.toVariantMap();
 }
 
 Utils::~Utils() {
     auto json = QJsonObject::fromVariantMap(m_settings);
     QJsonDocument document(json);
-    write(path(Utils::HomeLocation), "sb-settings.json", document.toJson());
+    write(path(Utils::SettingsLocation), "sb-settings.json", document.toJson());
 }
 
-bool Utils::createDir(const QString &dirName) {
+bool Utils::mkdir(const QString &dirName) {
     QDir dir(dirName);
     if (!dir.exists())
         dir.mkpath(".");
@@ -44,11 +45,24 @@ bool Utils::createDir(const QString &dirName) {
 }
 
 QString Utils::path(StandardLocation location) const {
+    if (location == Utils::SettingsLocation)
+        return QStandardPaths::standardLocations(QStandardPaths::ConfigLocation)[0] + "/SaucyBacon";
     return QStandardPaths::standardLocations((QStandardPaths::StandardLocation) location)[0];
 }
 
+QString Utils::path(const QString &location, const QString &fileName) {
+    mkdir(location);
+    QString path = QDir(location).absoluteFilePath(fileName);
+    return QDir::cleanPath(path);
+}
+
+QString Utils::path(StandardLocation location, const QString &fileName) const {
+    QString path = QDir(this->path(location)).absoluteFilePath(fileName);
+    return QDir::cleanPath(path);
+}
+
 bool Utils::write(const QString& dirName, const QString& fileName, const QByteArray& contents) {
-    if (!createDir(dirName))
+    if (!mkdir(dirName))
         return false;
     QString path = QDir(dirName).absoluteFilePath(fileName);
     path = QDir::cleanPath(path);

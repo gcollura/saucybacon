@@ -43,8 +43,6 @@ Flickable {
     property bool editable: true
     property int iconSize: units.gu(8)
 
-    property int currentIndex: 0
-
     Row {
         id: photoRow
         spacing: units.gu(2)
@@ -61,7 +59,7 @@ Flickable {
 
         Repeater {
             id: repeater
-            model: [ ]
+            model: photos
 
             delegate: UbuntuShape {
                 id: photo
@@ -69,6 +67,7 @@ Flickable {
                 height: width
 
                 property bool expanded: false
+                property int idx
 
                 image: Image {
                     source: modelData
@@ -79,6 +78,8 @@ Flickable {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
+                        photo.idx = index
+
                         if (editable)
                             PopupUtils.open(popoverComponent, photo);
                         else {
@@ -110,19 +111,13 @@ Flickable {
 
         function addPhoto(filename) {
             photos.push(filename);
-            // Update the model manually, since push() doesn't trigger
-            // the *Changed event
-            repeater.model = photos
+            photosChanged();
         }
 
         function removePhoto(index) {
             photos.splice(index, 1);
-            repeater.model = photos
+            photosChanged();
         }
-    }
-
-    onPhotosChanged: {
-        repeater.model = photos
     }
 
     Component {

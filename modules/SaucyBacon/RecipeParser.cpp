@@ -59,7 +59,7 @@ RecipeParser::RecipeParser(QObject *parent) :
     QObject(parent) {
 
     RecipeRegex recipeRegex;
-    // Default regex
+    // Default regex -- "a^" doesn't match anything
     recipeRegex["directions"] = QRegularExpression("a^");
     recipeRegex["preptime"] = QRegularExpression("a^");
     recipeRegex["cooktime"] = QRegularExpression("a^");
@@ -175,7 +175,7 @@ void RecipeParser::parseHtml(const QByteArray &html) {
         defaultRegex = m_services[m_service];
     else {
         defaultRegex = m_services["default"];
-        qDebug() << "Site not supported yet.";
+        qDebug() << "Site not supported yet: " + m_service;
     }
 
     QRegularExpressionMatchIterator matchDirections = defaultRegex["directions"].globalMatch(html);

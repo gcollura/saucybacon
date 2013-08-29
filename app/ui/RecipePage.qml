@@ -67,6 +67,7 @@ Page {
             focus: true
             delegate: RecipeListItem {
                 minimal: true
+                silent: true
                 progression: docId === recipe.docId
             }
         }

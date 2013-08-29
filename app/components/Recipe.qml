@@ -171,7 +171,7 @@ Item {
     }
 
     function exportAsPdf() {
-        var fileName = utils.path(Utils.DocumentsLocation) + "/" + name + ".pdf";
+        var fileName = utils.path(Utils.DocumentsLocation, name + ".pdf");
 
         if (utils.exportAsPdf(fileName, getContents()))
             console.log("Saved PDF: " + fileName);

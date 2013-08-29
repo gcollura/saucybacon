@@ -47,9 +47,9 @@ Dialog {
         text: i18n.tr("Create")
 
         onClicked: {
-            if (categories.indexOf(nameField.text) < 0)
-                categories.push(nameField.text)
-            caller.values = caller.update()
+            categories.push(nameField.text)
+            categoriesChanged()
+
             caller.selectedIndex = categories.indexOf(nameField.text)
             PopupUtils.close(dialogue)
         }

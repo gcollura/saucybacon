@@ -36,11 +36,14 @@ public:
         DocumentsLocation = QStandardPaths::DocumentsLocation,
         PicturesLocation = QStandardPaths::PicturesLocation,
         HomeLocation = QStandardPaths::HomeLocation,
-        ConfigLocation = QStandardPaths::ConfigLocation
+        ConfigLocation = QStandardPaths::ConfigLocation,
+        SettingsLocation
     };
 
-    Q_INVOKABLE bool createDir(const QString& dirName);
+    Q_INVOKABLE bool mkdir(const QString& dirName);
     Q_INVOKABLE QString path(StandardLocation location) const;
+    Q_INVOKABLE QString path(const QString &location, const QString &fileName);
+    Q_INVOKABLE QString path(StandardLocation location, const QString &fileName) const;
 
     Q_INVOKABLE bool write(const QString& dirName, const QString& fileName, const QByteArray &contents);
     Q_INVOKABLE QString read(const QString& dirName, const QString& fileName);

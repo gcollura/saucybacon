@@ -28,6 +28,7 @@ ListItem.Subtitled {
     icon: contents.photos[0] ? Qt.resolvedUrl(contents.photos[0]) : Qt.resolvedUrl("../../graphics/toolbarIcon@8.png")
 
     property bool minimal: false
+    property bool silent: false
 
     Column {
         id: right
@@ -72,13 +73,14 @@ ListItem.Subtitled {
             Label {
                 visible: contents.favorite
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: "\u2605"
+                text: "\u2605" // Star
             }
         }
     }
 
     onClicked: {
         recipe.docId = docId;
-        pageStack.push(recipePage);
+        if (!silent)
+            pageStack.push(recipePage);
     }
 }

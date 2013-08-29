@@ -98,10 +98,15 @@ MainView {
         saveSettings();
     }
 
+    // SaucyBacon Utils library
+    Utils {
+        id: utils
+    }
+
     /* Recipe Database */
     U1db.Database {
         id: recipesdb
-        path: "sb-recipesdb"
+        path: utils.path(Utils.SettingsLocation, "sb-recipes.db")
     }
 
     /* Base recipe document - just for reference
@@ -113,11 +118,6 @@ MainView {
             "directions": "", "servings": 4, "photos" : [ ], "favorite": false }
     } */
 
-    // SaucyBacon Utils library
-    Utils {
-        id: utils
-    }
-
     property Recipe recipe: Recipe { }
 
     /* Recipe addons */
@@ -127,6 +127,13 @@ MainView {
     property var searches: [ ]
 
     function loadSettings() {
+
+        Array.prototype.push = function(item) {
+            // Reimplement Array.push(..) to have always unique arrays
+            if (this.indexOf(item) < 0)
+                this[this.length] = item;
+        }
+
         if (!utils.get("firstLoad")) {
             categories = [ i18n.tr("Uncategorized") ];
 
@@ -151,6 +158,10 @@ MainView {
         if (local)
             return Qt.resolvedUrl("../graphics/icons/" + name + ".png")
         return "/usr/share/icons/ubuntu-mobile/actions/scalable/" + name + ".svg"
+    }
+
+    function settingsPath() {
+        return utils.path(Utils.ConfigLocation) + "/SaucyBacon/";
     }
 
     function onlyUnique(value, index, self) {

@@ -166,7 +166,7 @@ Item {
 
     function remove() {
         if (docId) {
-            recipesdb.putDoc("", docId);
+            recipesdb.putDoc(null, docId);
             removed();
         }
     }

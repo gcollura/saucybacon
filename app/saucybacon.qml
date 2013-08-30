@@ -45,6 +45,40 @@ MainView {
     backgroundColor: "#790f0f"
     footerColor: "#641616"
 
+    // Global actions
+
+    Action {
+        id: newAction
+        text: i18n.tr("New")
+        description: i18n.tr("Create a new recipe")
+        iconSource: icon('add')
+        keywords: "new;recipe"
+        onTriggered: {
+            recipe.newRecipe();
+            pageStack.push(editRecipePage);
+        }
+    }
+
+    Action {
+        id: editAction
+        text: i18n.tr("Edit")
+        description: i18n.tr("Edit the current recipe")
+        iconSource: icon("edit")
+        keywords: "edit;recipe"
+        onTriggered: pageStack.push(editRecipePage)
+    }
+
+    Action {
+        id: searchAction
+        text: i18n.tr("Search")
+        description: i18n.tr("Search for a new recipe on the internet")
+        iconSource: icon("edit")
+        keywords: "search;new;recipe"
+        onTriggered: { pageStack.push(tabs); tabs.selectedTabIndex = 1; }
+    }
+
+    actions: [ newAction, searchAction ]
+
     PageStack {
         id: pageStack
 
@@ -141,6 +175,10 @@ MainView {
             for (i in o)
                 r.push(o[i]);
             return r;
+        }
+
+        String.prototype.capitalize = function() {
+            return this.charAt(0).toUpperCase() + this.slice(1);
         }
 
         if (!utils.get("firstLoad")) {

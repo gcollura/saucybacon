@@ -271,6 +271,6 @@ void RecipeParser::hasFinishedParsing() {
     // If all processes are completed, trigger all signals
     if (m_parseJson && m_parseHtml) {
         setLoading(false);
-        contentsChanged();
+        emit contentsChanged();
     }
 }

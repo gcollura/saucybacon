@@ -25,8 +25,10 @@ import "../components"
 Page {
     title: i18n.tr("Recipes")
 
-    tools: RecipeListPageToolbar {
-        objectName: "recipesTabToolbar"
+    tools: ToolbarItems {
+        ToolbarButton {
+            action: newAction
+        }
     }
 
     Sidebar {

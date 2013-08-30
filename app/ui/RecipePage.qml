@@ -166,8 +166,9 @@ Page {
                                 function txt(quantity, type, name) {
                                     var output = "";
                                     output += quantity ? "%1 ".arg(quantity) : "";
-                                    output += type + " " + name;
-                                    return output;
+                                    output += type ? "%1 ".arg(type) : "";
+                                    output += name;
+                                    return output.capitalize();
                                 }
                             }
                         }

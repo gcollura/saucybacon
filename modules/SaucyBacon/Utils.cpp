@@ -56,7 +56,8 @@ QString Utils::path(const QString &location, const QString &fileName) {
     return QDir::cleanPath(path);
 }
 
-QString Utils::path(StandardLocation location, const QString &fileName) const {
+QString Utils::path(StandardLocation location, const QString &fileName) {
+    mkdir(path(location));
     QString path = QDir(this->path(location)).absoluteFilePath(fileName);
     return QDir::cleanPath(path);
 }

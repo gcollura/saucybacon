@@ -32,8 +32,8 @@ ToolbarItems {
 
         visible: recipe.exists()
         onTriggered: {
-            recipe.exportAsPdf();
             toolbar.opened = false;
+            recipe.exportAsPdf();
         }
     }
 
@@ -43,8 +43,8 @@ ToolbarItems {
 
         visible: recipe.exists()
         onTriggered: {
-            recipe.favorite = !recipe.favorite;
             toolbar.opened = false;
+            recipe.favorite = !recipe.favorite;
             recipe.save();
         }
     }
@@ -79,13 +79,7 @@ ToolbarItems {
     }
 
     ToolbarButton {
-        text: i18n.tr("Edit")
-        iconSource: icon("edit")
-
-        visible: recipe.ready
-        onTriggered: {
-            pageStack.push(editRecipePage)
-        }
+        action: editAction
     }
 
     ToolbarButton {

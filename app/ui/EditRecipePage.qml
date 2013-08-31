@@ -93,7 +93,7 @@ Page {
 
                         onSelectedIndexChanged: {
                             if (selectedIndex == categories.length)
-                                PopupUtils.open(Qt.resolvedUrl("NewCategoryDialog.qml"), recipeCategory)
+                                PopupUtils.open(Qt.resolvedUrl("dialogs/NewCategoryDialog.qml"), recipeCategory)
                         }
                     }
 

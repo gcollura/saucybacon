@@ -71,7 +71,7 @@ ToolbarItems {
     }
 
     ToolbarButton {
-        action: editAction
+        action: editRecipeAction
     }
 
     ToolbarButton {
@@ -79,7 +79,7 @@ ToolbarItems {
         iconSource: icon("delete")
 
         visible: recipe.exists()
-        onTriggered: PopupUtils.open(Qt.resolvedUrl("DeleteDialog.qml"))
+        onTriggered: PopupUtils.open(Qt.resolvedUrl("dialogs/DeleteDialog.qml"))
     }
 
     FriendsDispatcher {

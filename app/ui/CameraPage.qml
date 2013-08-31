@@ -40,7 +40,7 @@ Page {
 
     states: [
         State {
-            when: page.visible
+            when: visible
             PropertyChanges {
                 target: tools
                 opened: true

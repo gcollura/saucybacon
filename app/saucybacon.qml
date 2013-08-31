@@ -24,7 +24,7 @@ import U1db 1.0 as U1db
 import SaucyBacon 0.1
 
 import "ui"
-import "components"
+import "backend"
 
 MainView {
     objectName: "mainView"
@@ -47,10 +47,10 @@ MainView {
     // Global actions
 
     Action {
-        id: newAction
+        id: newRecipeAction
         text: i18n.tr("New")
         description: i18n.tr("Create a new recipe")
-        iconSource: icon('add')
+        iconSource: icon("add")
         keywords: "new;recipe"
         onTriggered: {
             recipe.newRecipe();
@@ -59,7 +59,7 @@ MainView {
     }
 
     Action {
-        id: editAction
+        id: editRecipeAction
         text: i18n.tr("Edit")
         description: i18n.tr("Edit the current recipe")
         iconSource: icon("edit")
@@ -76,7 +76,7 @@ MainView {
         onTriggered: { pageStack.push(tabs); tabs.selectedTabIndex = 1; }
     }
 
-    actions: [ newAction, searchAction ]
+    actions: [ newRecipeAction, searchAction ]
 
     PageStack {
         id: pageStack
@@ -160,6 +160,7 @@ MainView {
     } */
 
     property Recipe recipe: Recipe { }
+    property var menus: [ ]
 
     /* Recipe addons */
     property var difficulties: [ i18n.tr("No difficulty"), i18n.tr("Easy"), i18n.tr("Medium"), i18n.tr("Hard") ] // FIXME: Strange name

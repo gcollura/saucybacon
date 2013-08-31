@@ -31,7 +31,7 @@ Page {
 
     tools: ToolbarItems {
         ToolbarButton {
-            action: newAction
+            action: newRecipeAction
         }
     }
 

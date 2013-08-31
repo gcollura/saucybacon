@@ -52,5 +52,4 @@ Page {
     }
 
     onVisibleChanged: camera.setActiveState(visible)
-
 }

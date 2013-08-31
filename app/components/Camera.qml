@@ -33,11 +33,6 @@ Item {
 
     Camera {
         id: camera
-        flash.mode: Camera.FlashAuto
-        captureMode: Camera.CaptureStillImage // Default mode
-        focus.focusMode: Camera.FocusAuto
-        exposure.exposureMode: Camera.ExposureAuto
-
         cameraState: Camera.UnloadedState
 
         imageCapture {
@@ -55,15 +50,12 @@ Item {
             verticalCenter: parent.verticalCenter
         }
 
-        focus: visible
-
         /* This rotation needs to be applied since the camera hardware in the
            Galaxy Nexus phone is mounted at an angle inside the device, so the video
            feed is rotated too.
            FIXME: This should come from a system configuration option so that we
            don't have to have a different codebase for each different device we want
            to run on */
-
         orientation: Screen.primaryOrientation == Qt.LandscapeOrientation ? 0 : -90
     }
 
@@ -74,7 +66,6 @@ Item {
         camera.start();
 
         camera.searchAndLock();
-
         camera.imageCapture.capture();
 
         camera.unlock();
@@ -93,10 +84,12 @@ Item {
     }
 
     function setActiveState(status) {
-
-        if (status)
+        if (status) {
+            camera.start();
             camera.setCameraState(Camera.ActiveState);
-        else
+        } else {
+            camera.stop();
             camera.setCameraState(Camera.UnloadedState);
+        }
     }
 }

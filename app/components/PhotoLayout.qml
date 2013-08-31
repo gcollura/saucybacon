@@ -83,15 +83,7 @@ Flickable {
                         if (editable)
                             PopupUtils.open(popoverComponent, photo);
                         else {
-                            //photoRow.showPhoto(idx);
-                            if (!photo.expanded) {
-                                width = root.parent.width;
-                                photo.expanded = !photo.expanded;
-                                console.log(root.parent.width)
-                            } else {
-                                width = iconSize;
-                                photo.expanded = !photo.expanded;
-                            }
+                            photoRow.showPhoto(idx);
                         }
                     }
                 }

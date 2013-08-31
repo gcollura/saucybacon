@@ -20,10 +20,14 @@
 import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1
+
 import "../components"
 
 Page {
+    id: page
+
     title: i18n.tr("Recipes")
+    anchors.fill: parent
 
     tools: ToolbarItems {
         ToolbarButton {
@@ -31,9 +35,44 @@ Page {
         }
     }
 
+    states: [
+        State {
+            name: "wide"
+            when: wideAspect
+
+            PropertyChanges {
+                target: recipeListView
+
+                anchors.top: contents.top
+                anchors.topMargin: units.gu(9.5)
+                topMargin: 0
+            }
+
+            PropertyChanges {
+                target: contents
+
+                anchors.top: page.top
+                anchors.topMargin: 0
+            }
+        },
+
+        State {
+            name: "normal"
+
+            PropertyChanges {
+                target: recipeListView
+
+                topMargin: units.gu(9.5)
+            }
+        }
+    ]
+
+    flickable: !wideAspect ? recipeListView : null
+
     Sidebar {
         id: sidebar
         expanded: wideAspect
+        anchors.topMargin: units.gu(9.5)
 
         Column {
             anchors {
@@ -59,31 +98,25 @@ Page {
     }
 
     Item {
+        id: contents
+
         anchors {
-            left: sidebar.right
             top: parent.top
-            right: parent.right
             bottom: parent.bottom
+            left: sidebar.right
+            right: parent.right
         }
 
         ListView {
             objectName: "recipesListView"
-            id: listView
+            id: recipeListView
 
             anchors.fill: parent
             clip: true
 
             model: recipesdb
 
-            /* A delegate will be created for each Document retrieved from the Database */
-            delegate: RecipeListItem {
-            }
-
-            Scrollbar {
-                flickableItem: listView
-            }
+            delegate: RecipeListItem { }
         }
-
     }
-
 }

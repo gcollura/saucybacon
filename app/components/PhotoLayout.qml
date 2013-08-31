@@ -83,7 +83,7 @@ Flickable {
                         if (editable)
                             PopupUtils.open(popoverComponent, photo);
                         else {
-                            photoRow.showPhoto(idx);
+                            showPhoto(idx);
                         }
                     }
                 }
@@ -96,6 +96,7 @@ Flickable {
 
     function showPhoto(index) {
         console.log("Not implemented feature.");
+
     }
 
     function selectPhoto() {

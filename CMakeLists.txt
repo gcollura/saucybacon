@@ -29,5 +29,5 @@ add_subdirectory(graphics)
 
 # TODO: add translations
 
-
+install(FILES saucybacon DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 install(FILES saucybacon.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications)

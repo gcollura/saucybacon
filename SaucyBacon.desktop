@@ -1,8 +1,8 @@
 [Desktop Entry]
 Name=SaucyBacon
 Comment=Manage your personal recipe and find new tastes on the web
-Exec=/usr/bin/qmlscene $@ /usr/share/saucybacon/saucybacon.qml
-Icon=qmlscene
+Exec=saucybacon
+Icon=saucybacon
 Terminal=false
 Type=Application
 X-Ubuntu-Touch=true

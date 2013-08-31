@@ -25,11 +25,48 @@ import Ubuntu.Components.ListItems 0.1 as ListItem
 import "../components"
 
 Page {
+    id: page
+
     title: truncate(recipe.name, parent.width)
+    anchors.fill: parent
 
     tools: RecipePageToolbar {
         objectName: "recipePageToolbar"
     }
+
+    states: [
+        State {
+            name: "extraWide"
+            when: extraWideAspect
+
+            PropertyChanges {
+                target: recipeView
+
+                anchors.top: contents.top
+                anchors.topMargin: units.gu(9.5)
+                topMargin: 0
+            }
+
+            PropertyChanges {
+                target: contents
+
+                anchors.top: page.top
+                anchors.topMargin: units.gu(2)
+            }
+        },
+
+        State {
+            name: "normal"
+
+            PropertyChanges {
+                target: recipeView
+
+                topMargin: units.gu(9.5)
+            }
+        }
+    ]
+
+    flickable: !extraWideAspect ? recipeView : null
 
     Item {
         visible: !recipe.ready
@@ -57,9 +94,7 @@ Page {
         expanded: extraWideAspect && recipe.ready
         autoFlick: false
         header: i18n.tr("Recipes")
-        anchors {
-            top: parent.top
-        }
+        anchors.topMargin: units.gu(9.5)
 
         ListView {
             anchors.fill: parent
@@ -74,6 +109,8 @@ Page {
     }
 
     Item {
+        id: contents
+
         anchors {
             left: sidebar.right
             top: parent.top
@@ -82,7 +119,7 @@ Page {
         }
 
         Flickable {
-            id: flickable
+            id: recipeView
 
             anchors {
                 fill: parent
@@ -91,10 +128,10 @@ Page {
             }
 
             contentHeight: layout.height
-            interactive: contentHeight > height
+            interactive: contentHeight + units.gu(5) > height
 
             visible: recipe.ready
-            clip: true
+            clip: extraWideAspect
 
             Grid {
                 id: layout

@@ -138,7 +138,7 @@ Page {
                     text: contents.title
                     subText: contents.publisher_url
                     onClicked: {
-                        recipe.load(contents.recipe_id, contents.source_url, contents.publisher_url);
+                        recipe.load(contents.recipe_id, contents.source_url, contents.publisher_url, contents.image_url);
                         pageStack.push(recipePage);
                     }
                 }

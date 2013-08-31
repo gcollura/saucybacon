@@ -45,15 +45,17 @@ Item {
     property var photos: new Array()
 
     property string source
+    property string f2f
 
     // Signals
     signal changed
     signal saved
     signal removed
+    signal exported(string fileName)
 
     RecipeParser {
         id: parser
-
+        destPath: utils.path(utils.path(Utils.SettingsLocation) + "/imgs", "")
         onContentsChanged: {
             if (contents)
                 setContents(parser.contents);
@@ -70,9 +72,9 @@ Item {
         changed();
     }
 
-    function load(recipeId, recipeUrl, serviceUrl) {
+    function load(recipeId, recipeUrl, serviceUrl, imageUrl) {
         newRecipe();
-        parser.get(recipeId, recipeUrl, serviceUrl);
+        parser.get(recipeId, recipeUrl, serviceUrl, imageUrl);
     }
 
     function newRecipe() {
@@ -106,6 +108,7 @@ Item {
         photos = contents.photos ? contents.photos : [ ];
 
         source = contents.source ? contents.source : "";
+        f2f = contents.f2f ? contents.f2f : "";
     }
 
     function getContents() {
@@ -123,6 +126,7 @@ Item {
         contents.directions = directions ? directions : "";
         contents.photos = photos ? photos : [ ];
         contents.source = source ? source : "";
+        contents.f2f = f2f ? f2f : "";
         return contents;
     }
 
@@ -140,7 +144,8 @@ Item {
             "servings": 4,
             "directions": "",
             "photos": [ ],
-            "source": ""
+            "source": "",
+            "f2f": ""
         }
     }
 
@@ -174,7 +179,9 @@ Item {
     function exportAsPdf() {
         var fileName = utils.path(Utils.DocumentsLocation, name + ".pdf");
 
-        if (utils.exportAsPdf(fileName, getContents()))
+        if (utils.exportAsPdf(fileName, getContents())) {
+            exported(fileName);
             console.log("Saved PDF: " + fileName);
+        }
     }
 }

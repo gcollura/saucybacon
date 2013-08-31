@@ -133,17 +133,7 @@ Flickable {
                 Repeater {
                     model: [ i18n.tr("Remove"), i18n.tr("View") ]
                     ListItem.Standard {
-                        Label {
-                            // FIXME: Hack because of Suru theme!
-                            anchors {
-                                verticalCenter: parent.verticalCenter
-                                left: parent.left
-                                margins: units.gu(2)
-                            }
-                            text: modelData
-
-                            color: Theme.palette.normal.overlayText
-                        }
+                        text: modelData
 
                         onClicked: {
                             if (index === 0)

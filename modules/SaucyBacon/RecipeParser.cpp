@@ -180,14 +180,16 @@ RecipeParser::~RecipeParser() {
 
 }
 
-void RecipeParser::get(const QString &recipeId, const QString &urlRecipe, const QString &urlService) {
+void RecipeParser::get(const QString &recipeId, const QString &recipeUrl, const QString &serviceUrl, const QString &imageUrl) {
     setLoading(true);
     m_parseHtml = false;
     m_parseJson = false;
+    m_parseImage = false;
 
     QUrl ingredientsUrl(ApiKeys::F2FGETURL);
-    QUrl directionsUrl(urlRecipe);
-    m_service = urlService;
+    QUrl directionsUrl(recipeUrl);
+    m_service = serviceUrl;
+    QUrl photoUrl(imageUrl);
 
     QUrlQuery query;
     query.addQueryItem("key", ApiKeys::F2FKEY);
@@ -198,6 +200,10 @@ void RecipeParser::get(const QString &recipeId, const QString &urlRecipe, const 
 
     QNetworkRequest directionReq(directionsUrl);
     m_manager->get(directionReq);
+
+    QNetworkRequest photoReq(photoUrl);
+    m_photoName = imageUrl.split("/").back();
+    m_manager->get(photoReq);
 }
 
 void RecipeParser::replyFinished(QNetworkReply *reply) {
@@ -206,8 +212,9 @@ void RecipeParser::replyFinished(QNetworkReply *reply) {
         bool apiResponse = QUrl(ApiKeys::F2FURL).isParentOf(reply->url());
         if (apiResponse) {
             parseJson(reply->readAll());
+        } else if (reply->url().toString().contains(m_photoName)) {
+            parseImage(reply->readAll());
         } else {
-            m_contents["source"] = reply->url().toString();
             parseHtml(reply->readAll());
         }
 
@@ -261,15 +268,29 @@ void RecipeParser::parseJson(const QByteArray &json) {
     QJsonObject recipe = QJsonDocument::fromJson(json).object()["recipe"].toObject();
     m_contents["name"] = recipe["title"].toString();
     m_contents["ingredients"] = parseIngredients(recipe["ingredients"].toArray());
-    m_contents["photos"] = QJsonArray::fromStringList(QStringList(recipe["image_url"].toString()));
+    m_contents["source"] = recipe["source_url"].toString();
+    m_contents["f2f"] = recipe["f2f_url"].toString();
 
     m_parseJson = true;
     hasFinishedParsing();
 }
 
+void RecipeParser::parseImage(const QByteArray &imgData) {
+    QFile photo;
+    photo.setFileName(m_destPath + "/" + m_photoName);
+    photo.open(QIODevice::WriteOnly);
+    photo.write(imgData);
+    photo.close();
+
+    m_contents["photos"] = QJsonArray::fromStringList(QStringList(photo.fileName()));
+
+    m_parseImage = true;
+    hasFinishedParsing();
+}
+
 void RecipeParser::hasFinishedParsing() {
     // If all processes are completed, trigger all signals
-    if (m_parseJson && m_parseHtml) {
+    if (m_parseJson && m_parseHtml && m_parseImage) {
         setLoading(false);
         emit contentsChanged();
     }

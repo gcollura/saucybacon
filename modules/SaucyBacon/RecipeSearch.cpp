@@ -31,7 +31,6 @@ RecipeSearch::RecipeSearch(QObject *parent) :
     connect(m_manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
 
     connect(this, SIGNAL(queryChanged()), this, SLOT(makeRequest()));
-
 }
 
 RecipeSearch::~RecipeSearch() {

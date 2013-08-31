@@ -4,7 +4,7 @@
 - [x] Edit recipe page
 - [x] Save edited recipes
 - [ ] Search for recipes locally
-- [ ] Search for recipes online
+- [x] Search for recipes online
 - [x] View a recipe (RecipePage.qml)
 - [ ] Niceties
 - [ ] Some fashion for the contest

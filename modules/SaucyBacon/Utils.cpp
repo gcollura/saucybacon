@@ -99,6 +99,11 @@ bool Utils::exportAsPdf(const QString &fileName, const QJsonObject &contents) {
     QString html;
     QTextStream stream(&html);
 
+    stream << QString("<html><head><style type=\"text/css\">"
+                      "h1 {color:red;} "
+                      " "
+                      "</style></head><body>");
+
     stream << QString("<h1>%1</h1>").arg(contents["name"].toString());
 
     stream << QString("<p>%1 <br>").arg(contents["totaltime"].toString());
@@ -122,7 +127,9 @@ bool Utils::exportAsPdf(const QString &fileName, const QJsonObject &contents) {
     stream << QString(tr("<h2>Photos</h2><br />"));
     QJsonArray photos = contents["photos"].toArray();
     for (int i = 0; i < photos.count(); i++)
-        stream << QString("<img src='%1' />").arg(photos[i].toString());
+        stream << QString("<img src='%1' width=200 />").arg(photos[i].toString());
+
+    stream << QString("</body></html>");
 
     doc.setHtml(html);
 

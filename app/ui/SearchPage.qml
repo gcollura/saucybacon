@@ -34,8 +34,6 @@ Page {
         expanded: wideAspect
         header: i18n.tr("Search history")
 
-        property alias model: sidebarListView.model
-
         ListView {
             id: sidebarListView
             anchors.fill: parent
@@ -49,7 +47,6 @@ Page {
                     searchOnline(modelData);
                 }
             }
-
         }
     }
 
@@ -173,6 +170,5 @@ Page {
         // this function can be called everytime the user write text in the entry
 
         //searchQuery.query = [ {"title": querystr + "*" , "name": querystr + "*" }]
-
     }
 }

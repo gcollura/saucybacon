@@ -27,8 +27,6 @@ Page {
     signal imageCaptured(string image)
 
     tools: ToolbarItems {
-        opened: true
-        locked: true
         ToolbarButton {
             id: snapButton
             text: i18n.tr("Snaps")
@@ -40,6 +38,17 @@ Page {
         }
     }
 
+    states: [
+        State {
+            when: page.visible
+            PropertyChanges {
+                target: tools
+                opened: true
+                locked: true
+            }
+        }
+    ]
+
     Camera {
         id: camera
         anchors {
@@ -48,8 +57,6 @@ Page {
             fill: parent
         }
         onImageCaptured: page.imageCaptured(image);
-
+        onVisibleChanged: setActiveState(visible)
     }
-
-    onVisibleChanged: camera.setActiveState(visible)
 }

@@ -37,8 +37,8 @@ MainView {
     property bool wideAspect: width > units.gu(80)
     property bool extraWideAspect: width > units.gu(130)
 
-    width: units.gu(70)
-    height: units.gu(75)
+    width: units.gu(135)
+    height: units.gu(85)
 
     headerColor: "#640707"
     backgroundColor: "#790f0f"
@@ -84,6 +84,7 @@ MainView {
         Tabs {
             objectName: "tabs"
             id: tabs
+            visible: false
 
             Tab {
                 title: page.title

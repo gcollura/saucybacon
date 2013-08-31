@@ -71,17 +71,17 @@ RecipeParser::RecipeParser(QObject *parent) :
     m_services["http://allrecipes.com"] = recipeRegex;
 
     // SimplyRecipes
-    recipeRegex["directions"] = QRegularExpression("<div itemprop=\"recipeInstructions\">(.+?)</div>",
+    recipeRegex["directions"] = QRegularExpression("itemprop=\"recipeInstructions\">(.+?)</div>",
                                                    QRegularExpression::DotMatchesEverythingOption);
     recipeRegex["preptime"] = QRegularExpression("class=\"preptime\".*?>(\\d+) ([mM]inutes|[hH]ours)<span");
     recipeRegex["cooktime"] = QRegularExpression("class=\"cooktime\".*?>(\\d+) ([mM]inutes|[hH]ours)<span");
     m_services["http://simplyrecipes.com"] = recipeRegex;
 
     // PioneerWoman
-    recipeRegex["directions"] = QRegularExpression("<div itemprop=\"instructions\">(.*?)</div>",
+    recipeRegex["directions"] = QRegularExpression("itemprop=\"instructions\">(.+?)</div>",
                                                    QRegularExpression::DotMatchesEverythingOption);
-    recipeRegex["preptime"] = QRegularExpression("itemprop=\'prepTime\'.*?>(\\d+) ([mM]inutes|[hH]ours)</time");
-    recipeRegex["cooktime"] = QRegularExpression("itemprop=\'cookTime\'.*?>(\\d+) ([mM]inutes|[hH]ours)</time");
+    recipeRegex["preptime"] = QRegularExpression("itemprop=\'prepTime\'.+?>(\\d+) ([mM]inutes|[hH]ours)</time");
+    recipeRegex["cooktime"] = QRegularExpression("itemprop=\'cookTime\'.+?>(\\d+) ([mM]inutes|[hH]ours)</time");
     m_services["http://thepioneerwoman.com"] = recipeRegex;
 
     // Two peas and their pot
@@ -215,6 +215,11 @@ void RecipeParser::replyFinished(QNetworkReply *reply) {
         } else if (reply->url().toString().contains(m_photoName)) {
             parseImage(reply->readAll());
         } else {
+            int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+            if (statusCode == 301) {
+                QUrl redirectUrl = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
+                m_manager->get(QNetworkRequest(redirectUrl));
+            }
             parseHtml(reply->readAll());
         }
 

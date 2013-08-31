@@ -21,13 +21,15 @@ import QtQuick 2.0
 import QtQuick.Window 2.0
 import Ubuntu.Components 0.1
 import QtMultimedia 5.0
+import SaucyBacon 0.1
 
-UbuntuShape {
-    width: parent.width
-    height: width
+Item {
+    id: root
 
     anchors.horizontalCenter: parent.horizontalCenter
     anchors.verticalCenter: parent.verticalCenter
+
+    signal imageCaptured(string image)
 
     Camera {
         id: camera
@@ -39,9 +41,7 @@ UbuntuShape {
         cameraState: Camera.UnloadedState
 
         imageCapture {
-            onImageSaved: {
-                console.log("image saved as " + path);
-            }
+            onImageSaved: imageCaptured(path)
         }
     }
 
@@ -50,6 +50,10 @@ UbuntuShape {
         source: camera
 
         fillMode: VideoOutput.PreserveAspectCrop
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            verticalCenter: parent.verticalCenter
+        }
 
         focus: visible
 
@@ -66,6 +70,7 @@ UbuntuShape {
     function captureImage() {
 
         camera.setCaptureMode(Camera.CaptureStillImage);
+
         camera.start();
 
         camera.searchAndLock();
@@ -73,8 +78,6 @@ UbuntuShape {
         camera.imageCapture.capture();
 
         camera.unlock();
-
-        return camera.imageCapture.capturedImagePath;
     }
 
     function captureVideo() {
@@ -82,7 +85,6 @@ UbuntuShape {
         camera.setCaptureMode(Camera.CaptureVideo);
 
         camera.start();
-        camera.videoRecorder.setOutputLocation("/home/Videos/test.wmv");
 
         camera.videoRecorder.record();
         camera.videoRecorder.stop();

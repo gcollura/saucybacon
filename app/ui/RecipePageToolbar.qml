@@ -53,7 +53,10 @@ ToolbarItems {
         //iconSource: icon("open")
 
         visible: recipe.source.length > 0
-        onTriggered: console.log("Open " + recipe.source)
+        onTriggered: {
+            if (utils.open(recipe.source))
+                console.log("Open " + recipe.source);
+        }
     }
 
     ToolbarButton {

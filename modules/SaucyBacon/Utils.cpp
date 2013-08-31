@@ -21,6 +21,7 @@
 
 #include <QTextDocument>
 #include <QtPrintSupport/QPrinter>
+#include <QDesktopServices>
 
 Utils::Utils(QObject *parent) :
     QObject(parent) {
@@ -60,6 +61,15 @@ QString Utils::path(StandardLocation location, const QString &fileName) {
     mkdir(path(location));
     QString path = QDir(this->path(location)).absoluteFilePath(fileName);
     return QDir::cleanPath(path);
+}
+
+bool Utils::open(const QString &url) {
+    return QDesktopServices::openUrl(QUrl(url));
+}
+
+bool Utils::mailto(const QString &address, const QString &subject, const QString &body) {
+    QString url = QString("mailto:%1?subject=%2&body=%3").arg(address, subject, body);
+    return QDesktopServices::openUrl(QUrl(url));
 }
 
 bool Utils::write(const QString& dirName, const QString& fileName, const QByteArray& contents) {

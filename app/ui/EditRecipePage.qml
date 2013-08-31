@@ -202,6 +202,10 @@ Page {
                     clip: wideAspect
 
                     photos: recipe.photos
+
+                    Component.onCompleted: {
+                        cameraPage.imageCaptured.connect(addPhoto)
+                    }
                 }
 
                 Behavior on width { UbuntuNumberAnimation { duration: UbuntuAnimation.SlowDuration } }

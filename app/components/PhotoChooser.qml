@@ -55,7 +55,17 @@ Dialog {
         Component {
             id: fileDelegate
             ListItem.Standard {
-                text: fileName
+                Label {
+                    anchors {
+                        verticalCenter: parent.verticalCenter
+                        left: parent.left
+                        margins: units.gu(2)
+                    }
+                    text: fileName
+                    fontSize: "medium"
+                    color: "white" // FIXME: hardcoded colors
+                }
+
                 onClicked: {
                     var split = folder.text.split("/")
                     if (fileName == "..") {
@@ -96,8 +106,8 @@ Dialog {
     Button {
         text: i18n.tr("Acquire from Camera")
         onClicked: {
-            PopupUtils.close(dialogue)
-
+            PopupUtils.close(dialogue);
+            pageStack.push(cameraPage);
         }
     }
 }

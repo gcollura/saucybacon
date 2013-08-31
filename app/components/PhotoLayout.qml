@@ -23,7 +23,7 @@ import Ubuntu.Components.Popups 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
 
 Flickable {
-    id: flickable
+    id: root
 
     anchors {
         left: parent.left
@@ -54,7 +54,7 @@ Flickable {
 
             visible: editable
 
-            onClicked: photoRow.selectPhoto();
+            onClicked: selectPhoto();
         }
 
         Repeater {
@@ -85,9 +85,9 @@ Flickable {
                         else {
                             //photoRow.showPhoto(idx);
                             if (!photo.expanded) {
-                                width = flickable.parent.width;
+                                width = root.parent.width;
                                 photo.expanded = !photo.expanded;
-                                console.log(flickable.parent.width)
+                                console.log(root.parent.width)
                             } else {
                                 width = iconSize;
                                 photo.expanded = !photo.expanded;
@@ -100,24 +100,24 @@ Flickable {
 
             }
         }
+    }
 
-        function showPhoto(index) {
-            console.log("Not implemented feature.");
-        }
+    function showPhoto(index) {
+        console.log("Not implemented feature.");
+    }
 
-        function selectPhoto() {
-            PopupUtils.open(Qt.resolvedUrl("../components/PhotoChooser.qml"), photoRow);
-        }
+    function selectPhoto() {
+        PopupUtils.open(Qt.resolvedUrl("../components/PhotoChooser.qml"), root);
+    }
 
-        function addPhoto(filename) {
-            photos.pushBack(filename);
-            photosChanged();
-        }
+    function addPhoto(filename) {
+        photos.pushBack(filename);
+        photosChanged();
+    }
 
-        function removePhoto(index) {
-            photos.splice(index, 1);
-            photosChanged();
-        }
+    function removePhoto(index) {
+        photos.splice(index, 1);
+        photosChanged();
     }
 
     Component {
@@ -137,9 +137,9 @@ Flickable {
 
                         onClicked: {
                             if (index === 0)
-                                photoRow.removePhoto(caller.idx)
+                                removePhoto(caller.idx)
                             else if (index === 1)
-                                photoRow.showPhoto(caller.idx)
+                                showPhoto(caller.idx)
 
                             hide();
                         }

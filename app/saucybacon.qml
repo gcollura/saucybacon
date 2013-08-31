@@ -117,6 +117,13 @@ MainView {
             visible: false
         }
 
+        CameraPage {
+            objectName: "cameraPage"
+            id: cameraPage
+
+            visible: false
+        }
+
         function back() {
             pageStack.currentPage.tools.back.trigger();
         }

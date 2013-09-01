@@ -67,7 +67,8 @@ Flickable {
                 height: width
 
                 property bool expanded: false
-                property int idx
+                property int idx: index
+                property string source: modelData
 
                 image: Image {
                     source: modelData
@@ -83,7 +84,7 @@ Flickable {
                         if (editable)
                             PopupUtils.open(popoverComponent, photo);
                         else {
-                            showPhoto(idx);
+                            PopupUtils.open(previewerComponent, photo);
                         }
                     }
                 }
@@ -111,6 +112,26 @@ Flickable {
     function removePhoto(index) {
         photos.splice(index, 1);
         photosChanged();
+    }
+
+    Component {
+        id: previewerComponent
+
+        Previewer {
+            height: Math.min(parent.height, preview.height)
+            width: Math.min(parent.width, preview.width)
+            Image {
+                id: preview
+                anchors.centerIn: parent
+                source: caller ? photos[caller.idx] : ""
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                anchors.centerIn: parent
+                onClicked: console.log("LOL")
+            }
+        }
     }
 
     Component {

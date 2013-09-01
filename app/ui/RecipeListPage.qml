@@ -81,6 +81,10 @@ Page {
             }
 
             Standard {
+                text: i18n.tr("All")
+            }
+
+            Standard {
                 text: i18n.tr("Favorites")
             }
 

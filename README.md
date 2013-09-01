@@ -2,6 +2,15 @@
 
 Write recipes and save them online with the UbuntuOne sync feature.
 
+## Features
+ * Adaptive layout
+ * Online recipe search with automatic download
+ * Camera support
+ * Social sharing features
+ * Ubuntu One sync
+ * Unity/HUD integration
+ * Basic recipe management
+
 ## Requirements
  * Ubuntu SDK
  * U1db - qtdeclarative5-u1db1.0
@@ -28,7 +37,7 @@ $ cd -
 $ qmlscene -I modules app/saucybacon.qml
 ```
 
-***Known problems***
+**Known problems**
  * If your default compiler is clang, you have to switch back to gcc. Clang seems to be not supported at the moment.
  * Some recipe sites aren't supported yet and they aren't properly managed.
  * Retrieving contents from website is done using stupid regex, because I couldn't get a proper XML/HTML tool to work,

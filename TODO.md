@@ -5,12 +5,12 @@
 - [x] Save edited recipes
 - [x] View a recipe (RecipePage.qml)
 - [x] Search for recipes online
+- [-] Categories
+- [ ] Some fashion for the contest
+- [ ] Proportions
 - [ ] Search for recipes locally
 - [ ] Niceties
-- [ ] Some fashion for the contest
-- [ ] Create menus
-- [-] Categories
-- [ ] Proportions
 - [ ] Image zoom
 - [ ] Tests
 - [ ] New Database backend
+- [ ] Create menus

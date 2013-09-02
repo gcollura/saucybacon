@@ -79,25 +79,19 @@ Flickable {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        photo.idx = index
-
                         if (editable)
                             PopupUtils.open(popoverComponent, photo);
                         else {
-                            PopupUtils.open(previewerComponent, photo);
+                            showPhoto(photo)
                         }
                     }
                 }
-
-                // UbuntuNumberAnimation on opacity { from: 0; to: 100 }
-
             }
         }
     }
 
-    function showPhoto(index) {
-        console.log("Not implemented feature.");
-
+    function showPhoto(caller) {
+        PopupUtils.open(previewerComponent, caller);
     }
 
     function selectPhoto() {
@@ -118,18 +112,20 @@ Flickable {
         id: previewerComponent
 
         Previewer {
-            height: Math.min(parent.height, preview.height)
-            width: Math.min(parent.width, preview.width)
+            id: previewer
             Image {
-                id: preview
-                anchors.centerIn: parent
-                source: caller ? photos[caller.idx] : ""
-            }
+                id: image
 
-            MouseArea {
-                anchors.fill: parent
-                anchors.centerIn: parent
-                onClicked: console.log("LOL")
+                height: Math.min(mainView.height - units.gu(4), sourceSize.height)
+                width: Math.min(mainView.width - units.gu(4), sourceSize.width)
+
+                source: caller ? caller.source : ""
+                fillMode: Image.PreserveAspectFit
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: hide()
+                }
             }
         }
     }
@@ -153,7 +149,7 @@ Flickable {
                             if (index === 0)
                                 removePhoto(caller.idx)
                             else if (index === 1)
-                                showPhoto(caller.idx)
+                                showPhoto(caller)
 
                             hide();
                         }

@@ -171,7 +171,7 @@ QtObject {
 
     function remove() {
         if (docId) {
-            recipesdb.putDoc(null, docId);
+            recipesdb.putDoc("", docId);
             removed();
         }
     }

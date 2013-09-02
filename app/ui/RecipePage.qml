@@ -56,7 +56,7 @@ Page {
         },
 
         State {
-            name: "normal"
+            name: ""
 
             PropertyChanges {
                 target: recipeView

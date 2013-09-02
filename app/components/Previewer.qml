@@ -5,8 +5,19 @@ import Ubuntu.Components.Popups 0.1
 PopupBase {
     id: previewer
 
-    default property alias contents: contentsItem.data
+    default property alias contents: containerItem.data
     property Item caller
+
+    /*!
+      \qmlproperty real contentWidth
+      \qmlproperty real contentHeight
+      The properties can be used to alter the default content width and heights.
+      */
+    property alias contentWidth: foreground.width
+    /*! \internal */
+    property alias contentHeight: foreground.height
+
+    property bool autoClose: true
 
     __foreground: foreground
     __eventGrabber.enabled: true
@@ -16,17 +27,24 @@ PopupBase {
     Rectangle {
         id: foreground
 
-        property int margins: units.gu(2)
+        color: "transparent"
+
         anchors.centerIn: parent
 
+        width: containerItem.width
+        height: containerItem.height
+
         Item {
-            id: contentsItem
+            id: containerItem
+
             anchors {
                 top: parent.top
                 left: parent.left
                 right: parent.right
-                margins: foreground.margins
+                centerIn: parent
             }
+            height: childrenRect.height
+            width: childrenRect.width
         }
     }
 

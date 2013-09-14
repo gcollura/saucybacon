@@ -30,6 +30,8 @@ Page {
     title: i18n.tr("Recipes")
     anchors.fill: parent
 
+    actions: [ newRecipeAction, searchAction ]
+
     tools: ToolbarItems {
         ToolbarButton {
             action: newRecipeAction

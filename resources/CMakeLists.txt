@@ -8,4 +8,5 @@ file(GLOB_RECURSE GRAPHICS {CMAKE_CURRENT_SOURCE_DIR} *.png *.jpg *.svg)
 # Make the graphics files show in the QtCreator tree
 add_custom_target(GraphicsFiles SOURCES ${GRAPHICS})
 
-install(FILES ${GRAPHICS} DESTINATION ${CMAKE_INSTALL_PREFIX}/share/saucybacon/resources/icons)
+install(DIRECTORY icons DESTINATION ${CMAKE_INSTALL_PREFIX}/share/saucybacon/resources)
+install(DIRECTORY images DESTINATION ${CMAKE_INSTALL_PREFIX}/share/saucybacon/resources)

@@ -25,7 +25,7 @@ ListItem.Subtitled {
     id: item
     progression: true
 
-    icon: contents.photos[0] ? Qt.resolvedUrl(contents.photos[0]) : Qt.resolvedUrl("../../resources/images/default.png")
+    icon: contents.photos[0] ? Qt.resolvedUrl(contents.photos[0]) : mainView.icon("unknown-food", true)
 
     property bool minimal: false
     property bool silent: false

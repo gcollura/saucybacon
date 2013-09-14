@@ -214,7 +214,7 @@ MainView {
         if (local === "app")
             return "/usr/share/icons/ubuntu-mobile/apps/scalable/" + name + ".svg"
         if (local)
-            return Qt.resolvedUrl("../resources/icons/" + name + ".png")
+            return Qt.resolvedUrl("../resources/images/" + name + ".png")
         return "/usr/share/icons/ubuntu-mobile/actions/scalable/" + name + ".svg"
     }
 

@@ -247,7 +247,7 @@ void RecipeParser::parseHtml(const QByteArray &html) {
         directions.append(match.captured(1).replace(QRegularExpression("<.+?>"), "").simplified());
         directions.append("\n");
     }
-    directions.append(tr("\nRecipe from %1").arg(m_service));
+    directions.append(tr("\nRecipe from %1.\nDirections are not part of F2F API.").arg(m_service));
 
     QRegularExpressionMatch matchPreptime = defaultRegex["preptime"].match(html);
     QString preptime;

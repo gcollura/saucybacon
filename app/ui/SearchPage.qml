@@ -82,6 +82,7 @@ Page {
                     onTextChanged: searchLocally(searchField.text)
 
                     Behavior on width { UbuntuNumberAnimation { } }
+
                 }
 
                 Button {
@@ -113,6 +114,15 @@ Page {
                     running: search.loading
                     visible: running
                 }
+            }
+
+            Label {
+                anchors {
+                    right: parent.right
+                    rightMargin: units.gu(2)
+                }
+                text: i18n.tr("Powered by Food2Fork.com")
+                fontSize: "small"
             }
 
             ListView {

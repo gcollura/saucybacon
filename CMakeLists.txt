@@ -24,10 +24,9 @@ file(TO_CMAKE_PATH "${QT_IMPORTS_DIR}" QT_IMPORTS_DIR)
 
 add_subdirectory(modules)
 add_subdirectory(app)
-add_subdirectory(graphics)
+add_subdirectory(resources)
 # TODO: add subdirectories
 
 # TODO: add translations
 
 install(FILES saucybacon DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
-install(FILES saucybacon.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications)

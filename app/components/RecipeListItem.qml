@@ -25,7 +25,7 @@ ListItem.Subtitled {
     id: item
     progression: true
 
-    icon: contents.photos[0] ? Qt.resolvedUrl(contents.photos[0]) : Qt.resolvedUrl("../../graphics/toolbarIcon@8.png")
+    icon: contents.photos[0] ? Qt.resolvedUrl(contents.photos[0]) : Qt.resolvedUrl("../../resources/icons/default.png")
 
     property bool minimal: false
     property bool silent: false

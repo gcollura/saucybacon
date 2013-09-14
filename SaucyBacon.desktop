@@ -1,8 +1,0 @@
-[Desktop Entry]
-Name=SaucyBacon
-Comment=Manage your personal recipe and find new tastes on the web
-Exec=saucybacon
-Icon=saucybacon
-Terminal=false
-Type=Application
-X-Ubuntu-Touch=true

@@ -121,7 +121,7 @@ ToolbarItems {
                 ListItem.Header { text: i18n.tr("Export") }
                 ListItem.Standard {
                     text: i18n.tr("As pdf")
-                    icon: mainView.icon("export-document")
+                    icon: mainView.icon("export-document", true)
 
                     onTriggered: {
                         hide();

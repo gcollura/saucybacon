@@ -240,8 +240,8 @@ Page {
         recipe.photos = photoLayout.photos;
         recipe.restriction = recipeRestriction.selectedIndex;
 
-        pageStack.back();
         recipe.save();
+        pageStack.push(recipePage);
 
     }
 

@@ -84,7 +84,8 @@ Page {
                 horizontalCenter: parent.horizontalCenter
                 topMargin: units.gu(4)
             }
-            text: i18n.tr("I am loading your recipe, please hold still")
+            text: i18n.tr("Please wait. Serving up recipe.")
+            horizontalAlignment: Text.AlignRight
             fontSize: "large"
         }
     }

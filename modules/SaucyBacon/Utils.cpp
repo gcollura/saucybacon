@@ -108,6 +108,12 @@ QString Utils::read(const QString& dirName, const QString& fileName) {
     }
 }
 
+bool Utils::mv(const QString &oldName, const QString &newName) {
+    QFile file(oldName);
+    file.rename(newName);
+    return file.exists();
+}
+
 bool Utils::exportAsPdf(const QString &fileName, const QJsonObject &contents) {
     QTextDocument doc;
     QString html;

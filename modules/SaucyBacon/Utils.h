@@ -50,6 +50,7 @@ public:
 
     Q_INVOKABLE bool write(const QString& dirName, const QString& fileName, const QByteArray &contents);
     Q_INVOKABLE QString read(const QString& dirName, const QString& fileName);
+    Q_INVOKABLE bool mv(const QString& oldName, const QString& newName);
 
     Q_INVOKABLE bool exportAsPdf(const QString& fileName, const QJsonObject& contents);
 

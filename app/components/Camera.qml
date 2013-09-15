@@ -63,6 +63,9 @@ Item {
 
         camera.setCaptureMode(Camera.CaptureStillImage);
 
+        var dest = "%1.jpg".arg(Qt.formatDateTime(new Date(), "yyyy-MM-dd-hh-mm-ss-zzz"));
+        camera.imageCapture.captureToLocation(utils.path(utils.path(Utils.SettingsLocation) + "/imgs", dest));
+
         camera.start();
 
         camera.searchAndLock();

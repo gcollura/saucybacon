@@ -72,6 +72,14 @@ QtObject {
         changed();
     }
 
+    function setDocId(new_docId, content) {
+        docId = new_docId;
+    }
+
+    Component.onCompleted: {
+        recipesdb.docChanged.connect(setDocId);
+    }
+
     function load(recipeId, recipeUrl, serviceUrl, imageUrl) {
         newRecipe();
         parser.get(recipeId, recipeUrl, serviceUrl, imageUrl);

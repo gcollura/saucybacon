@@ -29,17 +29,16 @@ Database::Database(QObject *parent) :
     QAbstractListModel(parent) {
 
     // Find QSLite driver
-    db = new QSqlDatabase();
-    db->addDatabase("QSQLITE");
+    m_db = QSqlDatabase::addDatabase("QSQLITE");
 
-    db->setDatabaseName("saucybacondb");
+    m_db.setDatabaseName("/home/random/saucybacon.db");
 
     // Open database
-    db->open();
+    m_db.open();
 
     bool ret = false;
-    if (db->isOpen()) {
-        QSqlQuery query(*db);
+    if (m_db.isOpen()) {
+        QSqlQuery query(m_db);
         ret = query.exec("create table person "
                          "(id integer primary key, "
                          "firstname varchar(20), "
@@ -47,14 +46,13 @@ Database::Database(QObject *parent) :
                          "age integer)");
 
     } else {
-        qDebug() << "Cannot open db.";
+        qDebug() << "Cannot open m_db.";
     }
-    qDebug() << db->databaseName();
+    qDebug() << m_db.databaseName();
 }
 
 Database::~Database() {
-    db->close();
-    delete db;
+    m_db.close();
 }
 
 QVariant Database::data(const QModelIndex &index, int role) const {

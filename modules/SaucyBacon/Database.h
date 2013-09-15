@@ -21,8 +21,7 @@
 #define DATABASE_H
 
 #include <QAbstractListModel>
-
-class QSqlDatabase;
+#include <QSqlDatabase>
 
 class Database : public QAbstractListModel {
 
@@ -41,7 +40,7 @@ signals:
 
 public slots:
 private:
-    QSqlDatabase *db;
+    QSqlDatabase m_db;
 };
 
 #endif // DATABASE_H

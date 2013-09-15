@@ -117,6 +117,7 @@ Page {
             }
 
             Label {
+                id: creditLabel
                 anchors {
                     right: parent.right
                     rightMargin: units.gu(2)
@@ -133,7 +134,7 @@ Page {
                     margins: units.gu(-2)
                 }
 
-                height: parent.height - searchRow.height
+                height: parent.height - searchRow.height - creditLabel.height - units.gu(2)
                 clip: true
 
                 model: search

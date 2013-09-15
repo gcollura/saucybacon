@@ -23,79 +23,110 @@ import Ubuntu.Components 0.1
 Page {
     title: i18n.tr("About")
 
-    Column {
+    Flickable {
+        id: flickable
+
         anchors {
-            centerIn: parent
-            margins: units.gu(3)
-            topMargin: units.gu(8)
+            fill: parent
+            topMargin: units.gu(2)
+            bottomMargin: units.gu(2)
         }
+        contentHeight: layout.height
+        interactive: contentHeight + units.gu(5) > height // +5 because of strange ValueSelector height
 
-        spacing: units.gu(3)
+        Column {
+            id: layout
 
-        UbuntuShape {
-            image: Image {
-                source: Qt.resolvedUrl("../../resources/icons/SaucyBacon_icon.png")
+            anchors {
+                centerIn: parent
+                margins: units.gu(3)
             }
 
-            width: 128
-            height: width
-            radius: "medium"
-            anchors.horizontalCenter: parent.horizontalCenter
-        }
+            spacing: units.gu(3)
 
-        Grid {
-            anchors.horizontalCenter: parent.horizontalCenter
-            columns: 2
-            spacing: units.gu(1)
+            UbuntuShape {
+                image: Image {
+                    source: Qt.resolvedUrl("../../resources/icons/SaucyBacon_icon.png")
+                }
 
-            Label {
-                text: i18n.tr("Author: ")
+                width: 128
+                height: width
+                radius: "medium"
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+
+            Grid {
+                anchors.horizontalCenter: parent.horizontalCenter
+                columns: 2
+                spacing: units.gu(1)
+
+                Label {
+                    text: i18n.tr("Author: ")
+                }
+
+                Label {
+                    font.bold: true
+                    text: "Giulio Collura"
+                }
+
+                Label {
+                    text: i18n.tr("Icon:")
+                }
+
+                Label {
+                    font.bold: true
+                    text: "Lucas Romero Di Benedetto"
+                }
+
+                Label {
+                    text: i18n.tr("Contact:")
+                }
+
+                Label {
+                    text: i18n.tr("<a href=\"mailto:random.cpp@gmail.com?subject=SaucyBacon%20support\">random.cpp@gmail.com</a>")
+                    onLinkActivated: Qt.openUrlExternally(link)
+                    linkColor: "white"
+                }
             }
 
             Label {
-                font.bold: true
-                text: "Giulio Collura"
-            }
-
-            Label {
-                text: i18n.tr("Icon:")
-            }
-
-            Label {
-                font.bold: true
-                text: "Lucas Romero Di Benedetto"
-            }
-
-            Label {
-                text: i18n.tr("Contact:")
-            }
-
-            Label {
-                text: i18n.tr("<a href=\"mailto:random.cpp@gmail.com?subject=SaucyBacon%20support\">random.cpp@gmail.com</a>")
+                text: i18n.tr("<a href=\"https://github.com/random-cpp/saucybacon/issues/\">Report a Bug</a>")
+                anchors.horizontalCenter: parent.horizontalCenter
                 onLinkActivated: Qt.openUrlExternally(link)
+                linkColor: "white"
             }
-        }
 
-        Label {
-            text: i18n.tr("<a href=\"https://github.com/random-cpp/saucybacon/issues/\">Report a Bug</a>")
-            anchors.horizontalCenter: parent.horizontalCenter
-            onLinkActivated: Qt.openUrlExternally(link)
-        }
+            Label {
+                text: i18n.tr("<a href=\"https://github.com/random-cpp/saucybacon\">Website</a>")
+                anchors.horizontalCenter: parent.horizontalCenter
+                onLinkActivated: Qt.openUrlExternally(link)
+                linkColor: "white"
+            }
 
-        Label {
-            text: i18n.tr("<a href=\"https://github.com/random-cpp/saucybacon\">Website</a>")
-            anchors.horizontalCenter: parent.horizontalCenter
-            onLinkActivated: Qt.openUrlExternally(link)
-        }
+            Label {
+                text: i18n.tr("Version <b>%1</b>").arg("1.0")
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
 
-        Label {
-            text: i18n.tr("Version <b>%1</b>").arg("1.0.3")
-            anchors.horizontalCenter: parent.horizontalCenter
-        }
+            Label {
+                text: i18n.tr("Online search powered by <a href=\"http://food2fork.com/\">Food2Fork.com</a>")
+                wrapMode: Text.Wrap
+                anchors.horizontalCenter: parent.horizontalCenter
+                linkColor: "white"
+            }
 
-        Label {
-            text: i18n.tr("Copyright (C) 2013 Giulio Collura")
-            anchors.horizontalCenter: parent.horizontalCenter
+            Label {
+                text: i18n.tr("Recipe directions are not obtained with Food2Fork.com API.")
+                width: parent.width
+                wrapMode: Text.Wrap
+                horizontalAlignment: Text.AlignHCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+
+            Label {
+                text: i18n.tr("Copyright (C) 2013 Giulio Collura")
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
         }
     }
 }

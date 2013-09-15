@@ -151,10 +151,6 @@ MainView {
         id: utils
     }
 
-    Database {
-        id: db
-    }
-
     /* Recipe Database */
     U1db.Database {
         id: recipesdb
@@ -183,6 +179,10 @@ MainView {
     property var categories: [ ]
     property var restrictions: [ i18n.tr("Non-veg"), i18n.tr("Vegetarian"), i18n.tr("Vegan") ]
     property var searches: [ ]
+
+    // Component.onDestruction isn't called on the phone
+    onCategoriesChanged: saveSettings()
+    onSearchesChanged: saveSettings()
 
     function loadSettings() {
 

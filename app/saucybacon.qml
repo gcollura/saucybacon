@@ -19,7 +19,6 @@
 
 import QtQuick 2.0
 import Ubuntu.Components 0.1
-import Ubuntu.Layouts 0.1
 import U1db 1.0 as U1db
 import SaucyBacon 0.1
 
@@ -228,8 +227,8 @@ MainView {
     }
 
     function computeTotalTime(time1, time2) {
-        var t1 = parseInt(time1);
-        var t2 = parseInt(time2);
+        var t1 = time1 ? parseInt(time1) : 0;
+        var t2 = time2 ? parseInt(time2) : 0;
 
         var total = t1 + t2;
         if (!total)

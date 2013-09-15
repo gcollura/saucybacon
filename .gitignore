@@ -6,3 +6,4 @@ build/
 sb*db
 *.qmltypes
 *.so
+click-pkg/

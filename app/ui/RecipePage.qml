@@ -153,31 +153,60 @@ Page {
 
                     Item {
                         width: parent.width
-                        height: totaltimeLabel.height
+                        height: childrenRect.height
+
+                        Row {
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            spacing: units.gu(4)
+
+                            ImageWithLabel {
+                                id: totaltime
+                                visible: recipe.preptime + recipe.cooktime > 0
+                                source: icon("64/clock", true)
+                                text: recipe.totaltime
+                            }
+
+                            ImageWithLabel {
+                                id: difficulty
+                                visible: recipe.difficulty
+                                source: recipe.difficulty ? icon("64/difficulty-%1".arg(recipe.difficulty), true) : ""
+                                text: difficulties[recipe.difficulty]
+                            }
+
+                            ImageWithLabel {
+                                id: restriction
+                                visible: recipe.restriction
+                                source: recipe.restriction ? icon("64/restriction-%1".arg(recipe.restriction), true) : ""
+                                text: restrictions[recipe.restriction]
+                            }
+
+                            ImageWithLabel {
+                                id: favorite
+                                visible: recipe.favorite
+                                source: icon("64/star", true)
+                                text: i18n.tr("Favorite")
+                            }
+                        }
+
+                    }
+
+                    Label {
                         visible: recipe.preptime + recipe.cooktime > 0
-
-                        Label {
-                            id: totaltimeLabel
-                            anchors.left: parent.left
-                            text: i18n.tr("%1".arg(recipe.totaltime))
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: {
+                            var string = "";
+                            if (recipe.preptime > 0)
+                                string += i18n.tr("Prep: %1 mins".arg(recipe.preptime));
+                            if (recipe.preptime > 0 && recipe.cooktime > 0)
+                                string += " / ";
+                            if (recipe.cooktime > 0)
+                                string += i18n.tr("Cook: %1 mins".arg(recipe.cooktime));
+                            return string;
                         }
-                        Label {
-                            anchors.right: parent.right
-                            text: i18n.tr("Prep: %1 mins, Cook: %2 mins".arg(recipe.preptime).arg(recipe.cooktime))
-                        }
-                    }
-
-                    Label {
-                        id: difficultyLabel
-                        text: i18n.tr("Difficulty: %1".arg(difficulties[recipe.difficulty]))
-                    }
-
-                    Label {
-                        id: restrictionLabel
-                        text: i18n.tr("Restriction: %1".arg(restrictions[recipe.restriction]));
                     }
 
                     ListItem.ThinDivider {
+                        visible: recipe.preptime + recipe.cooktime > 0 || recipe.favorite || recipe.restriction || recipe.difficulty
                         anchors.margins: units.gu(-2)
                     }
 

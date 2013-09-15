@@ -98,7 +98,7 @@ QtObject {
 
         preptime = contents.preptime ? contents.preptime : "0";
         cooktime = contents.cooktime ? contents.cooktime : "0";
-        totaltime = contents.totaltime ? contents.totaltime : i18n.tr("Total time: %1 minutes").arg(computeTotalTime(preptime, cooktime));
+        totaltime = contents.totaltime ? contents.totaltime : i18n.tr("%1'").arg(computeTotalTime(preptime, cooktime));
 
         ingredients = contents.ingredients ? contents.ingredients : [ ];
         servings = contents.servings ? contents.servings : 4;
@@ -120,7 +120,7 @@ QtObject {
         contents.restriction = restriction ? restriction : 0;
         contents.preptime = preptime ? preptime : "0";
         contents.cooktime = cooktime ? cooktime : "0";
-        contents.totaltime = totaltime ? totaltime : i18n.tr("Total time: %1 minutes").arg(computeTotalTime(preptime, cooktime));
+        contents.totaltime = totaltime ? totaltime : i18n.tr("%1'").arg(computeTotalTime(preptime, cooktime));
         contents.ingredients = ingredients ? ingredients : [ ];
         contents.servings = servings ? servings : 4;
         contents.directions = directions ? directions : "";
@@ -139,7 +139,7 @@ QtObject {
             "restriction": 0,
             "preptime": "0",
             "cooktime": "0",
-            "totaltime": i18n.tr("Total time: %1 minutes").arg(computeTotalTime(preptime, cooktime)),
+            "totaltime": i18n.tr("%1'").arg(computeTotalTime(preptime, cooktime)),
             "ingredients": [ ],
             "servings": 4,
             "directions": "",

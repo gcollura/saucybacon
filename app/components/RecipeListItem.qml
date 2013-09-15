@@ -25,7 +25,8 @@ ListItem.Subtitled {
     id: item
     progression: true
 
-    icon: contents.photos[0] ? Qt.resolvedUrl(contents.photos[0]) : mainView.icon("unknown-food", true)
+    icon: contents.photos[0] ? Qt.resolvedUrl(contents.photos[0]) : mainView.icon("64/unknown-food", true)
+    fallbackIconSource: mainView.icon("64/unknown-food", true)
 
     property bool minimal: false
     property bool silent: false
@@ -36,12 +37,14 @@ ListItem.Subtitled {
             verticalCenter: parent.verticalCenter
             left: parent.left
         }
+
         Label {
             text: truncate(contents.name, item.width, units.gu(1.5))
         }
+
         Label {
             visible: contents.preptime + contents.cooktime > 0
-            text: i18n.tr("%1".arg(contents.totaltime))
+            text: i18n.tr("Total time: %1".arg(contents.totaltime))
             font.pixelSize: units.gu(1.5)
             color: Theme.palette.normal.backgroundText
         }
@@ -55,26 +58,24 @@ ListItem.Subtitled {
             right: parent.right
         }
         visible: !minimal
-        Label {
+
+        Image {
             anchors.verticalCenter: parent.verticalCenter
-            text: restrictions[contents.restriction]
-            font.pixelSize: units.gu(1.5)
-            color: Theme.palette.normal.backgroundText
+            source: contents.restriction ? mainView.icon("32/restriction-%1".arg(contents.restriction), true) : ""
+            sourceSize.height: units.gu(2)
         }
-        Column {
+
+        Image {
             anchors.verticalCenter: parent.verticalCenter
-            width: units.gu(2)
+            source: contents.difficulty ? mainView.icon("32/difficulty-%1".arg(contents.difficulty), true) : ""
+            sourceSize.height: units.gu(2)
+        }
 
-            Label {
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: Array(contents.difficulty + 1).join("\u1620")
-            }
-
-            Label {
-                visible: contents.favorite
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: "\u2605" // Star
-            }
+        Image {
+            visible: contents.favorite
+            anchors.verticalCenter: parent.verticalCenter
+            source: mainView.icon("32/star", true)
+            sourceSize.height: units.gu(2)
         }
     }
 

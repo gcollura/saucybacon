@@ -29,14 +29,23 @@ Page {
 
     title: recipe.exists() ? i18n.tr("Edit recipe") : i18n.tr("New recipe")
 
+    Action {
+        id: saveRecipeAction
+        description: i18n.tr("Save the current recipe")
+        keywords: "save;recipe"
+        iconSource: icon('save')
+        text: i18n.tr("Save")
+
+        onTriggered: {
+            saveRecipe();
+        }
+    }
+
+    actions: [ newRecipeAction, searchAction, saveRecipeAction ]
+
     tools: ToolbarItems {
         ToolbarButton {
-            iconSource: icon('save')
-            text: i18n.tr("Save")
-
-            onTriggered: {
-                saveRecipe();
-            }
+            action: saveRecipeAction
         }
     }
 
@@ -222,7 +231,7 @@ Page {
 
         recipe.preptime = prepTime.text;
         recipe.cooktime = cookTime.text;
-        recipe.totaltime = totalTime.text;
+        recipe.totaltime = i18n.tr("%1'").arg(computeTotalTime(prepTime.text, cookTime.text));
 
         recipe.ingredients = ingredientsLayout.getIngredients();
 

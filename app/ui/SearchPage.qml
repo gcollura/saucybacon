@@ -96,7 +96,7 @@ Page {
                     Image {
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.horizontalCenter: parent.horizontalCenter
-                        source: icon("search", true)
+                        source: icon("32/search", true)
                         sourceSize {
                             height: parent.height - units.gu(1.5)
                             width: parent.width - units.gu(1.5)

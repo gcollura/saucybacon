@@ -50,7 +50,7 @@ ToolbarItems {
 
     ToolbarButton {
         text: i18n.tr("Source")
-        //iconSource: icon("open")
+        iconSource: icon("browser2", true)
 
         visible: recipe.source.length > 0
         onTriggered: {
@@ -121,7 +121,7 @@ ToolbarItems {
                 ListItem.Header { text: i18n.tr("Export") }
                 ListItem.Standard {
                     text: i18n.tr("As pdf")
-                    icon: mainView.icon("export-document", true)
+                    icon: mainView.icon("64/export-pdf", true)
 
                     onTriggered: {
                         hide();

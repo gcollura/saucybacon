@@ -100,6 +100,14 @@ MainView {
                     id: searchPage
                 }
             }
+
+            Tab {
+                title: page.title
+                page: AboutPage {
+                    objectName: "aboutPage"
+                    id: aboutPage
+                }
+            }
         }
 
         RecipePage {

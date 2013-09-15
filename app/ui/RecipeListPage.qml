@@ -100,10 +100,12 @@ Page {
 
             Standard {
                 text: i18n.tr("All")
+                onClicked: { filter(""); favorites(false) }
             }
 
             Standard {
                 text: i18n.tr("Favorites")
+                onClicked: { favorites(true) }
             }
 
             Header {
@@ -114,6 +116,7 @@ Page {
                 model: categories
                 Standard {
                     text: modelData
+                    onClicked: filter(modelData)
                 }
             }
         }
@@ -139,21 +142,22 @@ Page {
 
             model: recipesdb
 
-            delegate: RecipeListItem { }
+            property string filter
+            property bool onlyfav
+
+            delegate: RecipeListItem {
+                visible: (recipeListView.filter.length > 0 ? contents.category == recipeListView.filter : true)
+                         && (recipeListView.onlyfav ? contents.favorite : true)
+                height: visible ? units.gu(6.2) : 0
+            }
         }
     }
 
 
     function filter(name) {
-
+        recipeListView.filter = name;
     }
-
-    U1db.Index {
-
+    function favorites(show) {
+        recipeListView.onlyfav = show;
     }
-
-    U1db.Query {
-
-    }
-
 }

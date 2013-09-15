@@ -34,7 +34,10 @@ Utils::Utils(QObject *parent) :
 Utils::~Utils() {
     auto json = QJsonObject::fromVariantMap(m_settings);
     QJsonDocument document(json);
-    write(path(Utils::SettingsLocation), "sb-settings.json", document.toJson());
+    if (mkdir(path(Utils::SettingsLocation)))
+        write(path(Utils::SettingsLocation), "sb-settings.json", document.toJson());
+    else
+        write(".", "sb-settings.json", document.toJson());
 }
 
 bool Utils::mkdir(const QString &dirName) {

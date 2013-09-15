@@ -30,7 +30,7 @@ MainView {
     id: mainView
 
     // NOTE: applicationName needs to match the .desktop filename
-    applicationName: "SaucyBacon"
+    applicationName: "saucybacon"
 
     automaticOrientation: true
     property bool wideAspect: width > units.gu(80)
@@ -146,7 +146,9 @@ MainView {
     /* Recipe Database */
     U1db.Database {
         id: recipesdb
-        path: utils.path(Utils.SettingsLocation, "sb-recipes.db")
+        path: utils.mkdir(Utils.SettingsLocation) ? utils.path(Utils.SettingsLocation, "sb-recipes.db") : "sb-recipes.db"
+
+        property bool count: recipesdb.listDocs().length
     }
 
     /* Base recipe document - just for reference

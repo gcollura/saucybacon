@@ -224,7 +224,7 @@ Page {
 
     function saveRecipe() {
 
-        recipe.name = recipeName.text ? recipeName.text : i18n.tr("Misterious Recipe");
+        recipe.name = recipeName.text.trim() ? recipeName.text.trim() : i18n.tr("Misterious Recipe");
         recipe.category = categories[recipeCategory.selectedIndex];
         recipe.difficulty = recipeDifficulty.selectedIndex;
         recipe.restriction = recipeRestriction.selectedIndex;

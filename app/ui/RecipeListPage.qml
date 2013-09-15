@@ -72,9 +72,24 @@ Page {
 
     flickable: !wideAspect ? recipeListView : null
 
+    Item {
+        visible: recipesdb.count == 0
+        anchors.fill: parent
+
+        Label {
+            anchors {
+                verticalCenter: parent.verticalCenter
+                horizontalCenter: parent.horizontalCenter
+            }
+            text: i18n.tr("No Recipes!")
+            fontSize: "large"
+        }
+    }
+
+
     Sidebar {
         id: sidebar
-        expanded: wideAspect
+        expanded: wideAspect && recipesdb.count > 0
         anchors.topMargin: units.gu(9.5)
 
         Column {
@@ -118,6 +133,7 @@ Page {
             objectName: "recipesListView"
             id: recipeListView
 
+            visible: recipesdb.count > 0
             anchors.fill: parent
             clip: true
 
@@ -126,6 +142,7 @@ Page {
             delegate: RecipeListItem { }
         }
     }
+
 
     function filter(name) {
 

@@ -50,7 +50,7 @@ ToolbarItems {
 
     ToolbarButton {
         text: i18n.tr("Source")
-        iconSource: icon("browser2", true)
+        iconSource: icon("32/browser", true)
 
         visible: recipe.source.length > 0
         onTriggered: {
@@ -71,6 +71,7 @@ ToolbarItems {
     }
 
     ToolbarButton {
+        visible: recipe.ready
         action: editRecipeAction
     }
 

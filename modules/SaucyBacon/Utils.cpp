@@ -27,7 +27,11 @@ Utils::Utils(QObject *parent) :
     QObject(parent) {
 
     mkdir(path(Utils::SettingsLocation));
-    auto json = QJsonDocument::fromJson(read(path(Utils::SettingsLocation), "sb-settings.json").toUtf8()).object();
+    QJsonDocument json;
+    if (QFile(path(Utils::SettingsLocation), "sb-settings.json").exists())
+        json = QJsonDocument::fromJson(read(path(Utils::SettingsLocation), "sb-settings.json").toUtf8()).object();
+    else if (QFile(path(".", "sb-settings.json").exists()))
+        json = QJsonDocument::fromJson(read(".", "sb-settings.json").toUtf8()).object();
     m_settings = json.toVariantMap();
 }
 

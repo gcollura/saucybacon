@@ -29,7 +29,7 @@ class Utils : public QObject
 
 public:
     explicit Utils(QObject *parent = 0);
-    ~Utils();
+    virtual ~Utils();
 
     enum StandardLocation {
         DesktopLocation = QStandardPaths::DesktopLocation,
@@ -56,6 +56,7 @@ public:
 
     Q_INVOKABLE QVariant get(const QString &key);
     Q_INVOKABLE bool set(const QString &key, const QVariant &value);
+    Q_INVOKABLE bool save();
 
 Q_SIGNALS:
 

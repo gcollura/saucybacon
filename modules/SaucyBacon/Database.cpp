@@ -39,11 +39,11 @@ Database::Database(QObject *parent) :
     bool ret = false;
     if (m_db.isOpen()) {
         QSqlQuery query(m_db);
-        ret = query.exec("create table person "
+        ret = query.exec("create table recipe "
                          "(id integer primary key, "
-                         "firstname varchar(20), "
-                         "lastname varchar(30), "
-                         "age integer)");
+                         "name varchar(20), "
+                         "contents varchar(30), "
+                         "category integer)");
 
     } else {
         qDebug() << "Cannot open m_db.";

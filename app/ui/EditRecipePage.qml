@@ -199,6 +199,7 @@ Page {
                     width: parent.width
 
                     text: recipe.directions
+                    textFormat: TextEdit.RichText
 
                     placeholderText: i18n.tr("Write your directions")
                     maximumLineCount: 0
@@ -235,7 +236,7 @@ Page {
 
         recipe.ingredients = ingredientsLayout.getIngredients();
 
-        recipe.directions = recipeDirections.text;
+        recipe.directions = recipeDirections.getFormattedText(0, recipeDirections.text.length);
 
         recipe.photos = photoLayout.photos;
         recipe.restriction = recipeRestriction.selectedIndex;

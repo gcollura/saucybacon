@@ -34,12 +34,7 @@ Utils::Utils(QObject *parent) :
     m_settings = json.toVariantMap();
 }
 
-Utils::~Utils() {
-    auto json = QJsonObject::fromVariantMap(m_settings);
-    QJsonDocument document(json);
-
-    write(path(Utils::SettingsLocation), "sb-settings.json", document.toJson());
-}
+Utils::~Utils() { }
 
 bool Utils::mkdir(const QString &dirName) {
     QDir dir(dirName);
@@ -175,4 +170,11 @@ bool Utils::set(const QString &key, const QVariant &value) {
     else
         m_settings.insert(key, value);
     return true;
+}
+
+bool Utils::save() {
+    auto json = QJsonObject::fromVariantMap(m_settings);
+    QJsonDocument document(json);
+
+    write(path(Utils::SettingsLocation), "sb-settings.json", document.toJson());
 }

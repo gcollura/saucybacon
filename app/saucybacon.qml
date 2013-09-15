@@ -180,10 +180,6 @@ MainView {
     property var restrictions: [ i18n.tr("Non-veg"), i18n.tr("Vegetarian"), i18n.tr("Vegan") ]
     property var searches: [ ]
 
-    // Component.onDestruction isn't called on the phone
-    onCategoriesChanged: saveSettings()
-    onSearchesChanged: saveSettings()
-
     function loadSettings() {
 
         Array.prototype.pushBack = function(item) {
@@ -216,12 +212,17 @@ MainView {
             categories = utils.get("categories");
             searches = utils.get("searches");
         }
+
+        // Component.onDestruction isn't called on the phone
+        categoriesChanged.connect(saveSettings)
+        searchesChanged.connect(saveSettings)
     }
 
     function saveSettings() {
         utils.set("windowSize", { "height": height, "width": width });
         utils.set("categories", categories);
         utils.set("searches", searches);
+        utils.save();
     }
 
     // Helper functions

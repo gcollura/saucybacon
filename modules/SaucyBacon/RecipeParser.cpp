@@ -169,6 +169,20 @@ RecipeParser::RecipeParser(QObject *parent) :
     recipeRegex["cooktime"] = QRegularExpression("a^");
     m_services["http://www.chow.com"] = recipeRegex;
 
+    // Smitten Kitchen
+    recipeRegex["directions"] = QRegularExpression("class=\"entry\"+?>(.+?)<script",
+                                                   QRegularExpression::DotMatchesEverythingOption);
+    recipeRegex["preptime"] = QRegularExpression("a^");
+    recipeRegex["cooktime"] = QRegularExpression("a^");
+    m_services["http://www.smittenkitchen.com"] = recipeRegex;
+
+    // Whats Gaby cooking
+    recipeRegex["directions"] = QRegularExpression("class=\"instructions\"+?>(.+?)</ol",
+                                                   QRegularExpression::DotMatchesEverythingOption);
+    recipeRegex["preptime"] = QRegularExpression("a^");
+    recipeRegex["cooktime"] = QRegularExpression("a^");
+    m_services["http://whatsgabycooking.com"] = recipeRegex;
+
     // And more soon...
 
     m_manager = new QNetworkAccessManager(this);
@@ -199,6 +213,7 @@ void RecipeParser::get(const QString &recipeId, const QString &recipeUrl, const 
     m_manager->get(ingredientsReq);
 
     QNetworkRequest directionReq(directionsUrl);
+    directionReq.setHeader(QNetworkRequest::UserAgentHeader, "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)");
     m_manager->get(directionReq);
 
     QNetworkRequest photoReq(photoUrl);
@@ -232,10 +247,13 @@ void RecipeParser::replyFinished(QNetworkReply *reply) {
 void RecipeParser::parseHtml(const QByteArray &html) {
 
     RecipeRegex defaultRegex;
-    if (m_services.contains(m_service))
+    bool supported;
+    if (m_services.contains(m_service)) {
         defaultRegex = m_services[m_service];
-    else {
+        supported = true;
+    } else {
         defaultRegex = m_services["default"];
+        supported = false;
         qDebug() << "Site not supported yet: " + m_service;
     }
 
@@ -245,9 +263,12 @@ void RecipeParser::parseHtml(const QByteArray &html) {
     while (matchDirections.hasNext()) {
         QRegularExpressionMatch match = matchDirections.next();
         directions.append(match.captured(1).replace(QRegularExpression("<.+?>"), "").simplified());
-        directions.append("\n");
+        directions.append("<br />");
     }
-    directions.append(tr("\nRecipe from %1.\nDirections are not part of F2F API.").arg(m_service));
+
+    if (!supported)
+        directions.append(tr("This website is supported yet. It was impossible to load the directions."));
+    directions.append(tr("<br />Recipe from %1.<br />Directions are not part of F2F API.").arg(m_service));
 
     QRegularExpressionMatch matchPreptime = defaultRegex["preptime"].match(html);
     QString preptime;

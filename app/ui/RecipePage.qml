@@ -213,6 +213,20 @@ Page {
                         anchors.margins: units.gu(-2)
                     }
 
+                    PhotoLayout {
+                        id: photoLayout
+                        clip: wideAspect
+                        editable: false
+                        iconSize: units.gu(12)
+
+                        photos: recipe.photos
+                    }
+
+                    ListItem.ThinDivider {
+                        visible: recipe.photos.length > 0
+                        anchors.margins: units.gu(-2)
+                    }
+
                     Label {
                         text: i18n.tr("Ingredients")
                         fontSize: "large"
@@ -221,6 +235,7 @@ Page {
 
                     Column {
                         width: parent.width
+                        spacing: units.gu(0.7)
 
                         Repeater {
                             id: ingredientsList
@@ -241,20 +256,6 @@ Page {
                                 }
                             }
                         }
-                    }
-
-                    ListItem.ThinDivider {
-                        visible: recipe.photos.length > 0
-                        anchors.margins: units.gu(-2)
-                    }
-
-                    PhotoLayout {
-                        id: photoLayout
-                        clip: wideAspect
-                        editable: false
-                        iconSize: units.gu(12)
-
-                        photos: recipe.photos
                     }
 
                     ListItem.ThinDivider {
@@ -286,6 +287,7 @@ Page {
                         text: recipe.directions
 
                         wrapMode: Text.Wrap
+                        textFormat: Text.RichText
                     }
                 }
             }

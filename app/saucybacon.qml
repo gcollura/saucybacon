@@ -151,12 +151,19 @@ MainView {
         id: utils
     }
 
+    Database {
+        id: db
+    }
+
     /* Recipe Database */
     U1db.Database {
         id: recipesdb
-        path: utils.mkdir(utils.path(Utils.SettingsLocation)) ? utils.path(Utils.SettingsLocation, "sb-recipes.db") : "sb-recipes.db"
+        path: utils.path(Utils.SettingsLocation, "sb-recipes.db")
 
-        property bool count: recipesdb.listDocs().length
+        property bool count: recipesdb.listDocs().length > 0
+        function update() {
+            count = recipesdb.listDocs().length > 0
+        }
     }
 
     /* Base recipe document - just for reference

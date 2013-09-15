@@ -17,20 +17,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-#include <QtQml>
-#include <QtQml/QQmlContext>
+#ifndef DATABASE_H
+#define DATABASE_H
 
-#include "Plugin.h"
-#include "Utils.h"
-#include "Database.h"
-#include "RecipeSearch.h"
-#include "RecipeParser.h"
+#include <QAbstractListModel>
 
-void SaucyBaconPlugin::registerTypes(const char *uri) {
-    Q_ASSERT(uri == QLatin1String("SaucyBacon"));
+class QSqlDatabase;
 
-    qmlRegisterType<Utils>(uri, 0, 1, "Utils");
-    qmlRegisterType<Database>(uri, 0, 1, "Database");
-    qmlRegisterType<RecipeSearch>(uri, 0, 1, "RecipeSearch");
-    qmlRegisterType<RecipeParser>(uri, 0, 1, "RecipeParser");
-}
+class Database : public QAbstractListModel {
+
+    Q_OBJECT
+public:
+    explicit Database(QObject *parent = 0);
+    virtual ~Database();
+
+    // QAbstractListModel
+    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+    QHash<int, QByteArray>roleNames() const;
+    int rowCount(const QModelIndex & parent = QModelIndex()) const;
+    void resetModel();
+
+signals:
+
+public slots:
+private:
+    QSqlDatabase *db;
+};
+
+#endif // DATABASE_H

@@ -166,6 +166,8 @@ QtObject {
         if (result)
             saved(); // emit signal
 
+        recipesdb.update();
+
         return result;
     }
 
@@ -173,6 +175,7 @@ QtObject {
         if (docId) {
             recipesdb.putDoc("", docId);
             removed();
+            recipesdb.update();
         }
     }
 

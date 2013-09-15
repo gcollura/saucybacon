@@ -28,20 +28,17 @@ Utils::Utils(QObject *parent) :
 
     mkdir(path(Utils::SettingsLocation));
     QJsonObject json;
-    if (QFile(path(Utils::SettingsLocation, "sb-settings.json")).exists())
-        json = QJsonDocument::fromJson(read(path(Utils::SettingsLocation), "sb-settings.json").toUtf8()).object();
-    else if (QFile(path(".", "sb-settings.json")).exists())
-        json = QJsonDocument::fromJson(read(".", "sb-settings.json").toUtf8()).object();
+
+    json = QJsonDocument::fromJson(read(path(Utils::SettingsLocation), "sb-settings.json").toUtf8()).object();
+
     m_settings = json.toVariantMap();
 }
 
 Utils::~Utils() {
     auto json = QJsonObject::fromVariantMap(m_settings);
     QJsonDocument document(json);
-    if (mkdir(path(Utils::SettingsLocation)))
-        write(path(Utils::SettingsLocation), "sb-settings.json", document.toJson());
-    else
-        write(".", "sb-settings.json", document.toJson());
+
+    write(path(Utils::SettingsLocation), "sb-settings.json", document.toJson());
 }
 
 bool Utils::mkdir(const QString &dirName) {
@@ -54,7 +51,7 @@ bool Utils::mkdir(const QString &dirName) {
 
 QString Utils::path(StandardLocation location) const {
     if (location == Utils::SettingsLocation)
-        return QStandardPaths::standardLocations(QStandardPaths::ConfigLocation)[0] + "/SaucyBacon";
+        return QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation)[0] + "/com.ubuntu.developer.gcollura.saucybacon";
     return QStandardPaths::standardLocations((QStandardPaths::StandardLocation) location)[0];
 }
 

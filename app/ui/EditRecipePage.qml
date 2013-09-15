@@ -27,7 +27,7 @@ import "../components"
 Page {
     id: page
 
-    title: recipe.exists() ? i18n.tr("Edit recipe") : i18n.tr("New recipe")
+    title: recipe.exists() && page.visible ? i18n.tr("Edit recipe") : i18n.tr("New recipe")
 
     Action {
         id: saveRecipeAction

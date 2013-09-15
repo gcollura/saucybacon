@@ -44,8 +44,19 @@ ToolbarItems {
         text: i18n.tr("Share")
         iconSource: icon("share")
 
-        visible: recipe.exists()
+        visible: recipe.exists() && recipe.source
         onTriggered: PopupUtils.open(popoverComponent, shareButton)
+    }
+
+    ToolbarButton {
+        id: exportButton
+        text: i18n.tr("Export")
+        iconSource: icon("32/export-pdf", true)
+        visible: recipe.exists() && !recipe.source
+        onTriggered: {
+            toolbar.opened = false;
+            recipe.exportAsPdf();
+        }
     }
 
     ToolbarButton {

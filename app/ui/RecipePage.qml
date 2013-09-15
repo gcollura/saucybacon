@@ -102,6 +102,7 @@ Page {
             focus: true
             delegate: RecipeListItem {
                 minimal: true
+                silent: true
                 progression: docId === recipe.docId
             }
         }
@@ -151,8 +152,10 @@ Page {
                     spacing: units.gu(2)
 
                     Item {
+                        id: infos
                         width: parent.width
                         height: childrenRect.height
+                        visible: recipe.preptime + recipe.cooktime > 0 || recipe.favorite || recipe.restriction || recipe.difficulty
 
                         Row {
                             anchors.horizontalCenter: parent.horizontalCenter
@@ -205,7 +208,7 @@ Page {
                     }
 
                     ListItem.ThinDivider {
-                        visible: recipe.preptime + recipe.cooktime > 0 || recipe.favorite || recipe.restriction || recipe.difficulty
+                        visible: infos.visible
                         anchors.margins: units.gu(-2)
                     }
 

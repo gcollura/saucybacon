@@ -48,4 +48,9 @@ PopupBase {
         }
     }
 
+    MouseArea {
+        anchors.fill: parent
+        onClicked: hide()
+    }
+
 }

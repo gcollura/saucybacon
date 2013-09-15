@@ -121,11 +121,6 @@ Flickable {
 
                 source: caller ? caller.source : ""
                 fillMode: Image.PreserveAspectFit
-
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: hide()
-                }
             }
         }
     }

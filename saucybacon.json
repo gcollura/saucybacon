@@ -3,7 +3,6 @@
         "accounts",
         "camera",
         "networking",
-        "picture_files",
         "content_exchange"
     ],
     "policy_version": 1

@@ -146,7 +146,7 @@ MainView {
     /* Recipe Database */
     U1db.Database {
         id: recipesdb
-        path: utils.mkdir(Utils.SettingsLocation) ? utils.path(Utils.SettingsLocation, "sb-recipes.db") : "sb-recipes.db"
+        path: utils.mkdir(utils.path(Utils.SettingsLocation)) ? utils.path(Utils.SettingsLocation, "sb-recipes.db") : "sb-recipes.db"
 
         property bool count: recipesdb.listDocs().length
     }

@@ -30,7 +30,7 @@ MainView {
     id: mainView
 
     // NOTE: applicationName needs to match the .desktop filename
-    applicationName: "saucybacon"
+    applicationName: "com.ubuntu.developer.gcollura.saucybacon"
 
     automaticOrientation: true
     property bool wideAspect: width > units.gu(80)

@@ -142,9 +142,9 @@ MainView {
         pageStack.push(tabs)
     }
 
-    Component.onDestruction: {
+    /* Component.onDestruction: {
         saveSettings();
-    }
+    } */
 
     // SaucyBacon Utils library
     Utils {
@@ -186,6 +186,10 @@ MainView {
             // Reimplement Array.push(..) to have always unique arrays
             if (this.indexOf(item) < 0)
                 this.push(item);
+        }
+
+        Array.prototype.last = function() {
+            return this.slice(-1)[0];
         }
 
         Array.prototype.unique = function() {

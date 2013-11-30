@@ -1,4 +1,5 @@
 {
+    "architecture": "armhf",
     "description": "Manage and search recipes with ease",
     "framework": "ubuntu-sdk-13.10",
     "hooks": {
@@ -10,5 +11,5 @@
     "maintainer": "Giulio Collura <random.cpp@gmail.com>",
     "name": "com.ubuntu.developer.gcollura.saucybacon",
     "title": "SaucyBacon",
-    "version": "1.0.9"
+    "version": "1.0.13"
 }

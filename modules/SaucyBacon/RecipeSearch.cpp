@@ -33,8 +33,7 @@ RecipeSearch::RecipeSearch(QObject *parent) :
     connect(this, SIGNAL(queryChanged()), this, SLOT(makeRequest()));
 }
 
-RecipeSearch::~RecipeSearch() {
-}
+RecipeSearch::~RecipeSearch() { }
 
 void RecipeSearch::setQuery(const QString &query) {
     m_query = query;

@@ -8,3 +8,4 @@ sb*db
 *.so
 click-pkg/
 resources/saucybacon.desktop
+*_click.sh

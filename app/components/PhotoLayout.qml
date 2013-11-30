@@ -21,6 +21,8 @@ import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.Popups 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
+import Ubuntu.Content 0.1
+import SaucyBacon 0.1
 
 Flickable {
     id: root
@@ -42,6 +44,8 @@ Flickable {
     property var photos: [ ]
     property bool editable: true
     property int iconSize: units.gu(8)
+
+    property var activeTransfer: null
 
     Row {
         id: photoRow
@@ -95,7 +99,10 @@ Flickable {
     }
 
     function selectPhoto() {
-        PopupUtils.open(Qt.resolvedUrl("../components/PhotoChooser.qml"), root);
+        // PopupUtils.open(Qt.resolvedUrl("../components/PhotoChooser.qml"), root);
+        root.activeTransfer = ContentHub.importContent(ContentType.Pictures);
+        root.activeTransfer.selectionType = ContentTransfer.Multiple;
+        root.activeTransfer.start();
     }
 
     function addPhoto(filename) {
@@ -108,6 +115,37 @@ Flickable {
         photosChanged();
     }
 
+    // ContentHub features
+    ContentImportHint {
+        id: importHint
+        anchors.fill: parent
+        activeTransfer: root.activeTransfer
+    }
+
+    Connections {
+        target: root.activeTransfer
+        onStateChanged: {
+            if (root.activeTransfer.state === ContentTransfer.Charged) {
+                var importItems = root.activeTransfer.items;
+                for (var i = 0; i < importItems.length; i++) {
+                    // TODO: Use QUrl::fromLocalFile to decode the path
+                    // Workaround: QFile doesn't play well with "file://" prefix
+                    var importedItem = importItems[i].url.toString().replace("file://", "");
+                    var filename = utils.fileName(importedItem);
+                    filename = utils.path(Utils.SettingsLocation, "imgs/" + filename);
+
+                    if (!utils.cp(importedItem, filename)) {
+                        console.log(" *** ERROR: utils.cp() failed (%1 -> %2)".arg(importedItem).arg(filename));
+                        continue;
+                    }
+
+                    photos.pushBack(filename);
+                }
+                photosChanged();
+            }
+        }
+    }
+
     Component {
         id: previewerComponent
 
@@ -116,8 +154,8 @@ Flickable {
             Image {
                 id: image
 
-                height: Math.min(mainView.height - units.gu(4), sourceSize.height)
-                width: Math.min(mainView.width - units.gu(4), sourceSize.width)
+                height: mainView.height - units.gu(4)
+                width: mainView.width - units.gu(4)
 
                 source: caller ? caller.source : ""
                 fillMode: Image.PreserveAspectFit

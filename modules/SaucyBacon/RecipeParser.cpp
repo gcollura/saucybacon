@@ -23,15 +23,15 @@
 #include <QtCore>
 #include <QtScript/QScriptEngine>
 
-// -------------------------------------------------------------
+// static functions --------------------------------------------
 
-QJsonValue evaluate(const QString &expr) {
+static QJsonValue evaluate(const QString &expr) {
     QScriptEngine myEngine;
     auto result = myEngine.evaluate(expr);
     return result.isNumber() ? result.toNumber() : 0;
 }
 
-QJsonArray parseIngredients(const QJsonArray &ingredients) {
+static QJsonArray parseIngredients(const QJsonArray &ingredients) {
     QJsonArray result;
     QRegularExpression regex("(?<quantity>[\\d\\-/?]+)[\\s+]?(?<type>\\w+)?[\\s+](?<name>.*)",
                              QRegularExpression::CaseInsensitiveOption);
@@ -245,41 +245,43 @@ void RecipeParser::replyFinished(QNetworkReply *reply) {
 }
 
 void RecipeParser::parseHtml(const QByteArray &html) {
-
     RecipeRegex defaultRegex;
     bool supported;
+    QString directions;
+    QString preptime;
+    QString cooktime;
+
     if (m_services.contains(m_service)) {
         defaultRegex = m_services[m_service];
         supported = true;
     } else {
-        defaultRegex = m_services["default"];
         supported = false;
         qDebug() << "Site not supported yet: " + m_service;
     }
 
-    QRegularExpressionMatchIterator matchDirections = defaultRegex["directions"].globalMatch(html);
-    QString directions;
+    if (supported) {
+        // TODO: Remove QRegularExpressionMatchIterator and use QRegExpMatch only.
+        QRegularExpressionMatchIterator matchDirections = defaultRegex["directions"].globalMatch(html);
+        while (matchDirections.hasNext()) {
+            auto match = matchDirections.next();
+            directions.append(match.captured(1).replace(QRegularExpression("<.+?>"), "").simplified());
+            directions.append("<br />");
+        }
 
-    while (matchDirections.hasNext()) {
-        QRegularExpressionMatch match = matchDirections.next();
-        directions.append(match.captured(1).replace(QRegularExpression("<.+?>"), "").simplified());
-        directions.append("<br />");
+        auto match = defaultRegex["preptime"].match(html);
+        if (match.hasMatch())
+            preptime = match.captured(1);
+
+        match = defaultRegex["cooktime"].match(html);
+        if (match.hasMatch())
+            cooktime = match.captured(1);
+
+    } else {
+        directions.append(tr("This website is supported yet. It was impossible to load the directions."));
     }
 
-    if (!supported)
-        directions.append(tr("This website is supported yet. It was impossible to load the directions."));
+    // Default copyright string
     directions.append(tr("<br />Recipe from %1.<br />Directions are not part of F2F API.").arg(m_service));
-
-    QRegularExpressionMatch matchPreptime = defaultRegex["preptime"].match(html);
-    QString preptime;
-    if (matchPreptime.hasMatch())
-        preptime = matchPreptime.captured(1);
-
-
-    QRegularExpressionMatch matchCooktime = defaultRegex["cooktime"].match(html);
-    QString cooktime;
-    if (matchCooktime.hasMatch())
-        cooktime = matchCooktime.captured(1);
 
 
     m_contents["directions"] = directions;

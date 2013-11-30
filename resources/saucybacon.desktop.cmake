@@ -1,12 +1,11 @@
 [Desktop Entry]
-Encoding=UTF-8
-Version=0.1
+Version=1.0
 Type=Application
 Terminal=false
-Exec=/usr/bin/qmlscene -I @QT_IMPORTS_DIR@ @CMAKE_INSTALL_PREFIX@/share/saucybacon/app/saucybacon.qml
-Icon=@CMAKE_INSTALL_PREFIX@/share/saucybacon/resources/icons/SaucyBacon.png
+Exec=qmlscene -I modules/ app/saucybacon.qml
+Icon=resources/icons/SaucyBacon_icon.png
 Name=SaucyBacon
 Comment=Manage and search recipes online with ease
 X-Ubuntu-StageHint=SideStage
-X-Ubuntu-Gettext-Domain=saucybacon
+X-Ubuntu-Gettext-Domain=com.ubuntu.developer.gcollura.saucybacon
 X-Ubuntu-Touch=true

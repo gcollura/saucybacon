@@ -109,6 +109,19 @@ bool Utils::mv(const QString &oldName, const QString &newName) {
     return file.exists();
 }
 
+bool Utils::cp(const QString &oldName, const QString &newName) {
+    return QFile::copy(oldName, newName) || QFile::exists(newName);
+}
+
+bool Utils::exists(const QString& fileName) {
+    return QFile::exists(fileName);
+}
+
+QString Utils::fileName(const QString& sourceFile) {
+    QFileInfo file(sourceFile);
+    return file.fileName();
+}
+
 bool Utils::exportAsPdf(const QString &fileName, const QJsonObject &contents) {
     QTextDocument doc;
     QString html;

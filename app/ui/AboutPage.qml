@@ -49,7 +49,7 @@ Page {
                     source: Qt.resolvedUrl("../../resources/icons/SaucyBacon_icon.png")
                 }
 
-                width: 128
+                width: units.gu(20)
                 height: width
                 radius: "medium"
                 anchors.horizontalCenter: parent.horizontalCenter

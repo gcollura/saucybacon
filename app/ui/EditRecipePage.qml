@@ -123,21 +123,23 @@ Page {
                     }
                 }
 
-                Row {
+                Flow {
+                    property bool doubleRow: parent.width < units.gu(39)
+
                     width: parent.width
                     spacing: units.gu(1)
 
                     Label {
                         id: totalTime
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: parent.width / 2 - units.gu(2)
+                        // anchors.verticalCenter: parent.verticalCenter
+                        width: parent.doubleRow ? parent.width + units.gu(2): parent.width / 2 - units.gu(2)
 
                         text: i18n.tr("Total time: %1 minutes").arg(computeTotalTime(prepTime.text, cookTime.text))
                     }
 
                     TextField {
                         id: prepTime
-                        width: parent.width / 4
+                        width: parent.doubleRow ? parent.width / 2 - units.gu(0.5) : parent.width / 4
                         placeholderText: i18n.tr("Prep time")
                         inputMethodHints: Qt.ImhPreferNumbers
 
@@ -146,7 +148,7 @@ Page {
 
                     TextField {
                         id: cookTime
-                        width: parent.width / 4
+                        width: prepTime.width
                         placeholderText: i18n.tr("Cook time")
                         inputMethodHints: Qt.ImhPreferNumbers
 
@@ -242,7 +244,9 @@ Page {
         recipe.restriction = recipeRestriction.selectedIndex;
 
         recipe.save();
-        pageStack.push(recipePage);
+
+        // pageStack.push(recipePage);
+        pageStack.back();
 
     }
 

@@ -25,7 +25,7 @@ ListItem.Subtitled {
     id: item
     progression: true
 
-    icon: contents.photos[0] ? Qt.resolvedUrl(contents.photos[0]) : mainView.icon("64/unknown-food", true)
+    iconSource: contents.photos[0] ? Qt.resolvedUrl(contents.photos[0]) : mainView.icon("64/unknown-food", true)
     fallbackIconSource: mainView.icon("64/unknown-food", true)
 
     property bool minimal: false

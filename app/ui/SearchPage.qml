@@ -28,6 +28,23 @@ import "../components"
 Page {
     title: i18n.tr("Search")
 
+    actions: [
+        Action {
+            id: searchTopRatedAction
+            text: i18n.tr("Top Rated")
+            description: i18n.tr("Search top rated recipes")
+            iconSource: icon("favorite-selected")
+            keywords: "search;top;rated;recipe"
+            onTriggered: { searchOnline(""); }
+        }
+    ]
+
+    tools: ToolbarItems {
+        ToolbarButton {
+            action: searchTopRatedAction
+        }
+    }
+
     Sidebar {
         id: searchSidebar
         autoFlick: false
@@ -142,7 +159,7 @@ Page {
                 /* A delegate will be created for each Document retrieved from the Database */
                 delegate: ListItem.Subtitled {
                     progression: true
-                    icon: contents.image_url
+                    iconSource: contents.image_url
                     text: contents.title
                     subText: contents.publisher_url
                     onClicked: {

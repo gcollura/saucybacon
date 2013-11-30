@@ -22,7 +22,7 @@
 
 #include <QtCore>
 
-class Utils : public QObject
+class Q_DECL_EXPORT Utils : public QObject
 {
     Q_OBJECT
     Q_ENUMS(StandardLocation)
@@ -51,6 +51,9 @@ public:
     Q_INVOKABLE bool write(const QString& dirName, const QString& fileName, const QByteArray &contents);
     Q_INVOKABLE QString read(const QString& dirName, const QString& fileName);
     Q_INVOKABLE bool mv(const QString& oldName, const QString& newName);
+    Q_INVOKABLE bool cp(const QString& oldName, const QString& newName);
+    Q_INVOKABLE bool exists(const QString& fileName);
+    Q_INVOKABLE QString fileName(const QString& sourceFile);
 
     Q_INVOKABLE bool exportAsPdf(const QString& fileName, const QJsonObject& contents);
 

@@ -1,6 +1,5 @@
 {
     "policy_groups": [
-        "accounts",
         "camera",
         "networking",
         "content_exchange"

@@ -41,6 +41,7 @@ Page {
 
     tools: ToolbarItems {
         ToolbarButton {
+            objectName: "searchTopRatedAction"
             action: searchTopRatedAction
         }
     }
@@ -90,6 +91,7 @@ Page {
                 spacing: units.gu(2)
 
                 TextField {
+                    objectName: "searchField"
                     id: searchField
 
                     width: parent.width - searchButton.width - parent.spacing
@@ -103,6 +105,7 @@ Page {
                 }
 
                 Button {
+                    objectName: "searchButton"
                     id: searchButton
                     anchors.verticalCenter: parent.verticalCenter
                     visible: !search.loading
@@ -125,6 +128,7 @@ Page {
                 }
 
                 ActivityIndicator {
+                    objectName: "activityIndicator"
                     id: activity
                     anchors.verticalCenter: parent.verticalCenter
                     width: searchButton.width
@@ -144,6 +148,7 @@ Page {
             }
 
             ListView {
+                objectName: "resultList"
                 id: resultList
                 anchors {
                     left: parent.left

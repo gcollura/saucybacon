@@ -1,3 +1,5 @@
+""" A main.qml test suite """
+
 # -*- Mode: Python; coding: utf-8; indent-tabs-mode: nil; tab-width: 4 -*-
 
 """Ubuntu Touch App autopilot tests."""
@@ -13,6 +15,10 @@ from autopilot.platform import model
 from testtools.matchers import Is, Not, Equals
 from autopilot.testcase import AutopilotTestCase
 
+from saucybacon import emulators
+
+from ubuntuuitoolkit import emulators as toolkit_emulators
+
 def get_module_include_path():
     return os.path.abspath(
         os.path.join(
@@ -21,11 +27,27 @@ def get_module_include_path():
             '..',
             '..',
             '..',
-            'modules')
+            '..',
+            'build',
+            'backend'
+            )
+        )
+        
+def get_qml_location():
+    return os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__),
+            '..',
+            '..',
+            '..',
+            '..',
+            '..',
+            'app'
+            )
         )
 
 
-class UbuntuTouchAppTestCase(AutopilotTestCase):
+class SaucyBaconTestCase(AutopilotTestCase):
     """A common test case class that provides several useful methods for the tests."""
 
     if model() == 'Desktop':
@@ -36,44 +58,47 @@ class UbuntuTouchAppTestCase(AutopilotTestCase):
         scenarios = [
         ('with touch', dict(input_device_class=Touch))
         ]
+    
+    local_location = get_qml_location() + "/saucybacon.qml"
 
     @property
     def main_window(self):
         return MainWindow(self.app)
 
-
     def setUp(self):
         self.pointing_device = Pointer(self.input_device_class.create())
-        super(UbuntuTouchAppTestCase, self).setUp()
-        self.launch_test_qml()
+        super(SaucyBaconTestCase, self).setUp()
+        
+        print self.local_location
+        print get_module_include_path()
+        if os.path.exists(self.local_location):
+            self.launch_test_local()
+        elif os.path.exists('/usr/share/saucybacon/app/saucybacon.qml'):
+            self.launch_test_installed()
+        else:
+            self.launch_test_click()
 
+    def launch_test_local(self):
+        self.app = self.launch_test_application(
+            "qmlscene",
+            self.local_location,
+            "-I",
+            get_module_include_path(),
+            app_type='qt',
+            emulator_base=toolkit_emulators.UbuntuUIToolkitEmulatorBase)
 
-    def launch_test_qml(self):
-        # If the test class has defined a 'test_qml' class attribute then we
-        # write it to disk and launch it inside the QML Scene. If not, then we
-        # silently do nothing (presumably the test has something else planned).
-        arch = subprocess.check_output(["dpkg-architecture",
-        "-qDEB_HOST_MULTIARCH"]).strip()
-        if hasattr(self, 'test_qml') and isinstance(self.test_qml, basestring):
-            qml_path = mktemp(suffix='.qml')
-            open(qml_path, 'w').write(self.test_qml)
-            self.addCleanup(remove, qml_path)
+    def launch_test_installed(self):
+        self.app = self.launch_test_application(
+            "qmlscene",
+            "/usr/share/postino/postino.qml",
+            "--desktop_file_hint=/usr/share/applications/saucybacon.desktop",
+            app_type='qt',
+            emulator_base=toolkit_emulators.UbuntuUIToolkitEmulatorBase)
 
-            self.app = self.launch_test_application(
-                "/usr/lib/" + arch + "/qt5/bin/qmlscene",
-                "-I", get_module_include_path(),
-                qml_path,
-                app_type='qt')
-
-        if hasattr(self, 'test_qml_file') and isinstance(self.test_qml_file, basestring):
-            qml_path = self.test_qml_file
-            self.app = self.launch_test_application(
-                "/usr/lib/" + arch + "/qt5/bin/qmlscene",
-                "-I", get_module_include_path(),
-                qml_path,
-                app_type='qt')
-
-        self.assertThat(self.get_qml_view().visible, Eventually(Equals(True)))
+    def launch_test_click(self):
+        self.app = self.launch_click_package(
+            'com.ubuntu.developers.gcollura.saucybacon',
+            emulator_base=toolkit_emulators.UbuntuUIToolkitEmulatorBase)
 
 
     def get_qml_view(self):
@@ -129,3 +154,7 @@ class UbuntuTouchAppTestCase(AutopilotTestCase):
         """Type a single key with keyboard"""
 
         self.keyboard.key(key)
+        
+    @property
+    def main_view(self):
+        return self.app.select_single(emulators.MainView)

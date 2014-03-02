@@ -1,12 +1,5 @@
-# Configure .desktop launcher
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/saucybacon.desktop.cmake ${CMAKE_CURRENT_SOURCE_DIR}/saucybacon.desktop)
+#substitute variables in the desktop file
+set(DESKTOP_FILE "${CMAKE_PROJECT_NAME}.desktop")
+configure_file(${DESKTOP_FILE}.in ${CMAKE_CURRENT_BINARY_DIR}/${DESKTOP_FILE})
 
-install(FILES saucybacon.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications)
-
-file(GLOB_RECURSE GRAPHICS {CMAKE_CURRENT_SOURCE_DIR} *.png *.jpg *.svg)
-
-# Make the graphics files show in the QtCreator tree
-add_custom_target(GraphicsFiles SOURCES ${GRAPHICS})
-
-install(DIRECTORY icons DESTINATION ${CMAKE_INSTALL_PREFIX}/share/saucybacon/resources)
-install(DIRECTORY images DESTINATION ${CMAKE_INSTALL_PREFIX}/share/saucybacon/resources)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${DESKTOP_FILE} DESTINATION ${DESKTOP_DIR})

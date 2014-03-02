@@ -1,9 +1,16 @@
-file(GLOB_RECURSE QML {CMAKE_CURRENT_SOURCE_DIR} *.qml)
+file(GLOB_RECURSE QML_JS_FILES *.qml *.js)
 
-# Make the qml files show in the QtCreator tree
-add_custom_target(QmlFiles SOURCES ${QML})
+# make the files visible on qtcreator
+add_custom_target(saucybacon_QmlFiles ALL SOURCES ${QML_JS_FILES})
 
-install(FILES saucybacon.qml DESTINATION ${CMAKE_INSTALL_PREFIX}/share/saucybacon/app)
-install(DIRECTORY components DESTINATION ${CMAKE_INSTALL_PREFIX}/share/saucybacon/app)
-install(DIRECTORY ui DESTINATION ${CMAKE_INSTALL_PREFIX}/share/saucybacon/app)
-install(DIRECTORY backend DESTINATION ${CMAKE_INSTALL_PREFIX}/share/saucybacon/app)
+if(CLICK_MODE)
+    install(FILES saucybacon.qml DESTINATION ${DATA_DIR}/app)
+    install(DIRECTORY components DESTINATION ${DATA_DIR}/app)
+    install(DIRECTORY ui DESTINATION ${DATA_DIR}/app)
+    install(DIRECTORY backend DESTINATION ${DATA_DIR}/app)    
+else(CLICK_MODE)
+    install(FILES saucybacon.qml DESTINATION ${SAUCYBACON_DIR}/app)
+    install(DIRECTORY components DESTINATION ${SAUCYBACON_DIR}/app)
+    install(DIRECTORY ui DESTINATION ${SAUCYBACON_DIR}/app)
+    install(DIRECTORY backend DESTINATION ${SAUCYBACON_DIR}/app)    
+endif(CLICK_MODE)

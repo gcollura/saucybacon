@@ -9,3 +9,4 @@ sb*db
 click-pkg/
 resources/saucybacon.desktop
 *_click.sh
+.excludes

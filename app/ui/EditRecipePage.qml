@@ -89,16 +89,15 @@ Page {
                     anchors {
                         left: parent.left
                         right: parent.right
-                        margins: units.gu(-2)
                     }
 
-                    ValueSelector {
+                    ItemSelector {
                         id: recipeCategory
                         width: parent.width
                         text: i18n.tr("Category")
 
                         selectedIndex: recipe.category ? categories.indexOf(recipe.category) : 0
-                        values: categories.concat([i18n.tr("<i>New category...</i>")])
+                        model: categories.concat([i18n.tr("<i>New category...</i>")])
 
                         onSelectedIndexChanged: {
                             if (selectedIndex == categories.length)
@@ -106,19 +105,19 @@ Page {
                         }
                     }
 
-                    ValueSelector {
+                    ItemSelector {
                         id: recipeDifficulty
                         width: parent.width
                         text: i18n.tr("Difficulty")
-                        values: difficulties
+                        model: difficulties
                         selectedIndex: recipe.difficulty
                     }
 
-                    ValueSelector {
+                    ItemSelector {
                         id: recipeRestriction
                         width: parent.width
                         text: i18n.tr("Restriction")
-                        values: restrictions
+                        model: restrictions
                         selectedIndex: recipe.restriction
                     }
                 }

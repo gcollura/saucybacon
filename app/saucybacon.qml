@@ -78,6 +78,7 @@ MainView {
     actions: [ newRecipeAction, searchAction ]
 
     PageStack {
+        objectName: "pageStack"
         id: pageStack
 
         Tabs {
@@ -86,6 +87,7 @@ MainView {
             visible: false
 
             Tab {
+                objectName: "recipeListTab"
                 title: page.title
                 page: RecipeListPage {
                     objectName: "recipeListPage"
@@ -94,6 +96,7 @@ MainView {
             }
 
             Tab {
+                objectName: "searchTab"
                 title: page.title
                 page: SearchPage {
                     objectName: "searchPage"
@@ -102,6 +105,7 @@ MainView {
             }
 
             Tab {
+                objectName: "aboutTab"
                 title: page.title
                 page: AboutPage {
                     objectName: "aboutPage"

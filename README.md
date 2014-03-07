@@ -17,8 +17,6 @@ Write recipes and save them online with the UbuntuOne sync feature.
  * U1db - qtdeclarative5-u1db1.0
  * HUD - qtdeclarative5-hud1.0
  * Unity.Action - qtdeclarative5-unity-action-plugin
- * Friends - qtdeclarative5-friends-plugin
- * Online Accounts - qtdeclarative5-accounts-plugin
  * Qt 5 folderlistmodel QML plugin - qtdeclarative5-folderlistmodel-plugin
  * Qt5 development packages
 
@@ -34,8 +32,12 @@ If you get some strange/error/warning output here, contact me on IRC or open an 
 
 Then to run SaucyBacon:
 ```
-$ cd -
-$ qmlscene -I modules app/saucybacon.qml
+$ make run
+```
+
+To generate a new click package:
+```
+$ make click
 ```
 
 **Known problems**

@@ -24,8 +24,8 @@ if(NOT QT_IMPORTS_DIR)
     )
 endif (NOT QT_IMPORTS_DIR)
 
-option(INSTALL_TESTS "Install the tests on make install" on)
-option(CLICK_MODE "Installs to a contained location" off)
+option(INSTALL_TESTS "Install the tests on make install" off)
+option(CLICK_MODE "Installs to a contained location" on)
 
 if(CLICK_MODE)
     set(CMAKE_INSTALL_PREFIX .)
@@ -55,4 +55,6 @@ add_custom_target("run" /usr/bin/qmlscene -I ${CMAKE_BINARY_DIR}/backend ${CMAKE
     DEPENDS SaucyBaconPlugin SaucyBaconPlugin-qmldir
     WORKING_DIRECTORY ./app)
 
-add_custom_target("click" click build ${DATA_DIR})
+add_custom_target("click" click build ${DATA_DIR}
+    DEPENDS SaucyBaconPlugin SaucyBaconPlugin-qmldir
+    WORKING_DIRECTORY ${CMAKE_BUILD_DIR})

@@ -68,7 +68,7 @@ ToolbarItems {
         text: i18n.tr("Delete")
         iconSource: icon("delete")
 
-        visible: false //recipe.exists()
+        visible: recipe.exists()
         onTriggered: PopupUtils.open(Qt.resolvedUrl("dialogs/DeleteDialog.qml"))
     }
 }

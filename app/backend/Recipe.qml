@@ -23,7 +23,7 @@ import SaucyBacon 0.1
 QtObject {
     id: recipe
 
-    property bool ready: !parser.loading
+    property bool ready: !parser.loading && name != ""
 
     property string docId: ""
 
@@ -181,7 +181,7 @@ QtObject {
 
     function remove() {
         if (docId) {
-            recipesdb.putDoc("", docId);
+            recipesdb.deleteDoc(docId);
             removed();
             recipesdb.update();
         }

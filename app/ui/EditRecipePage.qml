@@ -85,41 +85,35 @@ Page {
                     placeholderText: i18n.tr("Enter a name for your recipe")
                 }
 
-                Column {
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                    }
+                ItemSelector {
+                    id: recipeCategory
+                    width: parent.width
+                    // text: i18n.tr("Category")
 
-                    ItemSelector {
-                        id: recipeCategory
-                        width: parent.width
-                        text: i18n.tr("Category")
+                    selectedIndex: recipe.category ? categories.indexOf(recipe.category) : 0
+                    model: categories.concat([i18n.tr("<i>New category...</i>")])
 
-                        selectedIndex: recipe.category ? categories.indexOf(recipe.category) : 0
-                        model: categories.concat([i18n.tr("<i>New category...</i>")])
-
-                        onSelectedIndexChanged: {
-                            if (selectedIndex == categories.length)
-                                PopupUtils.open(Qt.resolvedUrl("dialogs/NewCategoryDialog.qml"), recipeCategory)
+                    onSelectedIndexChanged: {
+                        if (selectedIndex == categories.length) {
+                            PopupUtils.open(Qt.resolvedUrl("dialogs/NewCategoryDialog.qml"), recipeCategory)
                         }
                     }
+                }
 
-                    ItemSelector {
-                        id: recipeDifficulty
-                        width: parent.width
-                        text: i18n.tr("Difficulty")
-                        model: difficulties
-                        selectedIndex: recipe.difficulty
-                    }
+                ItemSelector {
+                    id: recipeDifficulty
+                    width: parent.width
+                    // text: i18n.tr("Difficulty")
+                    model: difficulties
+                    selectedIndex: recipe.difficulty
+                }
 
-                    ItemSelector {
-                        id: recipeRestriction
-                        width: parent.width
-                        text: i18n.tr("Restriction")
-                        model: restrictions
-                        selectedIndex: recipe.restriction
-                    }
+                ItemSelector {
+                    id: recipeRestriction
+                    width: parent.width
+                    // text: i18n.tr("Restriction")
+                    model: restrictions
+                    selectedIndex: recipe.restriction
                 }
 
                 Flow {

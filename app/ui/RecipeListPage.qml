@@ -72,20 +72,21 @@ Page {
 
     flickable: !wideAspect ? recipeListView : null
 
-    Item {
+    Label {
         visible: recipesdb.count == 0
-        anchors.fill: parent
 
-        Label {
-            anchors {
-                verticalCenter: parent.verticalCenter
-                horizontalCenter: parent.horizontalCenter
-            }
-            text: i18n.tr("No Recipes!")
-            fontSize: "large"
+        anchors {
+            verticalCenter: parent.verticalCenter
+            left: parent.left
+            right: parent.right
+            margins: units.gu(2)
         }
-    }
-
+        text: i18n.tr("No Recipes!<br/><br/>Go to Search tab<br/>Tap on New to create a new recipe")
+        elide: Text.ElideRight
+        wrapMode: Text.WordWrap
+        horizontalAlignment: Text.AlignHCenter
+        fontSize: "large"
+    } 
 
     Sidebar {
         id: sidebar

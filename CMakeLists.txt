@@ -56,5 +56,4 @@ add_custom_target("run" /usr/bin/qmlscene -I ${CMAKE_BINARY_DIR}/backend ${CMAKE
     WORKING_DIRECTORY ./app)
 
 add_custom_target("click" click build ${DATA_DIR}
-    DEPENDS SaucyBaconPlugin SaucyBaconPlugin-qmldir
-    WORKING_DIRECTORY ${CMAKE_BUILD_DIR})
+    DEPENDS SaucyBaconPlugin SaucyBaconPlugin-qmldir)

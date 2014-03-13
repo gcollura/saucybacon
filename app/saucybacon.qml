@@ -33,6 +33,7 @@ MainView {
     applicationName: "com.ubuntu.developer.gcollura.saucybacon"
 
     automaticOrientation: true
+    anchorToKeyboard: true
     property bool wideAspect: width > units.gu(80)
     property bool extraWideAspect: width > units.gu(130)
 
@@ -143,7 +144,8 @@ MainView {
     Component.onCompleted: {
         loadSettings();
 
-        pageStack.push(tabs)
+        pageStack.push(recipePage);
+        pageStack.push(tabs);
     }
 
     /* Component.onDestruction: {
@@ -160,9 +162,9 @@ MainView {
         id: recipesdb
         path: utils.path(Utils.SettingsLocation, "sb-recipes.db")
 
-        property bool count: recipesdb.listDocs().length > 0
+        property bool count: recipesdb.listDocs().length
         function update() {
-            count = recipesdb.listDocs().length > 0
+            count = recipesdb.listDocs().length
         }
     }
 
@@ -175,7 +177,7 @@ MainView {
             "directions": "", "servings": 4, "photos" : [ ], "favorite": false }
     } */
 
-    property Recipe recipe: Recipe { }
+    property Recipe r: Recipe { id: recipe }
     property var menus: [ ]
 
     /* Recipe addons */

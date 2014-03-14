@@ -21,6 +21,7 @@ import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.Popups 0.1
 import Ubuntu.Components.ListItems 0.1
+import Ubuntu.Components.Pickers 0.1
 
 import "../components"
 
@@ -127,25 +128,19 @@ Page {
                         // anchors.verticalCenter: parent.verticalCenter
                         width: parent.doubleRow ? parent.width + units.gu(2): parent.width / 2 - units.gu(2)
 
-                        text: i18n.tr("Total time: %1 minutes").arg(computeTotalTime(prepTime.text, cookTime.text))
+                        text: i18n.tr("Total time: ") + (prepTime.time + cookTime.time).toTime();
                     }
 
-                    TextField {
+                    TimePicker {
                         id: prepTime
                         width: parent.doubleRow ? parent.width / 2 - units.gu(0.5) : parent.width / 4
-                        placeholderText: i18n.tr("Prep time")
-                        inputMethodHints: Qt.ImhPreferNumbers
-
-                        text: recipe.preptime
+                        time: recipe.preptime
                     }
 
-                    TextField {
+                    TimePicker {
                         id: cookTime
-                        width: prepTime.width
-                        placeholderText: i18n.tr("Cook time")
-                        inputMethodHints: Qt.ImhPreferNumbers
-
-                        text: recipe.cooktime
+                        width: parent.doubleRow ? parent.width / 2 - units.gu(0.5) : parent.width / 4
+                        time: recipe.cooktime
                     }
                 }
 
@@ -225,9 +220,8 @@ Page {
         recipe.difficulty = recipeDifficulty.selectedIndex;
         recipe.restriction = recipeRestriction.selectedIndex;
 
-        recipe.preptime = prepTime.text;
-        recipe.cooktime = cookTime.text;
-        recipe.totaltime = i18n.tr("%1'").arg(computeTotalTime(prepTime.text, cookTime.text));
+        recipe.preptime = prepTime.time;
+        recipe.cooktime = cookTime.time;
 
         recipe.ingredients = ingredientsLayout.getIngredients();
 
@@ -254,8 +248,8 @@ Page {
         recipeDifficulty.selectedIndex = recipe.difficulty;
         recipeRestriction.selectedIndex = recipe.restriction;
 
-        prepTime.text = recipe.preptime > 0 ? recipe.preptime : "";
-        cookTime.text = recipe.cooktime > 0 ? recipe.cooktime : "";
+        // prepTime.text = recipe.preptime > 0 ? recipe.preptime : "";
+        // cookTime.text = recipe.cooktime > 0 ? recipe.cooktime : "";
 
         recipeDirections.text = recipe.directions;
     }

@@ -22,6 +22,8 @@ import Ubuntu.Components 0.1
 import U1db 1.0 as U1db
 import SaucyBacon 0.1
 
+import "backend/prototypes.js" as Proto
+
 import "ui"
 import "backend"
 
@@ -182,37 +184,16 @@ MainView {
 
     /* Recipe addons */
     property var difficulties: [ i18n.tr("No difficulty"), i18n.tr("Easy"), i18n.tr("Medium"), i18n.tr("Hard") ] // FIXME: Strange name
-    property var categories: [ ]
+    // property var categories: [ ]
     property var restrictions: [ i18n.tr("Non-veg"), i18n.tr("Vegetarian"), i18n.tr("Vegan") ]
-    property var searches: [ ]
+    // property var searches: [ ]
+    property var categories: { }
+    property var searches: { }
 
     function loadSettings() {
 
-        Array.prototype.pushBack = function(item) {
-            // Reimplement Array.push(..) to have always unique arrays
-            if (this.indexOf(item) < 0)
-                this.push(item);
-        }
-
-        Array.prototype.last = function() {
-            return this.slice(-1)[0];
-        }
-
-        Array.prototype.unique = function() {
-            var o = {}, i, l = this.length, r = [];
-            for (i = 0; i < l; i += 1)
-                o[this[i]] = this[i];
-            for (i in o)
-                r.push(o[i]);
-            return r;
-        }
-
-        String.prototype.capitalize = function() {
-            return this.charAt(0).toUpperCase() + this.slice(1);
-        }
-
         if (!utils.get("firstLoad")) {
-            categories = [ i18n.tr("Uncategorized") ];
+            categories[i18n.tr("Uncategorized")] = 0;
 
             utils.set("firstLoad", 1);
         } else {
@@ -255,13 +236,13 @@ MainView {
     }
 
     function computeTotalTime(time1, time2) {
-        var t1 = time1 ? parseInt(time1) : 0;
-        var t2 = time2 ? parseInt(time2) : 0;
+        var t1 = time1 ? time1.toIntTime() : 0;
+        var t2 = time2 ? time2.toIntTime() : 0;
 
         var total = t1 + t2;
         if (!total)
             total = 0;
 
-        return total.toString();
+        return total.toTime();
     }
 }

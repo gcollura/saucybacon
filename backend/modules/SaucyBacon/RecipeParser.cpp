@@ -73,43 +73,43 @@ RecipeParser::RecipeParser(QObject *parent) :
     // SimplyRecipes
     recipeRegex["directions"] = QRegularExpression("itemprop=\"recipeInstructions\">(.+?)</div>",
                                                    QRegularExpression::DotMatchesEverythingOption);
-    recipeRegex["preptime"] = QRegularExpression("class=\"preptime\".*?>(\\d+) ([mM]inutes|[hH]ours)<span");
-    recipeRegex["cooktime"] = QRegularExpression("class=\"cooktime\".*?>(\\d+) ([mM]inutes|[hH]ours)<span");
+    recipeRegex["preptime"] = QRegularExpression("class=\"preptime\".*?>(\\d+) ([mM]inutes|[hH]our[s]?)<span");
+    recipeRegex["cooktime"] = QRegularExpression("class=\"cooktime\".*?>(\\d+) ([mM]inutes|[hH]our[s]?)<span");
     m_services["http://simplyrecipes.com"] = recipeRegex;
 
     // PioneerWoman
     recipeRegex["directions"] = QRegularExpression("itemprop=\"instructions\">(.+?)</div>",
                                                    QRegularExpression::DotMatchesEverythingOption);
-    recipeRegex["preptime"] = QRegularExpression("itemprop=\'prepTime\'.+?>(\\d+) ([mM]inutes|[hH]ours)</time");
-    recipeRegex["cooktime"] = QRegularExpression("itemprop=\'cookTime\'.+?>(\\d+) ([mM]inutes|[hH]ours)</time");
+    recipeRegex["preptime"] = QRegularExpression("itemprop=\'prepTime\'.+?>(\\d+) ([mM]inutes|[hH]our[s]?)</time");
+    recipeRegex["cooktime"] = QRegularExpression("itemprop=\'cookTime\'.+?>(\\d+) ([mM]inutes|[hH]our[s]?)</time");
     m_services["http://thepioneerwoman.com"] = recipeRegex;
 
     // Two peas and their pot
     recipeRegex["directions"] = QRegularExpression("<div class=\"instructions\">(.*?)</div>",
                                                    QRegularExpression::DotMatchesEverythingOption);
-    recipeRegex["preptime"] = QRegularExpression("class=\"preptime\".*?>(\\d+) ([mM]inutes|[hH]ours)</span");
-    recipeRegex["cooktime"] = QRegularExpression("class=\"cooktime\".*?>(\\d+) ([mM]inutes|[hH]ours)</span");
+    recipeRegex["preptime"] = QRegularExpression("class=\"preptime\".*?>(\\d+) ([mM]inutes|[hH]our[s]?)</span");
+    recipeRegex["cooktime"] = QRegularExpression("class=\"cooktime\".*?>(\\d+) ([mM]inutes|[hH]our[s]?)</span");
     m_services["http://www.twopeasandtheirpod.com"] = recipeRegex;
 
     // Tasty Kitchen
     recipeRegex["directions"] = QRegularExpression("<span itemprop=\"instructions\">(.*?)</span>",
                                                    QRegularExpression::DotMatchesEverythingOption);
-    recipeRegex["preptime"] = QRegularExpression("itemprop=\'prepTime\'.*?>(\\d+) ([mM]inutes|[hH]ours)</time");
-    recipeRegex["cooktime"] = QRegularExpression("itemprop=\'cookTime\'.*?>(\\d+) ([mM]inutes|[hH]ours)</time");
+    recipeRegex["preptime"] = QRegularExpression("itemprop=\'prepTime\'.*?>(\\d+) ([mM]inutes|[hH]our[s]?)</time");
+    recipeRegex["cooktime"] = QRegularExpression("itemprop=\'cookTime\'.*?>(\\d+) ([mM]inutes|[hH]our[s]?)</time");
     m_services["http://tastykitchen.com"] = recipeRegex;
 
     // Jamie Oliver's Recipes
     recipeRegex["directions"] = QRegularExpression("<p class=\"instructions\">(.*?)</p>",
                                                    QRegularExpression::DotMatchesEverythingOption);
-    recipeRegex["preptime"] = QRegularExpression("class=\"preptime\".*?>(\\d+) ([mM]inutes|[hH]ours)</span");
-    recipeRegex["cooktime"] = QRegularExpression("class=\"cooktime\".*?>(\\d+) ([mM]inutes|[hH]ours)</span");
+    recipeRegex["preptime"] = QRegularExpression("class=\"preptime\".*?>(\\d+) ([mM]inutes|[hH]our[s]?)</span");
+    recipeRegex["cooktime"] = QRegularExpression("class=\"cooktime\".*?>(\\d+) ([mM]inutes|[hH]our[s]?)</span");
     m_services["http://www.jamieoliver.com"] = recipeRegex;
 
     // Closet cooking
     recipeRegex["directions"] = QRegularExpression("<ol class=\"instructions\">(.*?)</ol>",
                                                    QRegularExpression::DotMatchesEverythingOption);
-    recipeRegex["preptime"] = QRegularExpression("class=\"prepTime\".*?>(\\d+) ([mM]inutes|[hH]ours)</span");
-    recipeRegex["cooktime"] = QRegularExpression("class=\"cookTime\".*?>(\\d+) ([mM]inutes|[hH]ours)</span");
+    recipeRegex["preptime"] = QRegularExpression("class=\"prepTime\".*?>(\\d+) ([mM]inutes|[hH]our[s]?)</span");
+    recipeRegex["cooktime"] = QRegularExpression("class=\"cookTime\".*?>(\\d+) ([mM]inutes|[hH]our[s]?)</span");
     m_services["http://closetcooking.com"] = recipeRegex;
 
     // 101 Cookbooks
@@ -248,8 +248,7 @@ void RecipeParser::parseHtml(const QByteArray &html) {
     RecipeRegex defaultRegex;
     bool supported;
     QString directions;
-    QString preptime;
-    QString cooktime;
+    int preptime, cooktime, offset = 1;
 
     if (m_services.contains(m_service)) {
         defaultRegex = m_services[m_service];
@@ -269,12 +268,19 @@ void RecipeParser::parseHtml(const QByteArray &html) {
         }
 
         auto match = defaultRegex["preptime"].match(html);
-        if (match.hasMatch())
-            preptime = match.captured(1);
+        if (match.hasMatch()) {
+            if (match.captured(2).contains(QRegularExpression("[hH]our[s]?")))
+                offset = 60;
+            preptime = match.captured(1).toInt() * offset;
+        }
 
+        offset = 1;
         match = defaultRegex["cooktime"].match(html);
-        if (match.hasMatch())
-            cooktime = match.captured(1);
+        if (match.hasMatch()) {
+            if (match.captured(2).contains(QRegularExpression("[hH]our[s]?")))
+                offset = 60;
+            cooktime = match.captured(1).toInt() * offset;
+        }
 
     } else {
         directions.append(tr("This website is supported yet. It was impossible to load the directions."));

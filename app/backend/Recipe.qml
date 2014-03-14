@@ -33,11 +33,10 @@ QtObject {
     property int difficulty: 0
     property int restriction: 0
 
-    property string preptime
-    property string cooktime
-    property string totaltime
+    property int preptime
+    property int cooktime
 
-    property var ingredients: new Array()
+    property var ingredients: new Object()
     property int servings
 
     property string directions
@@ -104,12 +103,10 @@ QtObject {
         difficulty = contents.difficulty ? contents.difficulty : 0;
         restriction = contents.restriction ? contents.restriction : 0;
 
-        preptime = contents.preptime ? contents.preptime : "0";
-        cooktime = contents.cooktime ? contents.cooktime : "0";
-        totaltime = contents.totaltime ? contents.totaltime : i18n.tr("%1'").arg(computeTotalTime(preptime, cooktime));
+        preptime = contents.preptime ? contents.preptime : 0;
+        cooktime = contents.cooktime ? contents.cooktime : 0;
 
-        ingredients = contents.ingredients ? contents.ingredients : [ ];
-        servings = contents.servings ? contents.servings : 4;
+        ingredients = contents.ingredients ? contents.ingredients : { };
 
         directions = contents.directions ? contents.directions : "";
 
@@ -126,9 +123,8 @@ QtObject {
         contents.category = category ? category : categories[0];
         contents.difficulty = difficulty ? difficulty : 0;
         contents.restriction = restriction ? restriction : 0;
-        contents.preptime = preptime ? preptime : "0";
-        contents.cooktime = cooktime ? cooktime : "0";
-        contents.totaltime = totaltime ? totaltime : i18n.tr("%1'").arg(computeTotalTime(preptime, cooktime));
+        contents.preptime = preptime ? preptime : 0;
+        contents.cooktime = cooktime ? cooktime : 0;
         contents.ingredients = ingredients ? ingredients : [ ];
         contents.servings = servings ? servings : 4;
         contents.directions = directions ? directions : "";
@@ -145,9 +141,8 @@ QtObject {
             "category": categories[0],
             "difficulty": 0,
             "restriction": 0,
-            "preptime": "0",
-            "cooktime": "0",
-            "totaltime": i18n.tr("%1'").arg(computeTotalTime(preptime, cooktime)),
+            "preptime": 0,
+            "cooktime": 0,
             "ingredients": [ ],
             "servings": 4,
             "directions": "",

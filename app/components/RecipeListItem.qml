@@ -44,7 +44,7 @@ ListItem.Subtitled {
 
         Label {
             visible: contents.preptime + contents.cooktime > 0
-            text: i18n.tr("Total time: %1".arg(contents.totaltime))
+            text: i18n.tr("Total time: " + (contents.preptime + contents.cooktime).toTime())
             font.pixelSize: units.gu(1.5)
             color: Theme.palette.normal.backgroundText
         }

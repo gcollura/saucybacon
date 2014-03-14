@@ -166,7 +166,7 @@ Page {
                                 id: totaltime
                                 visible: recipe.preptime + recipe.cooktime > 0
                                 source: icon("64/clock", true)
-                                text: recipe.totaltime
+                                text: (recipe.preptime + recipe.cooktime).toTime()
                             }
 
                             ImageWithLabel {
@@ -199,11 +199,11 @@ Page {
                         text: {
                             var string = "";
                             if (recipe.preptime > 0)
-                                string += i18n.tr("Prep: %1 mins".arg(recipe.preptime));
+                                string += i18n.tr("Prep Time: " + recipe.preptime.toTime());
                             if (recipe.preptime > 0 && recipe.cooktime > 0)
                                 string += " / ";
                             if (recipe.cooktime > 0)
-                                string += i18n.tr("Cook: %1 mins".arg(recipe.cooktime));
+                                string += i18n.tr("Cook Time: " + recipe.cooktime.toTime());
                             return string;
                         }
                     }

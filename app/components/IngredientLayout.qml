@@ -50,6 +50,10 @@ Column {
     }
 
     function loadIngredients() {
+        if (typeof ingredients === "undefined") {
+            resetIngredients(1);
+            return;
+        }
         resetIngredients(ingredients.length);
 
         for (var i = 0; i < ingredients.length; i++) {
@@ -57,7 +61,7 @@ Column {
                 addIngredient();
 
             container.children[i].name = ingredients[i].name;
-            container.children[i].quantity = ingredients[i].quantity;
+            container.children[i].quantity = typeof ingredients[i].quantity !== "undefined" ? ingredients[i].quantity : 0
             container.children[i].type = ingredients[i].type;
         }
 

@@ -104,7 +104,7 @@ Page {
             }
 
             Label {
-                text: i18n.tr("Version <b>%1</b>").arg("1.0")
+                text: i18n.tr("Version <b>%1</b>").arg(utils.version)
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 

@@ -36,7 +36,7 @@ QtObject {
     property int preptime
     property int cooktime
 
-    property var ingredients: new Object()
+    property var ingredients: new Array()
     property int servings
 
     property string directions
@@ -106,7 +106,7 @@ QtObject {
         preptime = contents.preptime ? contents.preptime : 0;
         cooktime = contents.cooktime ? contents.cooktime : 0;
 
-        ingredients = contents.ingredients ? contents.ingredients : { };
+        ingredients = contents.ingredients ? contents.ingredients : [ ];
 
         directions = contents.directions ? contents.directions : "";
 
@@ -138,7 +138,7 @@ QtObject {
         return {
             "name": "",
             "favorite": false,
-            "category": categories[0],
+            "category": categories.keys()[0],
             "difficulty": 0,
             "restriction": 0,
             "preptime": 0,

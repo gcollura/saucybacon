@@ -243,7 +243,7 @@ Page {
                             model: recipe.ingredients
 
                             delegate: Label {
-                                width: parent.width
+                                width: ingredientsList.width
                                 text: txt(modelData.quantity, modelData.type, modelData.name)
                                 wrapMode: Text.Wrap
 

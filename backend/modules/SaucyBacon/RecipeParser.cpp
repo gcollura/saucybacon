@@ -40,7 +40,7 @@ static QJsonArray parseIngredients(const QJsonArray &ingredients) {
         auto match = regex.match(ingredients[i].toString(), 0, QRegularExpression::PartialPreferCompleteMatch);
         if (match.hasMatch() || match.hasPartialMatch()) {
             ingredient["name"] = match.captured("name");
-            ingredient["quantity"] = evaluate(match.captured("quantity").replace("-", "+"));
+            ingredient["quantity"] = match.captured("quantity");
             ingredient["type"] = match.captured("type");
         } else {
             ingredient["name"] = ingredients[i].toString().trimmed();
@@ -289,6 +289,11 @@ void RecipeParser::parseHtml(const QByteArray &html) {
     // Default copyright string
     directions.append(tr("<br />Recipe from %1.<br />Directions are not part of F2F API.").arg(m_service));
 
+    // Check if we get acceptable values or some junk
+    if (preptime > 200000 || preptime < 0)
+        preptime = 0;
+    if (cooktime > 200000 || cooktime < 0)
+        cooktime = 0;
 
     m_contents["directions"] = directions;
     m_contents["preptime"] = preptime;

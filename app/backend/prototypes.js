@@ -17,6 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
+Object.defineProperty(String.prototype, "startsWith", { 
+    enumerable: false,
+    value: function (str) {
+        return this.indexOf(str) == 0;
+    }
+});
+
 Object.defineProperty(String.prototype, "toIntTime", {
     enumerable: false,
     value: function() {
@@ -38,5 +45,27 @@ Object.defineProperty(Number.prototype, "toTime", {
         var hh = Math.floor(this / 60);
         var mm = this % 60;
         return hh.toString() + ":" + ("0" + mm).slice(-2);
+    }
+});
+
+
+Object.defineProperty(Object.prototype, "keys", { 
+    enumerable: false,
+    value: function () {
+        var keys = [];
+        for (var k in this) keys.push(k);
+        return keys;
+    }
+});
+
+Object.defineProperty(Array.prototype, "pushBack", { 
+    enumerable: false,
+    value: function (item) {
+        // This for seems to be slightly faster than .indexOf(item)
+        for (var i = 0; i < this.length; i++)
+            if (this[i] == item)
+                return i;
+        this.push(item);
+        return i;
     }
 });

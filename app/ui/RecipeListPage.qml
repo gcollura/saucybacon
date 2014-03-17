@@ -81,7 +81,7 @@ Page {
             right: parent.right
             margins: units.gu(2)
         }
-        text: i18n.tr("No Recipes!<br/><br/>Go to Search tab<br/>Tap on New to create a new recipe")
+        text: i18n.tr("No Recipes!\n\nGo to Search tab\nTap on New to create a new recipe")
         elide: Text.ElideRight
         wrapMode: Text.WordWrap
         horizontalAlignment: Text.AlignHCenter
@@ -148,7 +148,7 @@ Page {
 
             delegate: RecipeListItem {
                 visible: (recipeListView.filter.length > 0 ? contents.category == recipeListView.filter : true)
-                         && (recipeListView.onlyfav ? contents.favorite : true)
+                         && (recipeListView.onlyfav ? contents.favorite : true) && typeof contents.name !== 'undefined'
                 height: visible ? units.gu(6.2) : 0
             }
         }

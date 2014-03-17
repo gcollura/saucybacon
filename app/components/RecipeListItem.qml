@@ -57,7 +57,7 @@ ListItem.Subtitled {
             verticalCenter: parent.verticalCenter
             right: parent.right
         }
-        visible: !minimal
+        visible: !minimal && typeof contents.photos !== 'undefined'
 
         Image {
             anchors.verticalCenter: parent.verticalCenter
@@ -81,6 +81,7 @@ ListItem.Subtitled {
 
     onClicked: {
         recipe.docId = docId;
+        console.log("Opening recipe: " + docId)
         if (!silent)
             pageStack.push(recipePage);
     }

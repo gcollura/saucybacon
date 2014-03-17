@@ -63,8 +63,6 @@ Row {
         onClicked: object.destroy()
     }
 
-    // UbuntuNumberAnimation on opacity { from: 0; to: 100 }
-
     function focus() {
         ingredientName.forceActiveFocus();
     }

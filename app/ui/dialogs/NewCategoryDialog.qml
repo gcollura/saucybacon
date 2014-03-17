@@ -47,10 +47,10 @@ Dialog {
         text: i18n.tr("Create")
 
         onClicked: {
-            categories.pushBack(nameField.text)
+            var index = categories.pushBack(nameField.text)
             categoriesChanged()
 
-            caller.selectedIndex = categories.indexOf(nameField.text)
+            caller.selectedIndex = index
             PopupUtils.close(dialogue)
         }
     }

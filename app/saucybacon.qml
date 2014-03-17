@@ -146,17 +146,17 @@ MainView {
     Component.onCompleted: {
         loadSettings();
 
-        pageStack.push(recipePage);
         pageStack.push(tabs);
     }
 
-    /* Component.onDestruction: {
+    Component.onDestruction: {
         saveSettings();
-    } */
+    }
 
     // SaucyBacon Utils library
     Utils {
         id: utils
+        property string version: "0.2.0"
     }
 
     /* Recipe Database */
@@ -184,24 +184,27 @@ MainView {
 
     /* Recipe addons */
     property var difficulties: [ i18n.tr("No difficulty"), i18n.tr("Easy"), i18n.tr("Medium"), i18n.tr("Hard") ] // FIXME: Strange name
-    // property var categories: [ ]
+    property var categories: [ ]
     property var restrictions: [ i18n.tr("Non-veg"), i18n.tr("Vegetarian"), i18n.tr("Vegan") ]
-    // property var searches: [ ]
-    property var categories: { }
-    property var searches: { }
+    property var searches: [ ]
 
     function loadSettings() {
 
         if (!utils.get("firstLoad")) {
-            categories[i18n.tr("Uncategorized")] = 0;
+            console.log("Initializing settings and database for the first time.");
+            categories = [ i18n.tr("Uncategorized") ];
 
             utils.set("firstLoad", 1);
+            utils.set("version", utils.version)
         } else {
             // Restore previous size
             height = utils.get("windowSize").height;
             width = utils.get("windowSize").width;
             categories = utils.get("categories");
             searches = utils.get("searches");
+
+            if (utils.get("version") != utils.version)
+                updateDB(utils.get("version"))
         }
 
         // Component.onDestruction isn't called on the phone
@@ -213,6 +216,7 @@ MainView {
         utils.set("windowSize", { "height": height, "width": width });
         utils.set("categories", categories);
         utils.set("searches", searches);
+        utils.set("version", utils.version);
         utils.save();
     }
 
@@ -235,14 +239,17 @@ MainView {
         return name;
     }
 
-    function computeTotalTime(time1, time2) {
-        var t1 = time1 ? time1.toIntTime() : 0;
-        var t2 = time2 ? time2.toIntTime() : 0;
-
-        var total = t1 + t2;
-        if (!total)
-            total = 0;
-
-        return total.toTime();
+    function updateDB(oldVersion) {
+        oldVersion = typeof oldVersion === "undefined" ? "0.1.0" : oldVersion
+        if (oldVersion.startsWith("0.1")) {
+            console.log("Migrating from " + oldVersion + " to " + utils.version)
+            var docs = recipesdb.listDocs();
+            for (var i = 0; i < count.length; i++) {
+                var contents = recipesdb.getDoc(docs[i])
+                contents["preptime"] = contents["preptime"].toNumber();
+                contents["cooktime"] = contents["cooktime"].toNumber();
+                recipesdb.putDoc(contents, docs[i]);
+            }
+        }
     }
 }

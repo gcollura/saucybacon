@@ -83,6 +83,6 @@ ListItem.Subtitled {
         recipe.docId = docId;
         console.log("Opening recipe: " + docId)
         if (!silent)
-            pageStack.push(recipePage);
+            pageStack.push(Qt.resolvedUrl("../ui/RecipePage.qml"));
     }
 }

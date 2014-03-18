@@ -41,7 +41,8 @@ Dialog {
         onClicked: {
             recipe.remove();
             PopupUtils.close(dialogue);
-            pageStack.push(recipeListPage);
+            tabs.selectedTab = recipeListPage
+            pageStack.push(tabs);
         }
     }
 }

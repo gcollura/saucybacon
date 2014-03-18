@@ -56,7 +56,7 @@ MainView {
         keywords: "new;recipe"
         onTriggered: {
             recipe.newRecipe();
-            pageStack.push(editRecipePage);
+            pageStack.push(Qt.resolvedUrl("ui/EditRecipePage.qml"))
         }
     }
 
@@ -66,7 +66,7 @@ MainView {
         description: i18n.tr("Edit the current recipe")
         iconSource: icon("edit")
         keywords: "edit;recipe"
-        onTriggered: pageStack.push(editRecipePage)
+        onTriggered: pageStack.push(Qt.resolvedUrl("ui/EditRecipePage.qml"))
     }
 
     Action {
@@ -75,7 +75,16 @@ MainView {
         description: i18n.tr("Search for a new recipe on the internet")
         iconSource: icon("edit")
         keywords: "search;new;recipe"
-        onTriggered: { pageStack.push(tabs); tabs.selectedTabIndex = 1; }
+        onTriggered: { pageStack.push(tabs); tabs.selectedTab = searchTab; }
+    }
+
+    Action {
+        id: aboutAction
+        text: i18n.tr("About")
+        description: i18n.tr("About this application...")
+        iconSource: icon("help")
+        keywords: "about;saucybacon"
+        onTriggered: { pageStack.push(Qt.resolvedUrl("ui/AboutPage.qml"))}
     }
 
     actions: [ newRecipeAction, searchAction ]
@@ -87,7 +96,11 @@ MainView {
         Tabs {
             objectName: "tabs"
             id: tabs
-            visible: false
+
+            onSelectedTabChanged: {
+                if (tabs.selectedTab == searchTab)
+                    searchLoader.source = Qt.resolvedUrl("ui/SearchPage.qml")
+            }
 
             Tab {
                 objectName: "recipeListTab"
@@ -100,42 +113,18 @@ MainView {
 
             Tab {
                 objectName: "searchTab"
-                title: page.title
-                page: SearchPage {
-                    objectName: "searchPage"
-                    id: searchPage
+                id: searchTab
+                title: i18n.tr("Search")
+                page: Loader {
+                    id: searchLoader
+                    parent: searchTab
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                        bottom: parent.bottom
+                    }
                 }
             }
-
-            Tab {
-                objectName: "aboutTab"
-                title: page.title
-                page: AboutPage {
-                    objectName: "aboutPage"
-                    id: aboutPage
-                }
-            }
-        }
-
-        RecipePage {
-            objectName: "recipePage"
-            id: recipePage
-
-            visible: false
-        }
-
-        EditRecipePage {
-            objectName: "newRecipePage"
-            id: editRecipePage
-
-            visible: false
-        }
-
-        CameraPage {
-            objectName: "cameraPage"
-            id: cameraPage
-
-            visible: false
         }
 
         function back() {

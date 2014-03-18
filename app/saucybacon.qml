@@ -93,49 +93,54 @@ MainView {
         objectName: "pageStack"
         id: pageStack
 
-        Tabs {
-            objectName: "tabs"
-            id: tabs
-
-            onSelectedTabChanged: {
-                if (tabs.selectedTab == searchTab)
-                    searchLoader.source = Qt.resolvedUrl("ui/SearchPage.qml")
-            }
-
-            Tab {
-                objectName: "recipeListTab"
-                title: page.title
-                page: RecipeListPage {
-                    objectName: "recipeListPage"
-                    id: recipeListPage
-                }
-            }
-
-            Tab {
-                objectName: "searchTab"
-                id: searchTab
-                title: i18n.tr("Search")
-                page: Loader {
-                    id: searchLoader
-                    parent: searchTab
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                        bottom: parent.bottom
-                    }
-                }
-            }
+        Component.onCompleted: {
+            push(tabsComponent);
         }
 
         function back() {
             pageStack.currentPage.tools.back.trigger();
         }
+
+        Component {
+            id: tabsComponent
+            Tabs {
+                objectName: "tabs"
+                id: tabs
+
+                onSelectedTabChanged: {
+                    if (tabs.selectedTab == searchTab)
+                    searchLoader.source = Qt.resolvedUrl("ui/SearchPage.qml")
+                }
+
+                Tab {
+                    objectName: "recipeListTab"
+                    title: page.title
+                    page: RecipeListPage {
+                        objectName: "recipeListPage"
+                        id: recipeListPage
+                    }
+                }
+
+                Tab {
+                    objectName: "searchTab"
+                    id: searchTab
+                    title: i18n.tr("Search")
+                    page: Loader {
+                        id: searchLoader
+                        parent: searchTab
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                            bottom: parent.bottom
+                        }
+                    }
+                }
+            }
+        }
     }
 
     Component.onCompleted: {
         loadSettings();
-
-        pageStack.push(tabs);
     }
 
     Component.onDestruction: {
@@ -186,6 +191,7 @@ MainView {
             utils.set("firstLoad", 1);
             utils.set("version", utils.version)
         } else {
+            console.log("Reloading last saved options.")
             // Restore previous size
             height = utils.get("windowSize").height;
             width = utils.get("windowSize").width;

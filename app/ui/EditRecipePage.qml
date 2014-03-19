@@ -117,29 +117,27 @@ Page {
                     selectedIndex: recipe.restriction
                 }
 
-                Flow {
-                    property bool doubleRow: parent.width < units.gu(39)
-
+                Row {
                     width: parent.width
                     spacing: units.gu(1)
 
                     Label {
                         id: totalTime
-                        // anchors.verticalCenter: parent.verticalCenter
-                        width: parent.doubleRow ? parent.width + units.gu(2): parent.width / 2 - units.gu(2)
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: parent.width / 2 - units.gu(2)
 
                         text: i18n.tr("Total time: ") + (prepTime.time + cookTime.time).toTime();
                     }
 
                     TimePicker {
                         id: prepTime
-                        width: parent.doubleRow ? parent.width / 2 - units.gu(0.5) : parent.width / 4
+                        width: parent.width / 4
                         time: recipe.preptime
                     }
 
                     TimePicker {
                         id: cookTime
-                        width: parent.doubleRow ? parent.width / 2 - units.gu(0.5) : parent.width / 4
+                        width: parent.width / 4
                         time: recipe.cooktime
                     }
                 }

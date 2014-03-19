@@ -189,7 +189,7 @@ MainView {
             categories = [ i18n.tr("Uncategorized") ];
 
             utils.set("firstLoad", 1);
-            utils.set("version", utils.version)
+            utils.set("version", utils.version);
         } else {
             console.log("Reloading last saved options.")
             // Restore previous size
@@ -199,12 +199,13 @@ MainView {
             searches = utils.get("searches");
 
             if (utils.get("version") != utils.version)
-                updateDB(utils.get("version"))
+                updateDB(utils.get("version"));
         }
 
         // Component.onDestruction isn't called on the phone
-        categoriesChanged.connect(saveSettings)
-        searchesChanged.connect(saveSettings)
+        categoriesChanged.connect(saveSettings);
+        searchesChanged.connect(saveSettings);
+        saveSettings();
     }
 
     function saveSettings() {
@@ -239,10 +240,10 @@ MainView {
         if (oldVersion.startsWith("0.1")) {
             console.log("Migrating from " + oldVersion + " to " + utils.version)
             var docs = recipesdb.listDocs();
-            for (var i = 0; i < count.length; i++) {
+            for (var i = 0; i < docs.length; i++) {
                 var contents = recipesdb.getDoc(docs[i])
-                contents["preptime"] = contents["preptime"].toNumber();
-                contents["cooktime"] = contents["cooktime"].toNumber();
+                contents["preptime"] = parseInt(contents["preptime"]);
+                contents["cooktime"] = parseInt(contents["cooktime"]);
                 recipesdb.putDoc(contents, docs[i]);
             }
         }

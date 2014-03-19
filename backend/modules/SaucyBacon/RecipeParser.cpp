@@ -272,7 +272,8 @@ void RecipeParser::parseHtml(const QByteArray &html) {
             if (match.captured(2).contains(QRegularExpression("[hH]our[s]?")))
                 offset = 60;
             preptime = match.captured(1).toInt() * offset;
-        }
+        } else
+            preptime = 0;
 
         offset = 1;
         match = defaultRegex["cooktime"].match(html);
@@ -280,7 +281,8 @@ void RecipeParser::parseHtml(const QByteArray &html) {
             if (match.captured(2).contains(QRegularExpression("[hH]our[s]?")))
                 offset = 60;
             cooktime = match.captured(1).toInt() * offset;
-        }
+        } else
+            cooktime = 0;
 
     } else {
         directions.append(tr("This website is supported yet. It was impossible to load the directions."));

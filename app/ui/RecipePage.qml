@@ -76,6 +76,7 @@ Page {
         }
         ActivityIndicator {
             id: indicator
+            anchors.horizontalCenter: parent.horizontalCenter
             running: !recipe.ready
         }
         Label {
@@ -85,7 +86,7 @@ Page {
                 topMargin: units.gu(4)
             }
             text: i18n.tr("Please wait. Serving up recipe.")
-            horizontalAlignment: Text.AlignRight
+            horizontalAlignment: Text.AlignHCenter
             fontSize: "large"
         }
     }

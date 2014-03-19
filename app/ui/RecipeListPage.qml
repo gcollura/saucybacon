@@ -136,23 +136,28 @@ Page {
             right: parent.right
         }
 
-        ListView {
+        GridView {
             objectName: "recipesListView"
             id: recipeListView
 
             visible: recipesdb.count > 0
-            anchors.fill: parent
+            width: parent.width
+            height: parent.height
             clip: true
 
+            cellWidth: width / Math.floor(width / units.gu(14))
+            cellHeight: cellWidth + units.gu(8)
             model: recipesdb
 
             property string filter
             property bool onlyfav
 
-            delegate: RecipeListItem {
+            delegate: RecipeSquareListItem {
+                width: recipeListView.cellWidth
+                height: recipeListView.cellHeight
+
                 visible: (recipeListView.filter.length > 0 ? contents.category == recipeListView.filter : true)
                          && (recipeListView.onlyfav ? contents.favorite : true) && typeof contents.name !== 'undefined'
-                height: visible ? units.gu(6.2) : 0
             }
         }
     }

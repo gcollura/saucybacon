@@ -157,7 +157,7 @@ Page {
                         id: infos
                         width: parent.width
                         height: childrenRect.height
-                        visible: recipe.preptime + recipe.cooktime > 0 || recipe.favorite || recipe.restriction || recipe.difficulty
+                        visible: height > 0
 
                         Row {
                             anchors.horizontalCenter: parent.horizontalCenter

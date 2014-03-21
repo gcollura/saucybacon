@@ -24,6 +24,12 @@ Item {
     // Inspired by nik90's DetailCarousel delegate
     id: item
 
+    property string imageSource: ""
+    property alias title: label.text
+    property int favorite: 0
+    property int difficulty: 0
+    property int restriction: 0
+
     property bool minimal: false
     property bool silent: false
 
@@ -31,23 +37,26 @@ Item {
         anchors {
             fill: parent
             margins: units.gu(1.5)
-            bottomMargin: units.gu(2)
+            bottomMargin: units.gu(0.5)
         }
         spacing: units.gu(0.5)
 
         UbuntuShape {
             width: parent.width
-            height: parent.height - units.gu(4)
+            height: parent.height - units.gu(6)
             radius: "medium"
-            image: Image {
-                source: contents.photos[0] ? Qt.resolvedUrl(contents.photos[0]) : mainView.icon("64/unknown-food", true)
+
+            image: ImageWithFallback {
+                id: image
+                source: imageSource
+                fallbackSource: icon("64/unknown-food", true)
                 fillMode: Image.PreserveAspectCrop
             }
             Item {
                 id: bottomContainer
                 clip: true
                 height: units.gu(5)
-                visible: contents.difficulty || contents.restriction || contents.favorite
+                visible: difficulty || restriction || favorite
                 anchors {
                     left: parent.left
                     right: parent.right
@@ -75,18 +84,18 @@ Item {
 
                     Image {
                         anchors.verticalCenter: parent.verticalCenter
-                        source: contents.difficulty ? mainView.icon("32/difficulty-%1".arg(contents.difficulty), true) : ""
+                        source: difficulty ? icon("32/difficulty-%1".arg(difficulty), true) : ""
                         sourceSize.height: units.gu(2)
                     }
 
                     Image {
                         anchors.verticalCenter: parent.verticalCenter
-                        source: contents.restriction ? mainView.icon("32/restriction-%1".arg(contents.restriction), true) : ""
+                        source: restriction ? icon("32/restriction-%1".arg(restriction), true) : ""
                         sourceSize.height: units.gu(2)
                     }
 
                     Image {
-                        visible: contents.favorite
+                        visible: favorite
                         anchors.verticalCenter: parent.verticalCenter
                         source: mainView.icon("32/star", true)
                         sourceSize.height: units.gu(2)
@@ -96,12 +105,12 @@ Item {
         }
 
         Label {
+            id: label
             width: parent.width
             elide: Text.ElideRight
             maximumLineCount: 2
             wrapMode: Text.WordWrap
             horizontalAlignment: Text.AlignHCenter
-            text: contents.name
         }
     }
 

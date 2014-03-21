@@ -56,7 +56,7 @@ MainView {
         keywords: "new;recipe"
         onTriggered: {
             recipe.newRecipe();
-            pageStack.push(Qt.resolvedUrl("ui/EditRecipePage.qml"))
+            pageStack.push(Qt.resolvedUrl("ui/EditRecipePage.qml"), { title: i18n.tr("New Recipe") });
         }
     }
 
@@ -66,7 +66,7 @@ MainView {
         description: i18n.tr("Edit the current recipe")
         iconSource: icon("edit")
         keywords: "edit;recipe"
-        onTriggered: pageStack.push(Qt.resolvedUrl("ui/EditRecipePage.qml"))
+        onTriggered: pageStack.push(Qt.resolvedUrl("ui/EditRecipePage.qml"), { title: i18n.tr("Edit Recipe") });
     }
 
     Action {

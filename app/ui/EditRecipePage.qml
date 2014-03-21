@@ -28,8 +28,6 @@ import "../components"
 Page {
     id: page
 
-    title: recipe.exists() && page.visible ? i18n.tr("Edit recipe") : i18n.tr("New recipe")
-
     Action {
         id: saveRecipeAction
         description: i18n.tr("Save the current recipe")
@@ -82,7 +80,6 @@ Page {
                     id: recipeName
                     width: parent.width
 
-                    text: recipe.name
                     placeholderText: i18n.tr("Enter a name for your recipe")
                 }
 
@@ -91,7 +88,6 @@ Page {
                     width: parent.width
                     // text: i18n.tr("Category")
 
-                    selectedIndex: recipe.category ? categories.indexOf(recipe.category) : 0
                     model: categories.concat([i18n.tr("<i>New category...</i>")])
 
                     onSelectedIndexChanged: {
@@ -106,7 +102,6 @@ Page {
                     width: parent.width
                     // text: i18n.tr("Difficulty")
                     model: difficulties
-                    selectedIndex: recipe.difficulty
                 }
 
                 ItemSelector {
@@ -114,7 +109,6 @@ Page {
                     width: parent.width
                     // text: i18n.tr("Restriction")
                     model: restrictions
-                    selectedIndex: recipe.restriction
                 }
 
                 Row {
@@ -132,13 +126,11 @@ Page {
                     TimePicker {
                         id: prepTime
                         width: parent.width / 4
-                        time: recipe.preptime
                     }
 
                     TimePicker {
                         id: cookTime
                         width: parent.width / 4
-                        time: recipe.cooktime
                     }
                 }
 
@@ -146,19 +138,15 @@ Page {
                     anchors.margins: units.gu(-2)
                 }
 
-                Row {
+                Label {
+                    text: i18n.tr("Ingredients")
                     width: parent.width
-                    Label {
-                        text: i18n.tr("Ingredients")
-                    }
-                    // FIXME: Add servings feature
                 }
+                // FIXME: Add servings feature
 
                 IngredientLayout {
                     id: ingredientsLayout
                     width: parent.width
-                    ingredients: recipe.ingredients
-
                 }
 
                 Button {
@@ -186,7 +174,6 @@ Page {
                     id: recipeDirections
                     width: parent.width
 
-                    text: recipe.directions
                     textFormat: TextEdit.RichText
 
                     placeholderText: i18n.tr("Write your directions")
@@ -198,8 +185,6 @@ Page {
                     id: photoLayout
                     width: parent.width
                     clip: wideAspect
-
-                    photos: recipe.photos
                 }
 
                 Behavior on width { UbuntuNumberAnimation { duration: UbuntuAnimation.SlowDuration } }
@@ -230,20 +215,19 @@ Page {
 
     }
 
-    onVisibleChanged: {
-        if (!visible)
-            return;
-
-        // WORKAROUND: Refresh some widgets that may forget they configuration
-        // for example when they cleared using the clear button
+    Component.onCompleted: {
         recipeName.text = recipe.name
         recipeCategory.selectedIndex = recipe.category ? categories.indexOf(recipe.category) : 0;
         recipeDifficulty.selectedIndex = recipe.difficulty;
         recipeRestriction.selectedIndex = recipe.restriction;
 
-        // prepTime.text = recipe.preptime > 0 ? recipe.preptime : "";
-        // cookTime.text = recipe.cooktime > 0 ? recipe.cooktime : "";
+        prepTime.time = recipe.preptime
+        cookTime.time = recipe.preptime
+
+        ingredientsLayout.ingredients = recipe.ingredients
 
         recipeDirections.text = recipe.directions;
+
+        photoLayout.photos = recipe.photos
     }
 }

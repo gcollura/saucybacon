@@ -138,7 +138,7 @@ QtObject {
         return {
             "name": "",
             "favorite": false,
-            "category": categories.keys()[0],
+            "category": categories[0],
             "difficulty": 0,
             "restriction": 0,
             "preptime": 0,

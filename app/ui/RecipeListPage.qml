@@ -28,7 +28,6 @@ Page {
     id: page
 
     title: i18n.tr("All Recipes")
-    anchors.fill: parent
 
     actions: [ newRecipeAction, searchAction ]
 
@@ -147,18 +146,23 @@ Page {
             }
 
             visible: recipesdb.count > 0
-            clip: false
   
-            cellWidth: width / Math.floor(width / units.gu(16.5))
-            cellHeight: 4 / 3 * cellWidth + units.gu(4)
+            cellWidth: width / Math.floor(width / units.gu(16))
+            cellHeight: 4 / 3 * cellWidth + units.gu(5)
             model: recipesdb
 
             property string filter
             property bool onlyfav
 
-            delegate: RecipeSquareListItem {
+            delegate: SquareListItem {
                 width: recipeListView.cellWidth
                 height: recipeListView.cellHeight
+
+                title: contents.name
+                imageSource: contents.photos[0] ? contents.photos[0] : ""
+                favorite: contents.favorite
+                restriction: contents.restriction
+                difficulty: contents.difficulty
 
                 visible: (recipeListView.filter.length > 0 ? contents.category == recipeListView.filter : true)
                          && (recipeListView.onlyfav ? contents.favorite : true) && typeof contents.name !== 'undefined'

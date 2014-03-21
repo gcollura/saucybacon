@@ -42,9 +42,9 @@ MainView {
     width: units.gu(135)
     height: units.gu(85)
 
-    headerColor: "#640707"
-    backgroundColor: "#790f0f"
-    footerColor: "#641616"
+    headerColor: "#6d0a0a"
+    backgroundColor: "#540810"
+    footerColor: "#370517"
 
     // Global actions
 

@@ -21,6 +21,7 @@ import QtQuick 2.0
 import Ubuntu.Components 0.1
 
 Item {
+    // Inspired by nik90's DetailCarousel delegate
     id: item
 
     property bool minimal: false
@@ -28,9 +29,11 @@ Item {
 
     Column {
         anchors {
-            margins: units.gu(1)
             fill: parent
+            margins: units.gu(1.5)
+            bottomMargin: units.gu(2)
         }
+        spacing: units.gu(0.5)
 
         UbuntuShape {
             width: parent.width
@@ -39,6 +42,56 @@ Item {
             image: Image {
                 source: contents.photos[0] ? Qt.resolvedUrl(contents.photos[0]) : mainView.icon("64/unknown-food", true)
                 fillMode: Image.PreserveAspectCrop
+            }
+            Item {
+                id: bottomContainer
+                clip: true
+                height: units.gu(5)
+                visible: contents.difficulty || contents.restriction || contents.favorite
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    bottom: parent.bottom
+                }
+
+                UbuntuShape {
+                    // Thanks to nik90 for this trick
+                    radius: "medium"
+                    height: item.height
+                    anchors {
+                        bottom: parent.bottom
+                        left: parent.left
+                        right: parent.right
+                    }
+                    color: Qt.rgba(0,0,0,0.8)
+                }
+
+                Row {
+                    id: symbols
+                    height: parent.height
+                    width: childrenRect.width
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    spacing: units.gu(1)
+
+                    Image {
+                        anchors.verticalCenter: parent.verticalCenter
+                        source: contents.difficulty ? mainView.icon("32/difficulty-%1".arg(contents.difficulty), true) : ""
+                        sourceSize.height: units.gu(2)
+                    }
+
+                    Image {
+                        anchors.verticalCenter: parent.verticalCenter
+                        source: contents.restriction ? mainView.icon("32/restriction-%1".arg(contents.restriction), true) : ""
+                        sourceSize.height: units.gu(2)
+                    }
+
+                    Image {
+                        visible: contents.favorite
+                        anchors.verticalCenter: parent.verticalCenter
+                        source: mainView.icon("32/star", true)
+                        sourceSize.height: units.gu(2)
+                    }
+                }
             }
         }
 

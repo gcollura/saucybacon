@@ -101,7 +101,6 @@ Page {
                     onTextChanged: searchLocally(searchField.text)
 
                     Behavior on width { UbuntuNumberAnimation { } }
-
                 }
 
                 Button {

@@ -27,7 +27,7 @@ import "../components"
 Page {
     id: page
 
-    title: i18n.tr("Recipes")
+    title: i18n.tr("All Recipes")
     anchors.fill: parent
 
     actions: [ newRecipeAction, searchAction ]
@@ -52,6 +52,7 @@ Page {
                 anchors.top: contents.top
                 anchors.topMargin: units.gu(9.5)
                 topMargin: 0
+                clip: true
             }
 
             PropertyChanges {
@@ -67,7 +68,7 @@ Page {
 
             PropertyChanges {
                 target: recipeListView
-
+                clip: false
                 topMargin: units.gu(9.5)
             }
         }
@@ -140,13 +141,16 @@ Page {
             objectName: "recipesListView"
             id: recipeListView
 
-            visible: recipesdb.count > 0
-            width: parent.width
-            height: parent.height
-            clip: true
+            anchors {
+                fill: parent
+                margins: units.gu(1)
+            }
 
-            cellWidth: width / Math.floor(width / units.gu(14))
-            cellHeight: cellWidth + units.gu(8)
+            visible: recipesdb.count > 0
+            clip: false
+  
+            cellWidth: width / Math.floor(width / units.gu(16.5))
+            cellHeight: 4 / 3 * cellWidth + units.gu(4)
             model: recipesdb
 
             property string filter

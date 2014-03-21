@@ -7,21 +7,22 @@ Item {
     property alias source: image.source
     property alias text: label.text
 
-    height: units.gu(12)
-    width: label.width > image.width ? label.width : image.width
+    width: childrenRect.width
+    height: childrenRect.height
 
-    Image {
-        id: image
-        anchors.horizontalCenter: parent.horizontalCenter
-        sourceSize.height: units.gu(6)
-    }
+    Column {
+        spacing: units.gu(2)
 
-    Label {
-        id: label
-        anchors {
-            top: image.bottom
-            margins: units.gu(2)
-            horizontalCenter: parent.horizontalCenter
+        Image {
+            id: image
+            anchors.horizontalCenter: parent.horizontalCenter
+            smooth: true
+            sourceSize.height: units.gu(6)
+        }
+
+        Label {
+            id: label
+            anchors.horizontalCenter: parent.horizontalCenter
         }
     }
 }

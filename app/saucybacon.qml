@@ -42,6 +42,7 @@ MainView {
     width: units.gu(135)
     height: units.gu(85)
 
+    // Thanks Lucas Di Benedetto
     headerColor: "#6d0a0a"
     backgroundColor: "#540810"
     footerColor: "#370517"
@@ -56,7 +57,7 @@ MainView {
         keywords: "new;recipe"
         onTriggered: {
             recipe.newRecipe();
-            pageStack.push(Qt.resolvedUrl("ui/EditRecipePage.qml"), { title: i18n.tr("New Recipe") });
+            pageStack.push(Qt.resolvedUrl("ui/EditPage.qml"), { title: i18n.tr("New Recipe") });
         }
     }
 
@@ -66,7 +67,7 @@ MainView {
         description: i18n.tr("Edit the current recipe")
         iconSource: icon("edit")
         keywords: "edit;recipe"
-        onTriggered: pageStack.push(Qt.resolvedUrl("ui/EditRecipePage.qml"), { title: i18n.tr("Edit Recipe") });
+        onTriggered: pageStack.push(Qt.resolvedUrl("ui/EditPage.qml"), { title: i18n.tr("Edit Recipe") });
     }
 
     Action {
@@ -97,10 +98,6 @@ MainView {
             push(tabsComponent);
         }
 
-        function back() {
-            pageStack.currentPage.tools.back.trigger();
-        }
-
         Component {
             id: tabsComponent
             Tabs {
@@ -108,16 +105,18 @@ MainView {
                 id: tabs
 
                 onSelectedTabChanged: {
-                    if (tabs.selectedTab == searchTab)
-                    searchLoader.source = Qt.resolvedUrl("ui/SearchPage.qml")
+                    if (tabs.selectedTab == searchTab) {
+                        searchLoader.source = Qt.resolvedUrl("ui/SearchPage.qml")
+                    }
                 }
 
                 Tab {
-                    objectName: "recipeListTab"
+                    objectName: "homeTab"
+                    id: homeTab
                     title: page.title
-                    page: RecipeListPage {
-                        objectName: "recipeListPage"
-                        id: recipeListPage
+                    page: HomePage {
+                        objectName: "homePage"
+                        id: homePage
                     }
                 }
 
@@ -174,10 +173,9 @@ MainView {
     } */
 
     property Recipe r: Recipe { id: recipe }
-    property var menus: [ ]
 
     /* Recipe addons */
-    property var difficulties: [ i18n.tr("No difficulty"), i18n.tr("Easy"), i18n.tr("Medium"), i18n.tr("Hard") ] // FIXME: Strange name
+    property var difficulties: [ i18n.tr("No difficulty"), i18n.tr("Easy"), i18n.tr("Medium"), i18n.tr("Hard") ] // FIXME: Strange naming
     property var categories: [ ]
     property var restrictions: [ i18n.tr("Non-veg"), i18n.tr("Vegetarian"), i18n.tr("Vegan") ]
     property var searches: [ ]
@@ -228,6 +226,7 @@ MainView {
 
     function truncate(name, width, unit) {
         unit = typeof unit === "undefined" ? units.gu(2) : unit
+        if (typeof name === "undefined") return "";
         if (name.length > width / unit) {
             name = name.substring(0, width / (unit + units.gu(0.2)));
             name += "...";

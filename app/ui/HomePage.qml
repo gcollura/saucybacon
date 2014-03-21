@@ -46,10 +46,9 @@ Page {
             when: wideAspect
 
             PropertyChanges {
-                target: recipeListView
+                target: gridView
 
                 anchors.top: contents.top
-                anchors.topMargin: units.gu(9.5)
                 topMargin: 0
                 clip: true
             }
@@ -66,14 +65,13 @@ Page {
             name: ""
 
             PropertyChanges {
-                target: recipeListView
-                clip: false
+                target: gridView
+
                 topMargin: units.gu(9.5)
             }
         }
     ]
-
-    flickable: !wideAspect ? recipeListView : null
+    flickable: !wideAspect ? gridView : null
 
     Label {
         visible: recipesdb.count == 0
@@ -89,12 +87,11 @@ Page {
         wrapMode: Text.WordWrap
         horizontalAlignment: Text.AlignHCenter
         fontSize: "large"
-    } 
+    }
 
     Sidebar {
         id: sidebar
         expanded: wideAspect && recipesdb.count > 0
-        anchors.topMargin: units.gu(9.5)
 
         Column {
             anchors {
@@ -130,15 +127,15 @@ Page {
         id: contents
 
         anchors {
-            top: parent.top
+            top: page.top
             bottom: parent.bottom
             left: sidebar.right
             right: parent.right
         }
 
         GridView {
-            objectName: "recipesListView"
-            id: recipeListView
+            objectName: "gridView"
+            id: gridView
 
             anchors {
                 fill: parent
@@ -146,17 +143,18 @@ Page {
             }
 
             visible: recipesdb.count > 0
-  
+
             cellWidth: width / Math.floor(width / units.gu(16))
             cellHeight: 4 / 3 * cellWidth + units.gu(5)
+
             model: recipesdb
 
             property string filter
             property bool onlyfav
 
             delegate: SquareListItem {
-                width: recipeListView.cellWidth
-                height: recipeListView.cellHeight
+                width: gridView.cellWidth
+                height: gridView.cellHeight
 
                 title: contents.name
                 imageSource: contents.photos[0] ? contents.photos[0] : ""
@@ -164,17 +162,17 @@ Page {
                 restriction: contents.restriction
                 difficulty: contents.difficulty
 
-                visible: (recipeListView.filter.length > 0 ? contents.category == recipeListView.filter : true)
-                         && (recipeListView.onlyfav ? contents.favorite : true) && typeof contents.name !== 'undefined'
+                visible: (gridView.filter.length > 0 ? contents.category == gridView.filter : true)
+                         && (gridView.onlyfav ? contents.favorite : true) && typeof contents.name !== 'undefined'
             }
         }
     }
 
 
     function filter(name) {
-        recipeListView.filter = name;
+        gridView.filter = name;
     }
     function favorites(show) {
-        recipeListView.onlyfav = show;
+        gridView.onlyfav = show;
     }
 }

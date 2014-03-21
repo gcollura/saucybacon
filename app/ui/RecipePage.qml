@@ -102,10 +102,16 @@ Page {
             anchors.fill: parent
             model: recipesdb
             focus: true
-            delegate: RecipeListItem {
-                minimal: true
-                silent: true
+            delegate: ListItem.Subtitled {
+                text: truncate(contents.name, parent.width, units.gu(1.5))
+                subText: i18n.tr("Total time: " + (contents.preptime + contents.cooktime).toTime())
+                iconSource: contents.photos[0] ? contents.photos[0] : ""
+                fallbackIconSource: mainView.icon("64/unknown-food", true)
                 progression: docId === recipe.docId
+                onClicked: {
+                    recipe.docId = docId;
+                    console.log("Opening recipe: " + docId)
+                }
             }
         }
     }

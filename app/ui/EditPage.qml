@@ -211,7 +211,7 @@ Page {
 
         recipe.save();
 
-        pageStack.back();
+        pageStack.pop();
 
     }
 

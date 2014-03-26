@@ -50,12 +50,6 @@ Column {
     }
 
     function loadIngredients() {
-        if (typeof ingredients === "undefined") {
-            resetIngredients(1);
-            return;
-        }
-        resetIngredients(ingredients.length);
-
         for (var i = 0; i < ingredients.length; i++) {
             if (!ingredientsLayout.children[i])
                 addIngredient();
@@ -67,16 +61,6 @@ Column {
 
         // Make room for another ingredient
         addIngredient();
-    }
-
-    function resetIngredients(length) {
-        // Length parameter avoid useless object.destroy() calls
-        // Destroy only the objects we don't need at the moment
-        length = typeof length !== 'undefined' ? length : 0
-
-        for (var i = container.children.length - 1; i >= length; i--) {
-            container.children[i].destroy();
-        }
     }
 
     function addIngredient(setfocus) {

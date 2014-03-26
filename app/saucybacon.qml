@@ -26,6 +26,7 @@ import "backend/prototypes.js" as Proto
 
 import "ui"
 import "backend"
+import "models"
 
 MainView {
     objectName: "mainView"
@@ -150,6 +151,11 @@ MainView {
     Utils {
         id: utils
         property string version: "0.2.0"
+    }
+
+    BaseModel {
+        utils: utils
+        name: "categories"
     }
 
     /* Recipe Database */

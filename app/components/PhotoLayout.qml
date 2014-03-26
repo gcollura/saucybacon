@@ -99,10 +99,7 @@ Flickable {
     }
 
     function selectPhoto() {
-        // PopupUtils.open(Qt.resolvedUrl("../components/PhotoChooser.qml"), root);
-        root.activeTransfer = ContentHub.importContent(ContentType.Pictures);
-        root.activeTransfer.selectionType = ContentTransfer.Multiple;
-        root.activeTransfer.start();
+        activeTransfer = picSourceMulti.request();
     }
 
     function addPhoto(filename) {
@@ -115,8 +112,15 @@ Flickable {
         photosChanged();
     }
 
+    ContentPeer {
+        id: picSourceMulti
+        contentType: ContentType.Pictures
+        handler: ContentHandler.Source
+        selectionType: ContentTransfer.Multiple
+    }
+
     // ContentHub features
-    ContentImportHint {
+    ContentTransferHint {
         id: importHint
         anchors.fill: parent
         activeTransfer: root.activeTransfer

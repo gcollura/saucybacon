@@ -106,7 +106,6 @@ Page {
                 text: truncate(contents.name, parent.width, units.gu(1.5))
                 subText: i18n.tr("Total time: " + (contents.preptime + contents.cooktime).toTime())
                 iconSource: contents.photos[0] ? contents.photos[0] : ""
-                fallbackIconSource: mainView.icon("64/unknown-food", true)
                 progression: docId === recipe.docId
                 onClicked: {
                     recipe.docId = docId;

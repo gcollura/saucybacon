@@ -49,7 +49,7 @@ Item {
             image: ImageWithFallback {
                 id: image
                 source: imageSource
-                fallbackSource: icon("64/unknown-food", true)
+                fallbackSource: icon("512/unknown-food", true)
                 fillMode: Image.PreserveAspectCrop
             }
             Item {

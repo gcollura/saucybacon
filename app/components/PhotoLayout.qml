@@ -27,11 +27,6 @@ import SaucyBacon 0.1
 Flickable {
     id: root
 
-    anchors {
-        left: parent.left
-        right: parent.right
-    }
-
     height: photoRow.height
 
     contentWidth: photoRow.width

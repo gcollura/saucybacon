@@ -59,24 +59,65 @@ Page {
                         anchors {
                             top: parent.top
                             bottom: parent.bottom
+                            margins: units.gu(2)
                         }
                         width: page.width / 2
                         contentHeight: leftColumn.height
+                        interactive: contentHeight > height
 
                         Column {
                             id: leftColumn
                             anchors {
                                 left: parent.left
                                 right: parent.right
+                                margins: units.gu(2)
                             }
+                            spacing: units.gu(2)
                             height: childrenRect.height
 
                             ItemLayout {
                                 item: "symbolDisplay"
                                 width: parent.width
+                                height: symbolDisplay.height
+                            }
+
+                            ItemLayout {
+                                item: "totaltimeLabel"
+                                anchors {
+                                    horizontalCenter: parent.horizontalCenter
+                                }
+                                width: totaltimeLabel.width
+                                height: totaltimeLabel.height
+                            }
+
+                            ListItem.ThinDivider {
+                                visible: symbolDisplay.height > 0
+                                anchors.margins: units.gu(-2)
+                            }
+
+                            ItemLayout {
+                                item: "photoLayout"
+                                width: parent.width
+                                height: photoLayout.height
+                            }
+
+                            ListItem.ThinDivider {
+                                visible: recipe.photos.length > 0
+                                anchors.margins: units.gu(-2)
+                            }
+
+                            ItemLayout {
+                                item: "ingredientsLabel"
+                                width: parent.width
+                                height: ingredientsLabel.height
+                            }
+
+                            ItemLayout {
+                                item: "ingredientsColumn"
+                                width: parent.width
+                                height: ingredientsColumn.height
                             }
                         }
-                        Behavior on width { UbuntuNumberAnimation {} }
                     }
 
                     Flickable {
@@ -84,29 +125,37 @@ Page {
                         anchors {
                             top: parent.top
                             bottom: parent.bottom
+                            margins: units.gu(2)
                         }
                         width: page.width / 2
                         contentHeight: rightColumn.height
+                        interactive: contentHeight > height
 
                         Column {
                             id: rightColumn
                             anchors {
                                 left: parent.left
                                 right: parent.right
+                                margins: units.gu(2)
                             }
+                            spacing: units.gu(2)
                             height: childrenRect.height
 
                             ItemLayout {
                                 item: "directionsLabel"
                                 width: parent.width
+                                height: directionsLabel.height
                             }
 
                             ItemLayout {
                                 item: "directionsText"
-                                width: parent.width
+                                anchors {
+                                    left: parent.left
+                                    right: parent.right
+                                }
+                                height: directionsText.contentHeight
                             }
                         }
-                        Behavior on width { UbuntuNumberAnimation {} }
                     }
                 }
             }
@@ -137,7 +186,10 @@ Page {
                 Item {
                     id: symbolDisplay
                     Layouts.item: "symbolDisplay"
-                    width: parent.width
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
                     height: childrenRect.height
 
                     Row {
@@ -190,6 +242,10 @@ Page {
                 PhotoLayout {
                     id: photoLayout
                     Layouts.item: "photoLayout"
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
                     clip: wideAspect
                     editable: false
                     iconSize: units.gu(12)
@@ -213,7 +269,10 @@ Page {
                 Column {
                     id: ingredientsColumn
                     Layouts.item: "ingredientsColumn"
-                    width: parent.width
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
                     spacing: units.gu(0.7)
 
                     Repeater {
@@ -230,10 +289,7 @@ Page {
                 }
 
                 ListItem.ThinDivider {
-                    anchors {
-                        leftMargin: units.gu(-2)
-                        rightMargin: units.gu(-2)
-                    }
+                    anchors.margins: units.gu(-2)
                 }
 
                 Label {
@@ -252,13 +308,10 @@ Page {
                         left: parent.left
                         right: parent.right
                     }
-
                     text: recipe.directions
 
-                    wrapMode: Text.Wrap
+                    wrapMode: Text.WordWrap
                     textFormat: Text.RichText
-
-                    Behavior on width { UbuntuNumberAnimation {} }
                 }
             }
         }

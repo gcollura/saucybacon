@@ -240,7 +240,7 @@ Page {
                         Repeater {
                             id: ingredientsList
                             width: parent.width
-                            model: recipe.ingredients
+                            model: recipe.ingredients ? recipe.ingredients : 0
 
                             delegate: Label {
                                 width: parent.width

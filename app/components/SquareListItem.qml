@@ -121,7 +121,7 @@ Item {
             recipe.docId = docId;
             console.log("Opening recipe: " + docId)
             if (!silent)
-            pageStack.push(Qt.resolvedUrl("../ui/RecipePage.qml"));
+            pageStack.push(Qt.resolvedUrl("../ui/NewRecipePage.qml"));
         }
     }
 }

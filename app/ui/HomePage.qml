@@ -91,7 +91,6 @@ Page {
 
     Sidebar {
         id: sidebar
-        expanded: wideAspect && recipesdb.count > 0
 
         Column {
             anchors {

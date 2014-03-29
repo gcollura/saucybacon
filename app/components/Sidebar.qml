@@ -1,68 +1,31 @@
-/***************************************************************************
- * Whatsoever ye do in word or deed, do all in the name of the             *
- * Lord Jesus, giving thanks to God and the Father by him.                 *
- * - Colossians 3:17                                                       *
- *                                                                         *
- * Ubuntu UI Extras - A collection of QML widgets not available            *
- *                    in the default Ubuntu UI Toolkit                     *
- * Copyright (C) 2013-2014 Michael Spencer <sonrisesoftware@gmail.com>          *
- *                                                                         *
- * This program is free software: you can redistribute it and/or modify    *
- * it under the terms of the GNU General Public License as published by    *
- * the Free Software Foundation, either version 3 of the License, or       *
- * (at your option) any later version.                                     *
- *                                                                         *
- * This program is distributed in the hope that it will be useful,         *
- * but WITHOUT ANY WARRANTY; without even the implied warranty of          *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the            *
- * GNU General Public License for more details.                            *
- *                                                                         *
- * You should have received a copy of the GNU General Public License       *
- * along with this program. If not, see <http://www.gnu.org/licenses/>.    *
- ***************************************************************************/
+/*
+ * Copyright (C) 2013 Michael Spencer <sonrisesoftware@gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3 as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Authored by: Michael Spencer <sonrisesoftware@gmail.com>
+ */
+
 import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1
 
-/*!
-    \qmltype Sidebar
-    \brief A sidebar component for use in adaptive layouts
-
-    To use, simply add an instance to your code, and anchor other components to it.
-
-    To show or hide, set the expanded property.
-
-    By default, the sidebar has a flickable built in, and whatever contents are added
-    will be placed in the flickable. When you want this disabled, or want to fill the
-    entire sidebar, set the autoFill property to false.
-
-    Examples:
-    \qml
-        property bool wideAspect: width > units.gu(80)
-
-        Sidebar {
-            expanded: wideAspect
-
-            // Anchoring is automatic
-        }
-    \endqml
-*/
 Rectangle {
     id: root
 
     color: Qt.rgba(0.2,0.2,0.2,0.4)
 
-    property bool expanded: true
-
     property string mode: "left" // or "right"
-    property alias header: headerItem.text
-
-    anchors {
-        left: mode === "left" ? parent.left : undefined
-        right: mode === "right" ? parent.right : undefined
-        top: parent.top
-        bottom: parent.bottom
-    }
 
     VerticalDivider {
         mode: root.mode
@@ -76,27 +39,9 @@ Rectangle {
         }
     }
 
-    width: units.gu(35)
-
-
-    anchors.leftMargin: expanded ? 0 : -width
-    anchors.rightMargin: expanded ? 0 : -width
-
-    Behavior on anchors.leftMargin {
-        UbuntuNumberAnimation {}
-    }
-
-    Behavior on anchors.rightMargin {
-        UbuntuNumberAnimation {}
-    }
+    width: 0.37 * parent.width//units.gu(35)
 
     default property alias contents: contents.data
-
-    Header {
-        id: headerItem
-
-        visible: text !== ""
-    }
 
     property bool autoFlick: true
 
@@ -106,7 +51,7 @@ Rectangle {
         clip: true
 
         anchors {
-            top: headerItem.visible ? headerItem.bottom : parent.top
+            top: parent.top
             left: parent.left
             right: parent.right
             bottom: parent.bottom

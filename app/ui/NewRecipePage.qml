@@ -50,8 +50,35 @@ Page {
 
                 Row {
                     anchors {
-                        topMargin: units.gu(10)
+                        topMargin: header.height
                         fill: parent
+                    }
+
+                    Sidebar {
+                        id: sidebar
+                        mode: "left"
+                        visible: true
+                        anchors {
+                            top: parent.top
+                            bottom: parent.bottom
+                        }
+                        width: units.gu(30)
+
+                        ListView {
+                            width: sidebar.width
+                            height: sidebar.height
+                            model: recipesdb
+                            delegate: ListItem.Subtitled {
+                                text: truncate(contents.name, parent.width, units.gu(1.5))
+                                subText: i18n.tr("Total time: " + (contents.preptime + contents.cooktime).toTime())
+                                iconSource: contents.photos[0] ? contents.photos[0] : ""
+                                progression: docId === recipe.docId
+                                onClicked: {
+                                    recipe.docId = docId;
+                                    console.log("Opening recipe: " + docId)
+                                }
+                            }
+                        }
                     }
 
                     Flickable {
@@ -61,7 +88,7 @@ Page {
                             bottom: parent.bottom
                             margins: units.gu(2)
                         }
-                        width: page.width / 2
+                        width: page.width / 2 - sidebar.width / 2
                         contentHeight: leftColumn.height
                         interactive: contentHeight > height
 
@@ -76,9 +103,11 @@ Page {
                             height: childrenRect.height
 
                             ItemLayout {
+                                id: symbolDisplayItem
                                 item: "symbolDisplay"
                                 width: parent.width
                                 height: symbolDisplay.height
+                                visible: recipe.difficulty || recipe.preptime + recipe.cooktime > 0 || recipe.favorite || recipe.restriction
                             }
 
                             ItemLayout {
@@ -88,10 +117,11 @@ Page {
                                 }
                                 width: totaltimeLabel.width
                                 height: totaltimeLabel.height
+                                visible: recipe.preptime + recipe.cooktime > 0
                             }
 
                             ListItem.ThinDivider {
-                                visible: symbolDisplay.height > 0
+                                visible: symbolDisplayItem.visible
                                 anchors.margins: units.gu(-2)
                             }
 
@@ -99,6 +129,7 @@ Page {
                                 item: "photoLayout"
                                 width: parent.width
                                 height: photoLayout.height
+                                visible: recipe.photos.length > 0
                             }
 
                             ListItem.ThinDivider {
@@ -115,7 +146,7 @@ Page {
                             ItemLayout {
                                 item: "ingredientsColumn"
                                 width: parent.width
-                                height: ingredientsColumn.height
+                                height: Math.max(ingredientsColumn.childrenRect.height, ingredientsColumn.height)
                             }
                         }
                     }
@@ -127,7 +158,7 @@ Page {
                             bottom: parent.bottom
                             margins: units.gu(2)
                         }
-                        width: page.width / 2
+                        width: page.width / 2 - sidebar.width / 2
                         contentHeight: rightColumn.height
                         interactive: contentHeight > height
 
@@ -163,7 +194,7 @@ Page {
 
         Flickable {
             id: flickable
-
+            LayoutMirroring.enabled: true
             anchors {
                 fill: parent
                 margins: units.gu(2)
@@ -266,24 +297,30 @@ Page {
                     font.bold: true
                 }
 
-                Column {
+                Item {
                     id: ingredientsColumn
                     Layouts.item: "ingredientsColumn"
                     anchors {
                         left: parent.left
                         right: parent.right
                     }
-                    spacing: units.gu(0.7)
-
-                    Repeater {
-                        id: ingredientsList
+                    height: childrenRect.height
+                    Column {
                         width: parent.width
-                        model: recipe.ingredients
+                        spacing: units.gu(0.7)
+                        height: childrenRect.height
 
-                        delegate: Label {
-                            width: ingredientsList.width
-                            text: formatIngredient(modelData.quantity, modelData.type, modelData.name)
-                            wrapMode: Text.Wrap
+                        Repeater {
+                            id: ingredientsList
+                            width: parent.width
+                            model: recipe.ingredients
+
+                            delegate: Label {
+                                id: label
+                                width: parent.width
+                                text: formatIngredient(modelData.quantity, modelData.type, modelData.name)
+                                wrapMode: Text.Wrap
+                            } 
                         }
                     }
                 }
@@ -315,7 +352,7 @@ Page {
                 }
             }
         }
-    } 
+    }
 
     function formatTime(preptime, cooktime) {
         var string = "";

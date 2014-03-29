@@ -20,6 +20,7 @@
 import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1
+import Ubuntu.Layouts 0.1
 import U1db 1.0 as U1db
 
 import "../components"
@@ -40,111 +41,107 @@ Page {
         }
     }
 
-    states: [
-        State {
-            name: "wide"
-            when: wideAspect
+    property Flickable pageFlickable
+    flickable: wideAspect ? null : pageFlickable
 
-            PropertyChanges {
-                target: gridView
+    Layouts {
+        id: layouts
+        anchors.fill: parent
 
-                anchors.top: contents.top
-                topMargin: 0
-                clip: true
-            }
+        layouts: [
+            ConditionalLayout {
+                name: "firstStartLayout"
+                when: recipesdb.count == 0
 
-            PropertyChanges {
-                target: contents
+                Label {
+                    id: firstStartLabel
 
-                anchors.top: page.top
-                anchors.topMargin: 0
-            }
-        },
+                    anchors {
+                        verticalCenter: parent.verticalCenter
+                        left: parent.left
+                        right: parent.right
+                        margins: units.gu(2)
+                    }
 
-        State {
-            name: ""
+                    text: i18n.tr("No Recipes!\n\nGo to Search tab\nTap on New to create a new recipe")
+                    elide: Text.ElideRight
+                    wrapMode: Text.WordWrap
+                    horizontalAlignment: Text.AlignHCenter
+                    fontSize: "large"
+                }
+            },
 
-            PropertyChanges {
-                target: gridView
+            ConditionalLayout {
+                name: "tabletLayout"
+                when: wideAspect && recipesdb.count > 0
 
-                topMargin: units.gu(9.5)
-            }
-        }
-    ]
-    flickable: !wideAspect ? gridView : null
+                Row {
+                    anchors.fill: parent
 
-    Label {
-        visible: recipesdb.count == 0
+                    Sidebar {
+                        id: sidebar
+                        mode: "left"
+                        anchors {
+                            top: parent.top
+                            bottom: parent.bottom
+                        }
 
-        anchors {
-            verticalCenter: parent.verticalCenter
-            left: parent.left
-            right: parent.right
-            margins: units.gu(2)
-        }
-        text: i18n.tr("No Recipes!\n\nGo to Search tab\nTap on New to create a new recipe")
-        elide: Text.ElideRight
-        wrapMode: Text.WordWrap
-        horizontalAlignment: Text.AlignHCenter
-        fontSize: "large"
-    }
+                        Column {
+                            anchors {
+                                left: parent.left
+                                right: parent.right
+                            }
 
-    Sidebar {
-        id: sidebar
+                            Standard {
+                                text: i18n.tr("All")
+                                onClicked: { filter(""); favorites(false) }
+                            }
 
-        Column {
-            anchors {
-                left: parent.left
-                right: parent.right
-            }
+                            Standard {
+                                text: i18n.tr("Favorites")
+                                onClicked: { favorites(true) }
+                            }
 
-            Standard {
-                text: i18n.tr("All")
-                onClicked: { filter(""); favorites(false) }
-            }
+                            Header {
+                                text: i18n.tr("Categories")
+                            }
 
-            Standard {
-                text: i18n.tr("Favorites")
-                onClicked: { favorites(true) }
-            }
+                            Repeater {
+                                model: categories
+                                Standard {
+                                    text: modelData
+                                    onClicked: filter(modelData)
+                                }
+                            }
+                        }
+                    }
 
-            Header {
-                text: i18n.tr("Categories")
-            }
-
-            Repeater {
-                model: categories
-                Standard {
-                    text: modelData
-                    onClicked: filter(modelData)
+                    ItemLayout {
+                        item: "gridView"
+                        anchors {
+                            top: parent.top
+                            bottom: parent.bottom
+                        }
+                        width: parent.width - sidebar.width
+                    }
                 }
             }
-        }
-    }
-
-    Item {
-        id: contents
-
-        anchors {
-            top: page.top
-            bottom: parent.bottom
-            left: sidebar.right
-            right: parent.right
-        }
+        ]
 
         GridView {
-            objectName: "gridView"
             id: gridView
+            Layouts.item: "gridView"
+            objectName: "gridView"
 
             anchors {
                 fill: parent
                 margins: units.gu(1)
             }
 
-            visible: recipesdb.count > 0
+            clip: wideAspect
 
             cellWidth: width / Math.floor(width / units.gu(16))
-            cellHeight: 4 / 3 * cellWidth + units.gu(5)
+            cellHeight: 4 / 3 * cellWidth
 
             model: recipesdb
 
@@ -162,11 +159,12 @@ Page {
                 difficulty: contents.difficulty
 
                 visible: (gridView.filter.length > 0 ? contents.category == gridView.filter : true)
-                         && (gridView.onlyfav ? contents.favorite : true) && typeof contents.name !== 'undefined'
+                && (gridView.onlyfav ? contents.favorite : true) && typeof contents.name !== 'undefined'
             }
+
+            Component.onCompleted: pageFlickable = gridView
         }
     }
-
 
     function filter(name) {
         gridView.filter = name;

@@ -100,14 +100,12 @@ Page {
                 ItemSelector {
                     id: recipeDifficulty
                     width: parent.width
-                    // text: i18n.tr("Difficulty")
                     model: difficulties
                 }
 
                 ItemSelector {
                     id: recipeRestriction
                     width: parent.width
-                    // text: i18n.tr("Restriction")
                     model: restrictions
                 }
 
@@ -142,7 +140,6 @@ Page {
                     text: i18n.tr("Ingredients")
                     width: parent.width
                 }
-                // FIXME: Add servings feature
 
                 IngredientLayout {
                     id: ingredientsLayout
@@ -162,7 +159,7 @@ Page {
                     visible: !wideAspect
                 }
 
-                Behavior on width { UbuntuNumberAnimation { duration: UbuntuAnimation.SlowDuration } }
+                Behavior on width { UbuntuNumberAnimation { } }
             }
 
             Column {
@@ -187,7 +184,7 @@ Page {
                     clip: wideAspect
                 }
 
-                Behavior on width { UbuntuNumberAnimation { duration: UbuntuAnimation.SlowDuration } }
+                Behavior on width { UbuntuNumberAnimation { } }
             }
         }
     }

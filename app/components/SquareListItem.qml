@@ -21,7 +21,6 @@ import QtQuick 2.0
 import Ubuntu.Components 0.1
 
 Item {
-    // Inspired by nik90's DetailCarousel delegate
     id: item
 
     property string imageSource: ""
@@ -30,97 +29,92 @@ Item {
     property int difficulty: 0
     property int restriction: 0
 
-    property bool minimal: false
-    property bool silent: false
-
-    Column {
+    UbuntuShape {
         anchors {
             fill: parent
-            margins: units.gu(1.5)
-            bottomMargin: units.gu(0.5)
+            margins: units.gu(1)
         }
-        spacing: units.gu(0.5)
+        radius: "medium"
 
-        UbuntuShape {
-            width: parent.width
-            height: parent.height - units.gu(6)
-            radius: "medium"
+        image: ImageWithFallback {
+            id: image
+            source: imageSource
+            fallbackSource: icon("512/unknown-food", true)
+            fillMode: Image.PreserveAspectCrop
+        }
 
-            image: ImageWithFallback {
-                id: image
-                source: imageSource
-                fallbackSource: icon("512/unknown-food", true)
-                fillMode: Image.PreserveAspectCrop
+        Item {
+            id: bottomContainer
+            clip: true
+            height: infos.height + units.gu(2)
+            anchors {
+                left: parent.left
+                right: parent.right
+                bottom: parent.bottom
             }
-            Item {
-                id: bottomContainer
-                clip: true
-                height: units.gu(5)
-                visible: difficulty || restriction || favorite
+
+            UbuntuShape {
+                radius: "medium"
+                height: item.height
+                anchors {
+                    bottom: parent.bottom
+                    left: parent.left
+                    right: parent.right
+                }
+                color: Qt.rgba(0, 0, 0, 0.8)
+            }
+
+            Column {
+                id: infos
                 anchors {
                     left: parent.left
                     right: parent.right
-                    bottom: parent.bottom
+                    margins: units.gu(1)
+                    verticalCenter: parent.verticalCenter
                 }
-
-                UbuntuShape {
-                    // Thanks to nik90 for this trick
-                    radius: "medium"
-                    height: item.height
-                    anchors {
-                        bottom: parent.bottom
-                        left: parent.left
-                        right: parent.right
-                    }
-                    color: Qt.rgba(0,0,0,0.8)
-                }
+                height: childrenRect.height
+                spacing: units.gu(0.4)
 
                 Row {
                     id: symbols
-                    height: parent.height
-                    width: childrenRect.width
+                    height: childrenRect.height
                     anchors.horizontalCenter: parent.horizontalCenter
                     spacing: units.gu(1)
 
                     Image {
-                        anchors.verticalCenter: parent.verticalCenter
                         source: difficulty ? icon("32/difficulty-%1".arg(difficulty), true) : ""
                         sourceSize.height: units.gu(2)
                     }
 
                     Image {
-                        anchors.verticalCenter: parent.verticalCenter
                         source: restriction ? icon("32/restriction-%1".arg(restriction), true) : ""
                         sourceSize.height: units.gu(2)
                     }
 
                     Image {
                         visible: favorite
-                        anchors.verticalCenter: parent.verticalCenter
                         source: mainView.icon("32/star", true)
                         sourceSize.height: units.gu(2)
                     }
                 }
+
+                Label {
+                    id: label
+                    width: parent.width
+                    elide: Text.ElideRight
+                    maximumLineCount: 2
+                    wrapMode: Text.WordWrap
+                    horizontalAlignment: Text.AlignHCenter
+                }
             }
         }
-
-        Label {
-            id: label
-            width: parent.width
-            elide: Text.ElideRight
-            maximumLineCount: 2
-            wrapMode: Text.WordWrap
-            horizontalAlignment: Text.AlignHCenter
-        }
     }
-
 
     MouseArea {
         anchors.fill: parent
         onClicked: {
             recipe.docId = docId;
             console.log("Opening recipe: " + docId)
-            if (!silent)
             pageStack.push(Qt.resolvedUrl("../ui/NewRecipePage.qml"));
         }
     }

@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2013 Michael Spencer <sonrisesoftware@gmail.com>
+ * Copyright (C) 2014 Giulio Collura <random.cpp@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -23,7 +24,7 @@ import Ubuntu.Components.ListItems 0.1
 Rectangle {
     id: root
 
-    color: Qt.rgba(0.2,0.2,0.2,0.4)
+    color: Qt.rgba(0.2, 0.2, 0.2, 0.4)
 
     property string mode: "left" // or "right"
 
@@ -39,7 +40,7 @@ Rectangle {
         }
     }
 
-    width: 0.37 * parent.width//units.gu(35)
+    width: units.gu(35)
 
     default property alias contents: contents.data
 

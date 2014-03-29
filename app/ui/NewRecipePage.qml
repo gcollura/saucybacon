@@ -45,8 +45,41 @@ Page {
 
         layouts: [
             ConditionalLayout {
+                name: "waitLayout"
+                when: !recipe.ready
+
+                Item {
+                    anchors.fill: parent
+                    // We put the Column in a item because sometimes qmlscene
+                    // blames on parent which may be null and doesn't have the
+                    // properties verticalCenter and horizontalCenter
+                    // 
+                    // TypeError: Cannot read property of null
+                    Column {
+                        anchors {
+                            verticalCenter: parent.verticalCenter
+                            horizontalCenter: parent.horizontalCenter
+                        }
+                        spacing: units.gu(4)
+                        ActivityIndicator {
+                            id: indicator
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            running: true
+                        }
+                        Label {
+                            anchors {
+                                horizontalCenter: parent.horizontalCenter
+                            }
+                            text: i18n.tr("Please wait. Serving up recipe.")
+                            horizontalAlignment: Text.AlignHCenter
+                            fontSize: "large"
+                        }
+                    }
+                }
+            },
+            ConditionalLayout {
                 name: "tabletLayout"
-                when: wideAspect
+                when: wideAspect && recipe.ready
 
                 Row {
                     anchors {
@@ -62,7 +95,6 @@ Page {
                             top: parent.top
                             bottom: parent.bottom
                         }
-                        width: units.gu(30)
 
                         ListView {
                             width: sidebar.width
@@ -146,7 +178,7 @@ Page {
                             ItemLayout {
                                 item: "ingredientsColumn"
                                 width: parent.width
-                                height: Math.max(ingredientsColumn.childrenRect.height, ingredientsColumn.height)
+                                height: ingredientsColumn.height
                             }
                         }
                     }
@@ -194,15 +226,12 @@ Page {
 
         Flickable {
             id: flickable
-            LayoutMirroring.enabled: true
             anchors {
                 fill: parent
                 margins: units.gu(2)
             }
             contentHeight: column.height
             interactive: contentHeight > parent.height
-
-            visible: recipe.ready
 
             Component.onCompleted: pageFlickable = flickable
 

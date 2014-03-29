@@ -38,7 +38,6 @@ MainView {
     automaticOrientation: true
     anchorToKeyboard: true
     property bool wideAspect: width > units.gu(80)
-    property bool extraWideAspect: width > units.gu(130)
 
     width: units.gu(135)
     height: units.gu(85)

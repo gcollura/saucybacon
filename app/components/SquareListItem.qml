@@ -115,7 +115,7 @@ Item {
         onClicked: {
             recipe.docId = docId;
             console.log("Opening recipe: " + docId)
-            pageStack.push(Qt.resolvedUrl("../ui/NewRecipePage.qml"));
+            pageStack.push(Qt.resolvedUrl("../ui/RecipePage.qml"));
         }
     }
 }

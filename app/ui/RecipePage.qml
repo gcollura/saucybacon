@@ -21,6 +21,7 @@ import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.Popups 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
+import Ubuntu.Layouts 0.1
 
 import "../components"
 
@@ -34,214 +35,309 @@ Page {
         objectName: "recipePageToolbar"
     }
 
-    states: [
-        State {
-            name: "extraWide"
-            when: extraWideAspect
+    property Flickable pageFlickable
 
-            PropertyChanges {
-                target: recipeView
+    flickable: wideAspect ? null : pageFlickable
 
-                anchors.top: contents.top
-                anchors.topMargin: units.gu(9.5)
-                topMargin: 0
-            }
+    Layouts {
+        id: layouts
+        anchors.fill: parent
 
-            PropertyChanges {
-                target: contents
+        layouts: [
+            ConditionalLayout {
+                name: "waitLayout"
+                when: !recipe.ready
 
-                anchors.top: page.top
-                anchors.topMargin: units.gu(2)
-            }
-        },
+                Item {
+                    anchors.fill: parent
+                    // We put the Column in a item because sometimes qmlscene
+                    // blames on parent which may be null and doesn't have the
+                    // properties verticalCenter and horizontalCenter
+                    // 
+                    // TypeError: Cannot read property of null
+                    Column {
+                        anchors {
+                            verticalCenter: parent.verticalCenter
+                            horizontalCenter: parent.horizontalCenter
+                        }
+                        spacing: units.gu(4)
+                        ActivityIndicator {
+                            id: indicator
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            running: true
+                        }
+                        Label {
+                            anchors {
+                                horizontalCenter: parent.horizontalCenter
+                            }
+                            text: i18n.tr("Please wait. Serving up recipe.")
+                            horizontalAlignment: Text.AlignHCenter
+                            fontSize: "large"
+                        }
+                    }
+                }
+            },
+            ConditionalLayout {
+                name: "tabletLayout"
+                when: wideAspect && recipe.ready
 
-        State {
-            name: ""
+                Row {
+                    anchors {
+                        topMargin: header.height
+                        fill: parent
+                    }
 
-            PropertyChanges {
-                target: recipeView
+                    Sidebar {
+                        id: sidebar
+                        mode: "left"
+                        visible: true
+                        anchors {
+                            top: parent.top
+                            bottom: parent.bottom
+                        }
 
-                topMargin: units.gu(9.5)
-            }
-        }
-    ]
+                        ListView {
+                            width: sidebar.width
+                            height: sidebar.height
+                            model: recipesdb
+                            delegate: ListItem.Subtitled {
+                                text: truncate(contents.name, parent.width, units.gu(1.5))
+                                subText: i18n.tr("Total time: " + (contents.preptime + contents.cooktime).toTime())
+                                iconSource: contents.photos[0] ? contents.photos[0] : ""
+                                progression: docId === recipe.docId
+                                onClicked: {
+                                    recipe.docId = docId;
+                                    console.log("Opening recipe: " + docId)
+                                }
+                            }
+                        }
+                    }
 
-    flickable: !extraWideAspect ? recipeView : null
+                    Flickable {
+                        clip: true
+                        anchors {
+                            top: parent.top
+                            bottom: parent.bottom
+                            margins: units.gu(2)
+                        }
+                        width: page.width / 2 - sidebar.width / 2
+                        contentHeight: leftColumn.height
+                        interactive: contentHeight > height
 
-    Item {
-        visible: !recipe.ready
-        anchors {
-            verticalCenter: parent.verticalCenter
-            horizontalCenter: parent.horizontalCenter
-        }
-        ActivityIndicator {
-            id: indicator
-            anchors.horizontalCenter: parent.horizontalCenter
-            running: !recipe.ready
-        }
-        Label {
-            anchors {
-                top: indicator.bottom
-                horizontalCenter: parent.horizontalCenter
-                topMargin: units.gu(4)
-            }
-            text: i18n.tr("Please wait. Serving up recipe.")
-            horizontalAlignment: Text.AlignHCenter
-            fontSize: "large"
-        }
-    }
+                        Column {
+                            id: leftColumn
+                            anchors {
+                                left: parent.left
+                                right: parent.right
+                                margins: units.gu(2)
+                            }
+                            spacing: units.gu(2)
+                            height: childrenRect.height
 
-    Sidebar {
-        id: sidebar
-        expanded: extraWideAspect && recipe.ready
-        autoFlick: false
-        header: i18n.tr("Recipes")
-        anchors.topMargin: units.gu(9.5)
+                            ItemLayout {
+                                id: symbolDisplayItem
+                                item: "symbolDisplay"
+                                width: parent.width
+                                height: symbolDisplay.height
+                                visible: recipe.difficulty || recipe.preptime + recipe.cooktime > 0 || recipe.favorite || recipe.restriction
+                            }
 
-        ListView {
-            anchors.fill: parent
-            model: recipesdb
-            focus: true
-            delegate: ListItem.Subtitled {
-                text: truncate(contents.name, parent.width, units.gu(1.5))
-                subText: i18n.tr("Total time: " + (contents.preptime + contents.cooktime).toTime())
-                iconSource: contents.photos[0] ? contents.photos[0] : ""
-                progression: docId === recipe.docId
-                onClicked: {
-                    recipe.docId = docId;
-                    console.log("Opening recipe: " + docId)
+                            ItemLayout {
+                                item: "totaltimeLabel"
+                                anchors {
+                                    horizontalCenter: parent.horizontalCenter
+                                }
+                                width: totaltimeLabel.width
+                                height: totaltimeLabel.height
+                                visible: recipe.preptime + recipe.cooktime > 0
+                            }
+
+                            ListItem.ThinDivider {
+                                visible: symbolDisplayItem.visible
+                                anchors.margins: units.gu(-2)
+                            }
+
+                            ItemLayout {
+                                item: "photoLayout"
+                                width: parent.width
+                                height: photoLayout.height
+                                visible: recipe.photos.length > 0
+                            }
+
+                            ListItem.ThinDivider {
+                                visible: recipe.photos.length > 0
+                                anchors.margins: units.gu(-2)
+                            }
+
+                            ItemLayout {
+                                item: "ingredientsLabel"
+                                width: parent.width
+                                height: ingredientsLabel.height
+                            }
+
+                            ItemLayout {
+                                item: "ingredientsColumn"
+                                width: parent.width
+                                height: ingredientsColumn.height
+                            }
+                        }
+                    }
+
+                    Flickable {
+                        clip: true
+                        anchors {
+                            top: parent.top
+                            bottom: parent.bottom
+                            margins: units.gu(2)
+                        }
+                        width: page.width / 2 - sidebar.width / 2
+                        contentHeight: rightColumn.height
+                        interactive: contentHeight > height
+
+                        Column {
+                            id: rightColumn
+                            anchors {
+                                left: parent.left
+                                right: parent.right
+                                margins: units.gu(2)
+                            }
+                            spacing: units.gu(2)
+                            height: childrenRect.height
+
+                            ItemLayout {
+                                item: "directionsLabel"
+                                width: parent.width
+                                height: directionsLabel.height
+                            }
+
+                            ItemLayout {
+                                item: "directionsText"
+                                anchors {
+                                    left: parent.left
+                                    right: parent.right
+                                }
+                                height: directionsText.contentHeight
+                            }
+                        }
+                    }
                 }
             }
-        }
-    }
-
-    Item {
-        id: contents
-
-        anchors {
-            left: sidebar.right
-            top: parent.top
-            right: parent.right
-            bottom: parent.bottom
-        }
+        ]
 
         Flickable {
-            id: recipeView
-
+            id: flickable
             anchors {
                 fill: parent
-                topMargin: units.gu(2)
-                bottomMargin: units.gu(2)
+                margins: units.gu(2)
             }
+            contentHeight: column.height
+            interactive: contentHeight > parent.height
 
-            contentHeight: layout.height
-            interactive: contentHeight + units.gu(5) > height
+            Component.onCompleted: pageFlickable = flickable
 
-            visible: recipe.ready
-            clip: extraWideAspect
-
-            Grid {
-                id: layout
-
+            Column {
+                id: column
                 anchors {
                     left: parent.left
                     right: parent.right
-                    margins: units.gu(2)
                 }
-                spacing: wideAspect ? units.gu(4) : units.gu(2)
-                columns: wideAspect ? 2 : 1
+                spacing: units.gu(2)
 
-                Behavior on columns { UbuntuNumberAnimation { duration: UbuntuAnimation.SlowDuration } }
-
-                Column {
-                    width: wideAspect ? parent.width / 2 - units.gu(2) : parent.width
-                    anchors.margins: units.gu(2)
-                    spacing: units.gu(2)
-
-                    Item {
-                        id: infos
-                        width: parent.width
-                        height: childrenRect.height
-                        visible: height > 0
-
-                        Row {
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            spacing: units.gu(4)
-
-                            ImageWithLabel {
-                                id: totaltime
-                                visible: recipe.preptime + recipe.cooktime > 0
-                                source: icon("64/clock", true)
-                                text: (recipe.preptime + recipe.cooktime).toTime()
-                            }
-
-                            ImageWithLabel {
-                                id: difficulty
-                                visible: recipe.difficulty
-                                source: recipe.difficulty ? icon("64/difficulty-%1".arg(recipe.difficulty), true) : ""
-                                text: difficulties[recipe.difficulty]
-                            }
-
-                            ImageWithLabel {
-                                id: restriction
-                                visible: recipe.restriction
-                                source: recipe.restriction ? icon("64/restriction-%1".arg(recipe.restriction), true) : ""
-                                text: restrictions[recipe.restriction]
-                            }
-
-                            ImageWithLabel {
-                                id: favorite
-                                visible: recipe.favorite
-                                source: icon("64/star", true)
-                                text: i18n.tr("Favorite")
-                            }
-                        }
-
+                Item {
+                    id: symbolDisplay
+                    Layouts.item: "symbolDisplay"
+                    anchors {
+                        left: parent.left
+                        right: parent.right
                     }
+                    height: childrenRect.height
 
-                    Label {
-                        visible: recipe.preptime + recipe.cooktime > 0
+                    Row {
                         anchors.horizontalCenter: parent.horizontalCenter
-                        text: {
-                            var string = "";
-                            if (recipe.preptime > 0)
-                                string += i18n.tr("Prep Time: " + recipe.preptime.toTime());
-                            if (recipe.preptime > 0 && recipe.cooktime > 0)
-                                string += " / ";
-                            if (recipe.cooktime > 0)
-                                string += i18n.tr("Cook Time: " + recipe.cooktime.toTime());
-                            return string;
+                        spacing: units.gu(4)
+
+                        ImageWithLabel {
+                            id: totaltime
+                            visible: recipe.preptime + recipe.cooktime > 0
+                            source: icon("64/clock", true)
+                            text: (recipe.preptime + recipe.cooktime).toTime()
+                        }
+
+                        ImageWithLabel {
+                            id: difficulty
+                            visible: recipe.difficulty
+                            source: recipe.difficulty ? icon("64/difficulty-%1".arg(recipe.difficulty), true) : ""
+                            text: difficulties[recipe.difficulty]
+                        }
+
+                        ImageWithLabel {
+                            id: restriction
+                            visible: recipe.restriction
+                            source: recipe.restriction ? icon("64/restriction-%1".arg(recipe.restriction), true) : ""
+                            text: restrictions[recipe.restriction]
+                        }
+
+                        ImageWithLabel {
+                            id: favorite
+                            visible: recipe.favorite
+                            source: icon("64/star", true)
+                            text: i18n.tr("Favorite")
                         }
                     }
+                }
 
-                    ListItem.ThinDivider {
-                        visible: infos.visible
-                        anchors.margins: units.gu(-2)
+                Label {
+                    id: totaltimeLabel
+                    Layouts.item: "totaltimeLabel"
+                    visible: recipe.preptime + recipe.cooktime > 0
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: formatTime(recipe.preptime, recipe.cooktime)
+                }
+
+                ListItem.ThinDivider {
+                    visible: symbolDisplay.height > 0
+                    anchors.margins: units.gu(-2)
+                }
+
+                PhotoLayout {
+                    id: photoLayout
+                    Layouts.item: "photoLayout"
+                    anchors {
+                        left: parent.left
+                        right: parent.right
                     }
+                    clip: wideAspect
+                    editable: false
+                    iconSize: units.gu(12)
 
-                    PhotoLayout {
-                        id: photoLayout
-                        clip: wideAspect
-                        editable: false
-                        iconSize: units.gu(12)
+                    photos: recipe.photos
+                }
 
-                        photos: recipe.photos
+                ListItem.ThinDivider {
+                    visible: recipe.photos.length > 0
+                    anchors.margins: units.gu(-2)
+                }
+
+                Label {
+                    id: ingredientsLabel
+                    Layouts.item: "ingredientsLabel"
+                    text: i18n.tr("Ingredients")
+                    fontSize: "large"
+                    font.bold: true
+                }
+
+                Item {
+                    id: ingredientsColumn
+                    Layouts.item: "ingredientsColumn"
+                    anchors {
+                        left: parent.left
+                        right: parent.right
                     }
-
-                    ListItem.ThinDivider {
-                        visible: recipe.photos.length > 0
-                        anchors.margins: units.gu(-2)
-                    }
-
-                    Label {
-                        text: i18n.tr("Ingredients")
-                        fontSize: "large"
-                        font.bold: true
-                    }
-
+                    height: childrenRect.height
                     Column {
                         width: parent.width
                         spacing: units.gu(0.7)
+                        height: childrenRect.height
 
                         Repeater {
                             id: ingredientsList
@@ -249,54 +345,60 @@ Page {
                             model: recipe.ingredients
 
                             delegate: Label {
-                                width: ingredientsList.width
-                                text: txt(modelData.quantity, modelData.type, modelData.name)
+                                id: label
+                                width: parent.width
+                                text: formatIngredient(modelData.quantity, modelData.type, modelData.name)
                                 wrapMode: Text.Wrap
-
-                                function txt(quantity, type, name) {
-                                    var output = "";
-                                    output += quantity ? "%1 ".arg(quantity) : "";
-                                    output += type ? "%1 ".arg(type) : "";
-                                    output += name;
-                                    return output.capitalize();
-                                }
-                            }
+                            } 
                         }
                     }
-
-                    ListItem.ThinDivider {
-                        visible: !wideAspect
-                        anchors.margins: units.gu(-2)
-                    }
-
-                    Behavior on width { UbuntuNumberAnimation { duration: UbuntuAnimation.SlowDuration } }
-
                 }
 
-                Column {
-                    id: secondColumn
-                    width: wideAspect ? parent.width / 2 - units.gu(2) : parent.width
-                    spacing: units.gu(2)
+                ListItem.ThinDivider {
+                    anchors.margins: units.gu(-2)
+                }
 
-                    Label {
-                        id: label
-                        text: i18n.tr("Directions")
+                Label {
+                    id: directionsLabel
+                    Layouts.item: "directionsLabel"
+                    text: i18n.tr("Directions")
 
-                        fontSize: "large"
-                        font.bold: true
+                    fontSize: "large"
+                    font.bold: true
+                }
+
+                Label {
+                    id: directionsText
+                    Layouts.item: "directionsText"
+                    anchors {
+                        left: parent.left
+                        right: parent.right
                     }
+                    text: recipe.directions
 
-                    Label {
-                        id: directionsLabel
-                        width: parent.width
-
-                        text: recipe.directions
-
-                        wrapMode: Text.Wrap
-                        textFormat: Text.RichText
-                    }
+                    wrapMode: Text.WordWrap
+                    textFormat: Text.RichText
                 }
             }
         }
+    }
+
+    function formatTime(preptime, cooktime) {
+        var string = "";
+        if (preptime > 0)
+        string += i18n.tr("Prep Time: " + preptime.toTime());
+        if (preptime > 0 && cooktime > 0)
+        string += " / ";
+        if (cooktime > 0)
+        string += i18n.tr("Cook Time: " + cooktime.toTime());
+        return string;
+    }
+
+    function formatIngredient(quantity, type, name) {
+        var output = "";
+        output += quantity ? "%1 ".arg(quantity) : "";
+        output += type ? "%1 ".arg(type) : "";
+        output += name;
+        return output.capitalize();
     }
 }

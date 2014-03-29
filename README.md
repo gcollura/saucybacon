@@ -3,13 +3,11 @@
 Write recipes and save them online with the UbuntuOne sync feature.
 
 ## Features
- * Adaptive layout
+ * Recipe management
  * Online recipe search with automatic download
- * Camera support
- * Social sharing features
+ * Adaptive layout
  * Ubuntu One sync
  * Unity/HUD integration
- * Basic recipe management
 
 ## Requirements
  * Ubuntu SDK
@@ -17,7 +15,6 @@ Write recipes and save them online with the UbuntuOne sync feature.
  * U1db - qtdeclarative5-u1db1.0
  * HUD - qtdeclarative5-hud1.0
  * Unity.Action - qtdeclarative5-unity-action-plugin
- * Qt 5 folderlistmodel QML plugin - qtdeclarative5-folderlistmodel-plugin
  * Qt5 development packages
 
 ## Testing
@@ -41,8 +38,8 @@ $ make click
 ```
 
 **Known problems**
- * Some recipe sites aren't supported yet and they aren't properly managed.
- * Retrieving contents from website is done using stupid regex, because I couldn't get a proper XML/HTML tool to work,
+ * Some websites aren't properly supported and thus their recipes can't be loaded.
+ * Retrieving contents from website is done using per-website regex, because I couldn't get a proper XML/HTML tool to work,
    if you have suggestion to improve this aspect, please open an issue.
 
 ## License

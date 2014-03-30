@@ -40,7 +40,7 @@ Dialog {
 
         onClicked: {
             PopupUtils.close(dialogue);
-            pageStack.pop();
+            pageStack.push(tabsComponent);
             recipe.remove();
         }
     }

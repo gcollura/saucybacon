@@ -28,6 +28,8 @@ import "../components"
 Page {
     id: page
 
+    flickable: null
+
     Action {
         id: saveRecipeAction
         description: i18n.tr("Save the current recipe")
@@ -58,6 +60,8 @@ Page {
         }
         contentHeight: layout.height
         interactive: contentHeight + units.gu(5) > height // +5 because of strange ValueSelector height
+
+        Component.onCompleted: page.flickable = flickable
 
         Grid {
             id: layout

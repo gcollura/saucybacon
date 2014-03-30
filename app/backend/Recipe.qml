@@ -63,7 +63,7 @@ QtObject {
 
     onDocIdChanged: {
         if (exists()) {
-            setContents(recipesdb.getDoc(docId));
+            setContents(saucybacondb.getDoc(docId));
         } else {
             reset();
         }
@@ -76,7 +76,7 @@ QtObject {
     }
 
     Component.onCompleted: {
-        recipesdb.docChanged.connect(setDocId);
+        saucybacondb.docChanged.connect(setDocId);
     }
 
     function load(recipeId, recipeUrl, serviceUrl, imageUrl) {
@@ -162,23 +162,21 @@ QtObject {
         var contents = getContents();
 
         if (exists())
-            result = recipesdb.putDoc(contents, docId);
+            result = saucybacondb.putDoc(contents, docId);
         else
-            result = recipesdb.putDoc(contents);
+            result = saucybacondb.putDoc(contents);
 
         if (result)
             saved(); // emit signal
-
-        recipesdb.update();
 
         return result;
     }
 
     function remove() {
         if (docId) {
-            recipesdb.deleteDoc(docId);
+            console.log("Deleting: " + docId);
+            saucybacondb.deleteDoc(docId);
             removed();
-            recipesdb.update();
         }
     }
 

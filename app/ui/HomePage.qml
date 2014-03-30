@@ -44,6 +44,12 @@ Page {
     property Flickable pageFlickable
     flickable: wideAspect ? null : pageFlickable
 
+    U1db.Query {
+        id: recipesQuery
+        index: recipes
+        query: "*"
+    }
+
     Layouts {
         id: layouts
         anchors.fill: parent
@@ -86,6 +92,8 @@ Page {
                             bottom: parent.bottom
                         }
 
+                        property string selectedItem
+
                         Column {
                             anchors {
                                 left: parent.left
@@ -94,12 +102,21 @@ Page {
 
                             Standard {
                                 text: i18n.tr("All")
-                                onClicked: { filter(""); favorites(false) }
+                                progression: sidebar.selectedItem == text
+                                onClicked: { 
+                                    filter("name", "*");
+                                    sidebar.selectedItem = text;
+                                }
+                                Component.onCompleted: sidebar.selectedItem = text
                             }
 
                             Standard {
                                 text: i18n.tr("Favorites")
-                                onClicked: { favorites(true) }
+                                progression: sidebar.selectedItem == text
+                                onClicked: { 
+                                    filter("favorite", true);
+                                    sidebar.selectedItem = text;
+                                }
                             }
 
                             Header {
@@ -110,7 +127,27 @@ Page {
                                 model: categories
                                 Standard {
                                     text: modelData
-                                    onClicked: filter(modelData)
+                                    progression: sidebar.selectedItem == text
+                                    onClicked: { 
+                                        filter("category", modelData); 
+                                        sidebar.selectedItem = modelData; 
+                                    }
+                                }
+                            }
+
+                            Header {
+                                text: i18n.tr("Restrictions")
+                            }
+
+                            Repeater {
+                                model: restrictions
+                                Standard {
+                                    text: modelData
+                                    progression: sidebar.selectedItem == text
+                                    onClicked: { 
+                                        filter("restriction", index); 
+                                        sidebar.selectedItem = modelData; 
+                                    }
                                 }
                             }
                         }
@@ -143,7 +180,7 @@ Page {
             cellWidth: width / Math.floor(width / units.gu(16))
             cellHeight: 4 / 3 * cellWidth
 
-            model: recipesdb
+            model: recipesQuery
 
             property string filter
             property bool onlyfav
@@ -157,19 +194,15 @@ Page {
                 favorite: contents.favorite
                 restriction: contents.restriction
                 difficulty: contents.difficulty
-
-                visible: (gridView.filter.length > 0 ? contents.category == gridView.filter : true)
-                && (gridView.onlyfav ? contents.favorite : true) && typeof contents.name !== 'undefined'
             }
 
             Component.onCompleted: pageFlickable = gridView
         }
     }
 
-    function filter(name) {
-        gridView.filter = name;
-    }
-    function favorites(show) {
-        gridView.onlyfav = show;
+    function filter(prop, expression) {
+        var query = { }
+        query[prop] = expression;
+        recipesQuery.query = query;
     }
 }

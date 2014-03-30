@@ -159,13 +159,24 @@ MainView {
 
     /* Recipe Database */
     U1db.Database {
-        id: recipesdb
+        id: saucybacondb
         path: utils.path(Utils.SettingsLocation, "sb-recipes.db")
+    }
 
-        property bool count: recipesdb.listDocs().length
-        function update() {
-            count = recipesdb.listDocs().length
-        }
+    U1db.Index {
+        id: recipes
+        database: saucybacondb
+        name: 'recipes'
+        expression: [ 'name', 'category', 'restriction', 'favorite', 'difficulty', 
+            'photos', 'preptime', 'cooktime' ]
+    }
+
+    U1db.Query {
+        id: recipesdb
+        index: recipes
+        query: "*"
+
+        property int count: results.length
     }
 
     /* Base recipe document - just for reference

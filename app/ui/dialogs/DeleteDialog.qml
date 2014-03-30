@@ -39,9 +39,9 @@ Dialog {
         text: i18n.tr("Delete")
 
         onClicked: {
-            // recipe.remove();
             PopupUtils.close(dialogue);
-            pageStack.push(tabsComponent);
+            pageStack.pop();
+            recipe.remove();
         }
     }
 }

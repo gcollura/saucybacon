@@ -19,7 +19,6 @@
 
 import QtQuick 2.0
 import Ubuntu.Components 0.1
-import Ubuntu.Components.Popups 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
 import Ubuntu.Layouts 0.1
 
@@ -90,7 +89,6 @@ Page {
                     Sidebar {
                         id: sidebar
                         mode: "left"
-                        visible: true
                         anchors {
                             top: parent.top
                             bottom: parent.bottom
@@ -100,14 +98,17 @@ Page {
                             width: sidebar.width
                             height: sidebar.height
                             model: recipesdb
+                            header: ListItem.Header {
+                                text: i18n.tr("Recipes")
+                            }
                             delegate: ListItem.Subtitled {
                                 text: truncate(contents.name, parent.width, units.gu(1.5))
                                 subText: i18n.tr("Total time: " + (contents.preptime + contents.cooktime).toTime())
                                 iconSource: contents.photos[0] ? contents.photos[0] : ""
                                 progression: docId === recipe.docId
                                 onClicked: {
-                                    recipe.docId = docId;
                                     console.log("Opening recipe: " + docId)
+                                    recipe.docId = docId;
                                 }
                             }
                         }
@@ -334,6 +335,7 @@ Page {
                         right: parent.right
                     }
                     height: childrenRect.height
+
                     Column {
                         width: parent.width
                         spacing: units.gu(0.7)
@@ -346,10 +348,10 @@ Page {
 
                             delegate: Label {
                                 id: label
-                                width: parent.width
+                                width: ingredientsList.width
                                 text: formatIngredient(modelData.quantity, modelData.type, modelData.name)
                                 wrapMode: Text.Wrap
-                            } 
+                            }
                         }
                     }
                 }
@@ -388,7 +390,7 @@ Page {
         if (preptime > 0)
         string += i18n.tr("Prep Time: " + preptime.toTime());
         if (preptime > 0 && cooktime > 0)
-        string += " / ";
+        string += " | ";
         if (cooktime > 0)
         string += i18n.tr("Cook Time: " + cooktime.toTime());
         return string;

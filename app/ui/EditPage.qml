@@ -219,7 +219,7 @@ Page {
         recipeRestriction.selectedIndex = recipe.restriction;
 
         prepTime.time = recipe.preptime
-        cookTime.time = recipe.preptime
+        cookTime.time = recipe.cooktime
 
         ingredientsLayout.ingredients = recipe.ingredients
 

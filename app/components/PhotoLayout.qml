@@ -22,7 +22,7 @@ import Ubuntu.Components 0.1
 import Ubuntu.Components.Popups 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
 import Ubuntu.Content 0.1
-import SaucyBacon 0.1
+import SaucyBacon 1.0
 
 Flickable {
     id: root

@@ -1,7 +1,7 @@
 /**
  * This file is part of SaucyBacon.
  *
- * Copyright 2014 (C) Giulio Collura <random.cpp@gmail.com>
+ * Copyright 2013-2014 (C) Giulio Collura <random.cpp@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-WorkerScript.onMessage = function(message, utils) {
-    console.log(message + utils.version);
+#include "Recipe.h"
+
+Recipe::Recipe(QObject *parent)
+    : QObject(parent) {
+
+}
+
+bool Recipe::save() {
+    return true;
 }

@@ -18,15 +18,14 @@
 **/
 
 import QtQuick 2.0
-import Ubuntu.Components 0.1
+import Ubuntu.Components 1.1
 import U1db 1.0 as U1db
-import SaucyBacon 0.1
-
-import "backend/prototypes.js" as Proto
+import SaucyBacon 1.0
 
 import "ui"
 import "backend"
-import "models"
+
+import "backend/prototypes.js" as Prototypes
 
 MainView {
     objectName: "mainView"
@@ -37,6 +36,7 @@ MainView {
 
     automaticOrientation: true
     anchorToKeyboard: true
+    useDeprecatedToolbar: false
     property bool wideAspect: width > units.gu(80)
 
     width: units.gu(135)
@@ -74,9 +74,9 @@ MainView {
         id: searchAction
         text: i18n.tr("Search")
         description: i18n.tr("Search for a new recipe on the internet")
-        iconSource: icon("edit")
+        iconSource: icon("search")
         keywords: "search;new;recipe"
-        onTriggered: { pageStack.push(tabs); tabs.selectedTab = searchTab; }
+        onTriggered: { pageStack.push(Qt.resolvedUrl("ui/SearchPage.qml"))}
     }
 
     Action {
@@ -95,44 +95,18 @@ MainView {
         id: pageStack
 
         Component.onCompleted: {
-            push(tabsComponent);
+            push(homePage);
         }
 
-        Component {
-            id: tabsComponent
-            Tabs {
-                objectName: "tabs"
-                id: tabs
-
-                onSelectedTabChanged: {
-                    if (tabs.selectedTab == searchTab) {
-                        searchLoader.source = Qt.resolvedUrl("ui/SearchPage.qml")
-                    }
+        HomePage {
+            objectName: "homePage"
+            id: homePage
+            tools: ToolbarItems {
+                ToolbarButton {
+                    action: newRecipeAction
                 }
-
-                Tab {
-                    objectName: "homeTab"
-                    id: homeTab
-                    title: page.title
-                    page: HomePage {
-                        objectName: "homePage"
-                        id: homePage
-                    }
-                }
-
-                Tab {
-                    objectName: "searchTab"
-                    id: searchTab
-                    title: i18n.tr("Search")
-                    page: Loader {
-                        id: searchLoader
-                        parent: searchTab
-                        anchors {
-                            left: parent.left
-                            right: parent.right
-                            bottom: parent.bottom
-                        }
-                    }
+                ToolbarButton {
+                    action: searchAction
                 }
             }
         }
@@ -152,13 +126,8 @@ MainView {
         property string version: "0.2.0"
     }
 
-    BaseModel {
-        utils: utils
-        name: "categories"
-    }
-
     /* Recipe Database */
-    U1db.Database {
+    Database {
         id: saucybacondb
         path: utils.path(Utils.SettingsLocation, "sb-recipes.db")
     }

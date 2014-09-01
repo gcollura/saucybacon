@@ -26,7 +26,7 @@
 /*
  ----8<-----
 
- import SaucyBacon 0.1
+ import SaucyBacon 1.0
 
  Rectangle {
    width: 200
@@ -51,6 +51,7 @@ class SaucyBaconPlugin : public QQmlExtensionPlugin
 
 public:
     void registerTypes(const char *uri);
+    void initializeEngine(QQmlEngine *engine, const char *uri);
 };
 #endif // SAUCYBACON_PLUGIN_H
 

@@ -13,7 +13,7 @@ Write recipes and save them online with the UbuntuOne sync feature.
  * Ubuntu SDK
  * Ubuntu Mobile Icons - ubuntu-mobile-icons
  * U1db - qtdeclarative5-u1db1.0
- * HUD - qtdeclarative5-hud1.0
+ * U1db-dev - libu1db-qt5-dev
  * Unity.Action - qtdeclarative5-unity-action-plugin
  * Qt5 development packages
 

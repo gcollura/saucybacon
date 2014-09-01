@@ -18,9 +18,9 @@
 **/
 
 import QtQuick 2.0
-import SaucyBacon 0.1
+import SaucyBacon 1.0
 
-QtObject {
+Item {
     id: recipe
 
     property bool ready: !parser.loading && name != ""
@@ -52,8 +52,8 @@ QtObject {
     signal removed
     signal exported(string fileName)
 
-    default property RecipeParser parser
     RecipeParser {
+        id: parser
         destPath: utils.path(utils.path(Utils.SettingsLocation) + "/imgs", "")
         onContentsChanged: {
             if (contents)

@@ -17,16 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-import QtQuick 2.0
-import SaucyBacon 0.1
+#ifndef RECIPE_H
+#define RECIPE_H
 
-ListModel {
-    id: root
+#include <QtCore/QObject>
+#include "Database.h"
 
-    property Utils utils;
-    property string name;
+class Recipe : public QObject {
 
-    onCountChanged: {
-        // sync with Utils
-    }
-}
+    Q_OBJECT
+public:
+    Recipe(QObject *parent = 0);
+    virtual ~Recipe() {}
+
+    bool save();
+};
+
+#endif // RECIPE_H

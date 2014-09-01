@@ -1,12 +1,13 @@
-project(saucybacon)
+project(saucybacon C CXX)
 cmake_minimum_required(VERSION 2.8.9)
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+set(UBUNTU_PROJECT_TYPE "ClickApp" CACHE INTERNAL "Tells QtCreator this is a Click app project")
 
 find_package(Qt5Core)
 find_package(Qt5Qml)
 find_package(Qt5Quick)
-find_package(Qt5Script)
+find_package(U1db)
 #find_package(ubuntu-sdk-libs)
 
 set(CMAKE_AUTOMOC ON)
@@ -15,28 +16,30 @@ set(CMAKE_AUTOMOC ON)
 include(GNUInstallDirs)
 
 # components PATH
-if(NOT QT_IMPORTS_DIR)
-    MESSAGE( STATUS "Query qmake for QT_IMPORTS_DIR" )
-    execute_process(
-        COMMAND qmake -query QT_INSTALL_QML
-        OUTPUT_VARIABLE QT_IMPORTS_DIR
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-endif (NOT QT_IMPORTS_DIR)
+execute_process(
+    COMMAND dpkg-architecture -qDEB_HOST_MULTIARCH
+    OUTPUT_VARIABLE ARCH_TRIPLET
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+set(QT_IMPORTS_DIR "lib/${ARCH_TRIPLET}")
 
 option(INSTALL_TESTS "Install the tests on make install" off)
-option(CLICK_MODE "Installs to a contained location" on)
 
-if(CLICK_MODE)
-    set(CMAKE_INSTALL_PREFIX .)
-    set(DATA_DIR ${CMAKE_INSTALL_PREFIX}/clickpkg)
-endif(CLICK_MODE)
 set(APP_NAME                saucybacon)
-set(SAUCYBACON_DIR          ${CMAKE_INSTALL_PREFIX}/app)
-set(SAUCYBACONPLUGIN_DIR    backend)
+set(SAUCYBACON_DIR          "share/qml/${APP_NAME}")
 set(MAIN_QML                "saucybacon.qml")
 set(ICON                    "resources/icons/SaucyBacon_icon.png")
-include(Click)
+
+# set install paths
+set(CMAKE_INSTALL_PREFIX /)
+set(DATA_DIR /)
+set(DESKTOP_DIR ${DATA_DIR})
+
+set(EXEC "qmlscene ${SAUCYBACON_DIR}/${MAIN_QML}")
+
+install(FILES manifest.json DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(DIRECTORY "resources/" DESTINATION ${DATA_DIR})
+install(FILES "saucybacon.apparmor" DESTINATION ${DATA_DIR})
 
 add_subdirectory(app)
 add_subdirectory(backend)

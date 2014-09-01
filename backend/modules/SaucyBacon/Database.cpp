@@ -19,58 +19,10 @@
 
 #include "Database.h"
 
-#include <QtSql>
-#include <QFile>
-#include <QDir>
-
-#include <QDebug>
-
 Database::Database(QObject *parent) :
-    QAbstractListModel(parent) {
+    U1db::Database(parent) {
 
-    // Find QSLite driver
-    m_db = QSqlDatabase::addDatabase("QSQLITE");
-
-    m_db.setDatabaseName("/home/random/saucybacon.db");
-
-    // Open database
-    m_db.open();
-
-    bool ret = false;
-    if (m_db.isOpen()) {
-        QSqlQuery query(m_db);
-        ret = query.exec("create table recipe "
-                         "(id integer primary key, "
-                         "name varchar(20), "
-                         "contents varchar(30), "
-                         "category integer)");
-
-    } else {
-        qDebug() << "Cannot open m_db.";
-    }
-    qDebug() << m_db.databaseName();
 }
 
 Database::~Database() {
-    m_db.close();
-}
-
-QVariant Database::data(const QModelIndex &index, int role) const {
-
-    return QVariant();
-}
-
-QHash<int, QByteArray> Database::roleNames() const {
-    QHash<int, QByteArray> roles;
-    roles.insert(0, "contents");
-    return roles;
-}
-
-int Database::rowCount(const QModelIndex &parent) const {
-    return 0;
-}
-
-void Database::resetModel() {
-    beginResetModel();
-    endResetModel();
 }

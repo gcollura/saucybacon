@@ -18,9 +18,9 @@
 **/
 
 import QtQuick 2.0
-import Ubuntu.Components 0.1
-import Ubuntu.Components.Popups 0.1
-import Ubuntu.Components.ListItems 0.1 as ListItem
+import Ubuntu.Components 1.1
+import Ubuntu.Components.Popups 1.0
+import Ubuntu.Components.ListItems 1.0 as ListItem
 
 ToolbarItems {
     id: toolbar
@@ -49,13 +49,15 @@ ToolbarItems {
     }
 
     ToolbarButton {
-        text: i18n.tr("Save")
-        iconSource: icon("save")
-
         visible: recipe.ready && !recipe.exists()
-        onTriggered: {
-            toolbar.opened = false;
-            recipe.save()
+        action: Action {
+            text: i18n.tr("Save")
+            iconSource: icon("save")
+
+            onTriggered: {
+                toolbar.opened = false;
+                recipe.save()
+            }
         }
     }
 
@@ -65,10 +67,12 @@ ToolbarItems {
     }
 
     ToolbarButton {
-        text: i18n.tr("Delete")
-        iconSource: icon("delete")
-
         visible: recipe.exists()
-        onTriggered: PopupUtils.open(Qt.resolvedUrl("dialogs/DeleteDialog.qml"))
+        action: Action {
+            text: i18n.tr("Delete")
+            iconSource: icon("delete")
+
+            onTriggered: PopupUtils.open(Qt.resolvedUrl("dialogs/DeleteDialog.qml"))
+        }
     }
 }

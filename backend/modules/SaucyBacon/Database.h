@@ -20,27 +20,15 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 
-#include <QAbstractListModel>
-#include <QSqlDatabase>
+#include <libu1db-qt5/database.h>
 
-class Database : public QAbstractListModel {
+class Database : public U1db::Database {
 
     Q_OBJECT
 public:
     explicit Database(QObject *parent = 0);
     virtual ~Database();
 
-    // QAbstractListModel
-    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-    QHash<int, QByteArray>roleNames() const;
-    int rowCount(const QModelIndex & parent = QModelIndex()) const;
-    void resetModel();
-
-signals:
-
-public slots:
-private:
-    QSqlDatabase m_db;
 };
 
 #endif // DATABASE_H

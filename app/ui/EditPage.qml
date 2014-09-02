@@ -34,7 +34,7 @@ Page {
         id: saveRecipeAction
         description: i18n.tr("Save the current recipe")
         keywords: "save;recipe"
-        iconSource: icon('save')
+        iconName: 'save'
         text: i18n.tr("Save")
 
         onTriggered: {
@@ -87,7 +87,7 @@ Page {
                     placeholderText: i18n.tr("Enter a name for your recipe")
                 }
 
-                ItemSelector {
+                OptionSelector {
                     id: recipeCategory
                     width: parent.width
                     // text: i18n.tr("Category")
@@ -101,13 +101,13 @@ Page {
                     }
                 }
 
-                ItemSelector {
+                OptionSelector {
                     id: recipeDifficulty
                     width: parent.width
                     model: difficulties
                 }
 
-                ItemSelector {
+                OptionSelector {
                     id: recipeRestriction
                     width: parent.width
                     model: restrictions
@@ -156,6 +156,7 @@ Page {
                     text: i18n.tr("Add new ingredient")
 
                     onClicked: ingredientsLayout.addIngredient(true)
+                    gradient: colors.redGradient
                 }
 
                 ThinDivider {

@@ -53,7 +53,8 @@ Flickable {
 
             visible: editable
 
-            onClicked: selectPhoto();
+            onClicked: selectPhoto()
+            gradient: colors.redGradient
         }
 
         Repeater {

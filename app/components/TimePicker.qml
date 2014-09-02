@@ -18,9 +18,9 @@
 **/
 
 import QtQuick 2.0
-import Ubuntu.Components 0.1
-import Ubuntu.Components.Pickers 0.1
-import Ubuntu.Components.Popups 0.1
+import Ubuntu.Components 1.1
+import Ubuntu.Components.Pickers 1.0
+import Ubuntu.Components.Popups 1.0
 
 Button {
     id: root
@@ -31,6 +31,8 @@ Button {
     onClicked: {
         PopupUtils.open(dialog, root);
     }
+
+    gradient: colors.redGradient
 
     Component {
         id: dialog
@@ -47,7 +49,6 @@ Button {
 
             Button {
                 text: i18n.tr("Cancel")
-                gradient: UbuntuColors.greyGradient
                 onClicked: {
                     PopupUtils.close(dialogue);
                 }
@@ -55,6 +56,7 @@ Button {
 
             Button {
                 text: i18n.tr("Accept")
+                gradient: UbuntuColors.orangeGradient
                 onClicked: {
                     root.time = picker.date.getMinutes() + picker.date.getHours() * 60;
                     print("Picked time=" + Qt.formatTime(picker.date, "hh:mm"));

@@ -18,7 +18,7 @@
 **/
 
 import QtQuick 2.0
-import Ubuntu.Components 0.1
+import Ubuntu.Components 1.1
 
 Item {
     id: item
@@ -77,7 +77,7 @@ Item {
             placeholderText: i18n.tr("Insert ingredient name")
         }
 
-        Button {
+        AbstractButton {
             id: cancelButton
             width: units.gu(4)
             height: width
@@ -85,7 +85,13 @@ Item {
                 right: parent.right
             }
 
-            iconSource: icon("32/delete", true)
+            Icon {
+                anchors {
+                    fill: parent
+                    margins: units.gu(0.2)
+                }
+                name: "edit-clear"
+            }
 
             onClicked: item.destroy()
         }

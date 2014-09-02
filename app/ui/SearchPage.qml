@@ -35,7 +35,7 @@ Page {
             id: searchTopRatedAction
             text: i18n.tr("Top Rated")
             description: i18n.tr("Search top rated recipes")
-            iconSource: icon("favorite-selected")
+            iconName: "favorite-selected"
             keywords: "search;top;rated;recipe"
             onTriggered: { searchOnline(""); }
         }
@@ -46,6 +46,12 @@ Page {
             objectName: "searchTopRatedAction"
             action: searchTopRatedAction
         }
+    }
+
+    LoadingIndicator {
+        id: loadingIndicator
+        text: i18n.tr("Searching...")
+        isShown: search.loading
     }
 
     Layouts {
@@ -132,45 +138,13 @@ Page {
                     id: searchField
                     objectName: "searchField"
 
-                    width: parent.width - searchButton.width - parent.spacing
+                    width: parent.width
                     placeholderText: "Search for a recipe..."
 
                     onAccepted: searchOnline(searchField.text)
                     onTextChanged: searchLocally(searchField.text)
 
                     Behavior on width { UbuntuNumberAnimation { } }
-                }
-
-                Button {
-                    id: searchButton
-                    objectName: "searchButton"
-                    anchors.verticalCenter: parent.verticalCenter
-                    visible: !search.loading
-
-                    height: searchField.height
-                    width: height
-
-                    Image {
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        source: icon("32/search", true)
-                        sourceSize {
-                            height: parent.height - units.gu(1.5)
-                            width: parent.width - units.gu(1.5)
-                        }
-                    }
-
-                    onClicked: searchOnline(searchField.text)
-                    Behavior on visible { UbuntuNumberAnimation { } }
-                }
-
-                ActivityIndicator {
-                    id: activityIndicator
-                    objectName: "activityIndicator"
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: searchButton.width
-                    running: search.loading
-                    visible: running
                 }
             }
 
@@ -184,7 +158,7 @@ Page {
                 fontSize: "small"
             }
 
-            ListView {
+            RefreshableListView {
                 id: resultList
                 objectName: "resultList"
                 anchors {
@@ -209,6 +183,14 @@ Page {
                     }
                 }
 
+                onPulledUp: {
+                    console.log("Load more results")
+                    oldContentY = contentY;
+                    search.loadMore();
+                }
+
+                property double oldContentY;
+
                 Scrollbar {
                     flickableItem: resultList
                 }
@@ -218,6 +200,15 @@ Page {
 
     RecipeSearch {
         id: search
+        onLoadingError: {
+            loadingIndicator.text = i18n.tr("Loading error, please try again");
+        }
+        onLoadingCompleted: {
+            if (search.page > 1) {
+                resultList.contentY = resultList.oldContentY + units.gu(3);
+            }
+        }
+
     }
 
     function searchOnline(querystr) {
@@ -226,6 +217,7 @@ Page {
         // TODO: have money to buy an unlimited API
 
         console.log("Perfoming remote search...");
+        loadingIndicator.text = i18n.tr("Searching...");
         search.query = querystr;
 
         if (querystr.length > 0) {

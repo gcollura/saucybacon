@@ -23,6 +23,7 @@ import U1db 1.0 as U1db
 import SaucyBacon 1.0
 
 import "ui"
+import "components"
 import "backend"
 
 import "backend/prototypes.js" as Prototypes
@@ -44,7 +45,7 @@ MainView {
 
     // Thanks Lucas Di Benedetto
     headerColor: "#6d0a0a"
-    backgroundColor: "#540810"
+    backgroundColor: colors.darkRed
     footerColor: "#370517"
 
     // Global actions
@@ -53,7 +54,7 @@ MainView {
         id: newRecipeAction
         text: i18n.tr("New")
         description: i18n.tr("Create a new recipe")
-        iconSource: icon("add")
+        iconName: "add"
         keywords: "new;recipe"
         onTriggered: {
             recipe.newRecipe();
@@ -65,7 +66,7 @@ MainView {
         id: editRecipeAction
         text: i18n.tr("Edit")
         description: i18n.tr("Edit the current recipe")
-        iconSource: icon("edit")
+        iconName: "edit"
         keywords: "edit;recipe"
         onTriggered: pageStack.push(Qt.resolvedUrl("ui/EditPage.qml"), { title: i18n.tr("Edit Recipe") });
     }
@@ -74,7 +75,7 @@ MainView {
         id: searchAction
         text: i18n.tr("Search")
         description: i18n.tr("Search for a new recipe on the internet")
-        iconSource: icon("search")
+        iconName: "search"
         keywords: "search;new;recipe"
         onTriggered: { pageStack.push(Qt.resolvedUrl("ui/SearchPage.qml"))}
     }
@@ -83,7 +84,7 @@ MainView {
         id: aboutAction
         text: i18n.tr("About")
         description: i18n.tr("About this application...")
-        iconSource: icon("help")
+        iconName: "help"
         keywords: "about;saucybacon"
         onTriggered: { pageStack.push(Qt.resolvedUrl("ui/AboutPage.qml"))}
     }
@@ -118,6 +119,10 @@ MainView {
 
     Component.onDestruction: {
         saveSettings();
+    }
+
+    Colors {
+        id: colors
     }
 
     // SaucyBacon Utils library
@@ -201,12 +206,7 @@ MainView {
 
     // Helper functions
     function icon(name, local) {
-        local = typeof local === "undefined" ? "" : local
-        if (local === "app")
-            return "/usr/share/icons/ubuntu-mobile/apps/scalable/" + name + ".svg"
-        if (local)
-            return Qt.resolvedUrl("graphics/" + name + ".png")
-        return "/usr/share/icons/ubuntu-mobile/actions/scalable/" + name + ".svg"
+        return Qt.resolvedUrl("graphics/" + name + ".png")
     }
 
     function truncate(name, width, unit) {

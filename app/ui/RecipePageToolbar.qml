@@ -26,33 +26,23 @@ ToolbarItems {
     id: toolbar
 
     ToolbarButton {
-        text: i18n.tr("Favorite")
-        iconSource: recipe.favorite ? icon("favorite-selected") : icon("favorite-unselected")
-
-        visible: recipe.exists()
-        onTriggered: {
-            toolbar.opened = false;
-            recipe.favorite = !recipe.favorite;
-            recipe.save();
-        }
-    }
-
-    ToolbarButton {
-        text: i18n.tr("Source")
-        iconSource: icon("32/browser", true)
-
-        visible: recipe.source.length > 0
-        onTriggered: {
-            if (utils.open(recipe.source))
-                console.log("Open " + recipe.source);
-        }
-    }
-
-    ToolbarButton {
-        visible: recipe.ready && !recipe.exists()
         action: Action {
+            visible: recipe.exists()
+            text: i18n.tr("Favorite")
+            iconName: recipe.favorite ? "favorite-selected" : "favorite-unselected"
+
+            onTriggered: {
+                recipe.favorite = !recipe.favorite;
+                recipe.save();
+            }
+        }
+    }
+
+    ToolbarButton {
+        action: Action {
+            visible: recipe.ready && !recipe.exists()
             text: i18n.tr("Save")
-            iconSource: icon("save")
+            iconName: "save"
 
             onTriggered: {
                 toolbar.opened = false;
@@ -62,17 +52,29 @@ ToolbarItems {
     }
 
     ToolbarButton {
-        visible: recipe.ready
-        action: editRecipeAction
+        action: recipe.ready ? editRecipeAction : null
     }
 
     ToolbarButton {
-        visible: recipe.exists()
         action: Action {
+            visible: recipe.exists()
             text: i18n.tr("Delete")
-            iconSource: icon("delete")
+            iconName: "delete"
 
             onTriggered: PopupUtils.open(Qt.resolvedUrl("dialogs/DeleteDialog.qml"))
+        }
+    }
+
+    ToolbarButton {
+        action: Action {
+            visible: recipe.source.length > 0
+            text: i18n.tr("Source")
+            iconName: "stock_website"
+
+            onTriggered: {
+                if (utils.open(recipe.source))
+                console.log("Open " + recipe.source);
+            }
         }
     }
 }

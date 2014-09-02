@@ -28,7 +28,7 @@ option(INSTALL_TESTS "Install the tests on make install" off)
 set(APP_NAME                saucybacon)
 set(SAUCYBACON_DIR          "share/qml/${APP_NAME}")
 set(MAIN_QML                "saucybacon.qml")
-set(ICON                    "resources/icons/SaucyBacon_icon.png")
+set(ICON                    "icons/SaucyBacon_icon.png")
 
 # set install paths
 set(CMAKE_INSTALL_PREFIX /)
@@ -38,7 +38,7 @@ set(DESKTOP_DIR ${DATA_DIR})
 set(EXEC "qmlscene ${SAUCYBACON_DIR}/${MAIN_QML}")
 
 install(FILES manifest.json DESTINATION ${CMAKE_INSTALL_PREFIX})
-install(DIRECTORY "resources/" DESTINATION ${DATA_DIR})
+install(DIRECTORY "resources/icons" DESTINATION ${DATA_DIR})
 install(FILES "saucybacon.apparmor" DESTINATION ${DATA_DIR})
 
 add_subdirectory(app)

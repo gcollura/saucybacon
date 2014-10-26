@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-import QtQuick 2.0
+import QtQuick 2.3
 import Ubuntu.Components 1.1
 
 Item {
@@ -28,11 +28,11 @@ Item {
         right: parent.right
     }
 
-    height: row.childrenRect.height
+    height: _quantity.height
 
     property alias name: _name.text
     property alias quantity: _quantity.text
-    property alias type: _quantityType.text
+    property alias unit: _unit.text
 
     Item {
         id: row
@@ -53,7 +53,7 @@ Item {
         }
 
         TextField {
-            id: _quantityType
+            id: _unit
             width: focus ? units.gu(16) : units.gu(6)
             anchors {
                 left: _quantity.right
@@ -68,7 +68,7 @@ Item {
         TextField {
             id: _name
             anchors {
-                left: _quantityType.right
+                left: _unit.right
                 right: cancelButton.left
                 leftMargin: units.gu(1)
                 rightMargin: units.gu(1)
@@ -79,18 +79,17 @@ Item {
 
         AbstractButton {
             id: cancelButton
-            width: units.gu(4)
+            width: units.gu(3)
             height: width
             anchors {
+                verticalCenter: parent.verticalCenter
                 right: parent.right
             }
 
             Icon {
-                anchors {
-                    fill: parent
-                    margins: units.gu(0.2)
-                }
+                anchors.fill: parent
                 name: "edit-clear"
+                color: colors.white
             }
 
             onClicked: item.destroy()

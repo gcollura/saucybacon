@@ -26,37 +26,25 @@
 class QRegularExpression;
 typedef QMap<QString, QRegularExpression> RecipeRegex;
 
-class Q_DECL_EXPORT RecipeParser : public QObject {
+class RecipeParser : public QObject {
 
     Q_OBJECT
-    Q_PROPERTY(QVariant contents READ contents NOTIFY contentsChanged)
-    Q_PROPERTY(bool loading READ loading NOTIFY loadingChanged)
-    Q_PROPERTY(QString destPath READ destPath WRITE setDestPath NOTIFY destPathChanged)
 
 public:
     explicit RecipeParser(QObject *parent = 0);
     virtual ~RecipeParser();
 
-    Q_INVOKABLE void get(const QString &recipeId, const QString &recipeUrl, const QString &serviceUrl, const QString &imageUrl);
+    void get(const QString &recipeId, const QString &recipeUrl, const QString &serviceUrl, const QString &imageUrl);
 
 signals:
-    void ready();
-    void contentsChanged();
-    void loadingChanged();
+    void recipeAvailable(const QVariantMap &recipe);
+    void loading(bool loading);
     void destPathChanged();
 
-public slots:
+private slots:
     void replyFinished(QNetworkReply *reply);
 
 private:
-    QVariant contents() const { return m_contents; }
-
-    bool loading() const { return m_loading; }
-    void setLoading(const bool loading) { m_loading = loading; emit loadingChanged(); }
-
-    QString destPath() const { return m_destPath; }
-    void setDestPath(const QString &destPath) { m_destPath = destPath; emit destPathChanged(); }
-
     void parseHtml(const QByteArray &html);
     void parseJson(const QByteArray &json);
     void parseImage(const QByteArray &imgData);
@@ -64,7 +52,6 @@ private:
 
     QNetworkAccessManager *m_manager;
     QVariantMap m_contents;
-    bool m_loading;
     QString m_service;
     QString m_destPath;
     QString m_photoName;

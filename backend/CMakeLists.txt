@@ -2,21 +2,16 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${U1DB_INCLUDE_DIRS}
 )
 
 set(SaucyBaconPlugin_SRCS
     modules/SaucyBacon/Database.cpp
-    modules/SaucyBacon/Recipe.cpp
+    modules/SaucyBacon/QueryThread.cpp
     modules/SaucyBacon/Plugin.cpp
     modules/SaucyBacon/ApiKeys.cpp
     modules/SaucyBacon/RecipeParser.cpp
     modules/SaucyBacon/RecipeSearch.cpp
     modules/SaucyBacon/Utils.cpp
-)
-
-link_libraries(
-    ${U1DB_LIBRARIES}
 )
 
 add_library(SaucyBaconPlugin MODULE

@@ -113,8 +113,8 @@ Item {
     MouseArea {
         anchors.fill: parent
         onClicked: {
-            recipe.docId = docId;
-            console.log("Opening recipe: " + docId)
+            database.getRecipe(modelData.id);            
+            console.log("Opening recipe: " + modelData.id)
             pageStack.push(Qt.resolvedUrl("../ui/RecipePage.qml"));
         }
     }

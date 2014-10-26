@@ -24,7 +24,6 @@
 #include "Utils.h"
 #include "RecipeSearch.h"
 #include "RecipeParser.h"
-#include "Recipe.h"
 #include "Database.h"
 
 void SaucyBaconPlugin::registerTypes(const char *uri) {
@@ -32,8 +31,6 @@ void SaucyBaconPlugin::registerTypes(const char *uri) {
 
     qmlRegisterType<Utils>(uri, 1, 0, "Utils");
     qmlRegisterType<RecipeSearch>(uri, 1, 0, "RecipeSearch");
-    qmlRegisterType<RecipeParser>(uri, 1, 0, "RecipeParser");
-    qmlRegisterType<Recipe>(uri, 1, 0, "Recipe");
     qmlRegisterType<Database>(uri, 1, 0, "Database");
 }
 

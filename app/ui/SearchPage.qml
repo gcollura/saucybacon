@@ -86,13 +86,13 @@ Page {
                             }
 
                             Repeater {
-                                model: searches
+                                model: database.searches
 
                                 ListItem.Standard {
-                                    text: modelData
+                                    text: modelData.name
                                     onClicked: {
-                                        searchField.text = modelData;
-                                        searchOnline(modelData);
+                                        searchField.text = modelData.name;
+                                        searchOnline(modelData.name);
                                     }
                                 }
                             }
@@ -178,7 +178,7 @@ Page {
                     text: contents.title
                     subText: contents.publisher_url
                     onClicked: {
-                        recipe.load(contents.recipe_id, contents.source_url, contents.publisher_url, contents.image_url);
+                        database.getRecipeOnline(contents.recipe_id, contents.source_url, contents.publisher_url, contents.image_url);
                         pageStack.push(Qt.resolvedUrl("RecipePage.qml"));
                     }
                 }
@@ -221,8 +221,7 @@ Page {
         search.query = querystr;
 
         if (querystr.length > 0) {
-            searches.pushBack(querystr);
-            searchesChanged();
+            database.addSearch(querystr);
         }
     }
 

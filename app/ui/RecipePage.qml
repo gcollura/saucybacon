@@ -27,7 +27,7 @@ import "../components"
 Page {
     id: page
 
-    title: truncate(recipe.name, parent.width)
+    title: recipe.name ? recipe.name : i18n.tr("Recipe")
     anchors.fill: parent
 
     tools: RecipePageToolbar {
@@ -38,47 +38,22 @@ Page {
 
     flickable: wideAspect ? null : pageFlickable
 
+    property var recipe: database.recipe
+
+    LoadingIndicator {
+        id: loadingIndicator
+        text: i18n.tr("Downloading recipe...")
+        isShown: database.loading
+    }
+
     Layouts {
         id: layouts
         anchors.fill: parent
 
         layouts: [
             ConditionalLayout {
-                name: "waitLayout"
-                when: !recipe.ready
-
-                Item {
-                    anchors.fill: parent
-                    // We put the Column in a item because sometimes qmlscene
-                    // blames on parent which may be null and doesn't have the
-                    // properties verticalCenter and horizontalCenter
-                    // 
-                    // TypeError: Cannot read property of null
-                    Column {
-                        anchors {
-                            verticalCenter: parent.verticalCenter
-                            horizontalCenter: parent.horizontalCenter
-                        }
-                        spacing: units.gu(4)
-                        ActivityIndicator {
-                            id: indicator
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            running: true
-                        }
-                        Label {
-                            anchors {
-                                horizontalCenter: parent.horizontalCenter
-                            }
-                            text: i18n.tr("Please wait. Serving up recipe.")
-                            horizontalAlignment: Text.AlignHCenter
-                            fontSize: "large"
-                        }
-                    }
-                }
-            },
-            ConditionalLayout {
                 name: "tabletLayout"
-                when: wideAspect && recipe.ready
+                when: wideAspect
 
                 Row {
                     anchors {
@@ -97,18 +72,18 @@ Page {
                         ListView {
                             width: sidebar.width
                             height: sidebar.height
-                            model: recipesdb
+                            model: database.recipes
                             header: ListItem.Header {
                                 text: i18n.tr("Recipes")
                             }
                             delegate: ListItem.Subtitled {
-                                text: truncate(contents.name, parent.width, units.gu(1.5))
-                                subText: i18n.tr("Total time: " + (contents.preptime + contents.cooktime).toTime())
-                                iconSource: contents.photos[0] ? contents.photos[0] : ""
-                                progression: docId === recipe.docId
+                                text: modelData.name
+                                subText: i18n.tr("Total time: " + (modelData.preptime + modelData.cooktime).toTime())
+                                iconSource: modelData.photos[0] ? modelData.photos[0] : ""
+                                progression: recipe.id === modelData.id
                                 onClicked: {
-                                    console.log("Opening recipe: " + docId)
-                                    recipe.docId = docId;
+                                    console.log("Opening recipe: " + modelData.id)
+                                    database.getRecipe(modelData.id)
                                 }
                             }
                         }
@@ -139,7 +114,7 @@ Page {
                                 id: symbolDisplayItem
                                 item: "symbolDisplay"
                                 width: parent.width
-                                height: symbolDisplay.height
+                                height: symbolDisplay.childrenRect.height
                                 visible: recipe.difficulty || recipe.preptime + recipe.cooktime > 0 || recipe.favorite || recipe.restriction
                             }
 
@@ -151,6 +126,13 @@ Page {
                                 width: totaltimeLabel.width
                                 height: totaltimeLabel.height
                                 visible: recipe.preptime + recipe.cooktime > 0
+                            }
+
+                            ItemLayout {
+                                item: "categoriesLabel"
+                                width: parent.width
+                                height: categoriesLabel.height
+                                visible: recipe.categories.length > 0
                             }
 
                             ListItem.ThinDivider {
@@ -265,17 +247,10 @@ Page {
                         }
 
                         ImageWithLabel {
-                            id: difficulty
-                            visible: recipe.difficulty
-                            source: recipe.difficulty ? icon("64/difficulty-%1".arg(recipe.difficulty), true) : ""
-                            text: difficulties[recipe.difficulty]
-                        }
-
-                        ImageWithLabel {
                             id: restriction
                             visible: recipe.restriction
                             source: recipe.restriction ? icon("64/restriction-%1".arg(recipe.restriction), true) : ""
-                            text: restrictions[recipe.restriction]
+                            text: database.restrictions[recipe.restriction].name
                         }
 
                         ImageWithLabel {
@@ -295,6 +270,22 @@ Page {
                     text: formatTime(recipe.preptime, recipe.cooktime)
                 }
 
+                Label {
+                    id: categoriesLabel
+                    Layouts.item: "categoriesLabel"
+                    visible: recipe.categories.length > 0
+                    width: parent.width
+                    text: {
+                        var txt = i18n.tr("Categories: ")
+                        for (var i = 0; i < database.categories.length; i++) {
+                            if (recipe.categories.indexOf(database.categories[i].id.toString()) > -1) {
+                                txt += database.categories[i].name + " "
+                            }
+                        }
+                        return txt
+                    }
+                }
+
                 ListItem.ThinDivider {
                     visible: symbolDisplay.height > 0
                     anchors.margins: units.gu(-2)
@@ -309,13 +300,13 @@ Page {
                     }
                     clip: wideAspect
                     editable: false
-                    iconSize: units.gu(12)
+                    iconSize: units.gu(16)
 
                     photos: recipe.photos
                 }
 
                 ListItem.ThinDivider {
-                    visible: recipe.photos.length > 0
+                    visible: recipe.photos.length > 0 && ingredientsLabel.visible
                     anchors.margins: units.gu(-2)
                 }
 
@@ -325,6 +316,7 @@ Page {
                     text: i18n.tr("Ingredients")
                     fontSize: "large"
                     font.bold: true
+                    visible: recipe.ingredients ? recipe.ingredients.length > 0 : 0
                 }
 
                 Item {
@@ -349,7 +341,7 @@ Page {
                             delegate: Label {
                                 id: label
                                 width: ingredientsList.width
-                                text: formatIngredient(modelData.quantity, modelData.type, modelData.name)
+                                text: formatIngredient(modelData.quantity, modelData.unit, modelData.name)
                                 wrapMode: Text.Wrap
                             }
                         }
@@ -367,6 +359,7 @@ Page {
 
                     fontSize: "large"
                     font.bold: true
+                    visible: recipe.directions.length > 0
                 }
 
                 Label {
@@ -384,6 +377,7 @@ Page {
             }
         }
     }
+
 
     function formatTime(preptime, cooktime) {
         var string = "";

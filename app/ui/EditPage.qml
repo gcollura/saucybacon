@@ -17,11 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-import QtQuick 2.0
-import Ubuntu.Components 0.1
-import Ubuntu.Components.Popups 0.1
-import Ubuntu.Components.ListItems 0.1
-import Ubuntu.Components.Pickers 0.1
+import QtQuick 2.3
+import Ubuntu.Components 1.1
+import Ubuntu.Components.Popups 1.0
+import Ubuntu.Components.ListItems 1.0
 
 import "../components"
 
@@ -42,13 +41,20 @@ Page {
         }
     }
 
-    actions: [ newRecipeAction, searchAction, saveRecipeAction ]
-
     tools: ToolbarItems {
         ToolbarButton {
             action: saveRecipeAction
         }
     }
+
+    states: [
+        State {
+            name: "edit"
+        },
+        State {
+            name: "new"
+        }
+    ]
 
     Flickable {
         id: flickable
@@ -59,7 +65,7 @@ Page {
             bottomMargin: units.gu(2)
         }
         contentHeight: layout.height
-        interactive: contentHeight + units.gu(5) > height // +5 because of strange ValueSelector height
+        interactive: contentHeight + units.gu(5) > height // +5 because of strange OptionSelector height
 
         Component.onCompleted: page.flickable = flickable
 
@@ -87,32 +93,6 @@ Page {
                     placeholderText: i18n.tr("Enter a name for your recipe")
                 }
 
-                OptionSelector {
-                    id: recipeCategory
-                    width: parent.width
-                    // text: i18n.tr("Category")
-
-                    model: categories.concat([i18n.tr("<i>New category...</i>")])
-
-                    onSelectedIndexChanged: {
-                        if (selectedIndex == categories.length) {
-                            PopupUtils.open(Qt.resolvedUrl("dialogs/NewCategoryDialog.qml"), recipeCategory)
-                        }
-                    }
-                }
-
-                OptionSelector {
-                    id: recipeDifficulty
-                    width: parent.width
-                    model: difficulties
-                }
-
-                OptionSelector {
-                    id: recipeRestriction
-                    width: parent.width
-                    model: restrictions
-                }
-
                 Row {
                     width: parent.width
                     spacing: units.gu(1)
@@ -123,6 +103,7 @@ Page {
                         width: parent.width / 2 - units.gu(2)
 
                         text: i18n.tr("Total time: ") + (prepTime.time + cookTime.time).toTime();
+                        fontSize: "large"
                     }
 
                     TimePicker {
@@ -136,32 +117,149 @@ Page {
                     }
                 }
 
-                ThinDivider {
-                    anchors.margins: units.gu(-2)
+                Label {
+                    text: i18n.tr("Photos")
+                    fontSize: "large"
+                }
+
+                PhotoLayout {
+                    id: photoLayout
+                    width: parent.width
+                    clip: wideAspect
+                }
+
+                Item {
+                    width: parent.width
+                    height: childrenRect.height
+
+                    Label {
+                        fontSize: "large"
+                        text: i18n.tr("Categories")
+                    }
+
+                    AbstractButton {
+                        id: newCategoryButton
+                        width: units.gu(2)
+                        height: width
+                        anchors.right: parent.right
+
+                        Icon {
+                            anchors.fill: parent
+                            name: "edit"
+                            color: colors.white
+                        }
+                        onClicked: PopupUtils.open(Qt.resolvedUrl("dialogs/CategoryDialog.qml"))
+                    }
+                }
+
+                ListModel {
+                    id: categoriesModel
+                    property var rawModel: database.categories
+                    signal updated()
+                    onRawModelChanged: {
+                        categoriesModel.clear()
+                        for (var i = 0; i < rawModel.length; i++) {
+                            categoriesModel.append(rawModel[i])
+                            categoriesModel.setProperty(i, "isSelected", false)
+                        }
+                        updated()
+                    }
+                }
+
+                CategorySelector {
+                    id: recipeCategory
+                    width: parent.width
+
+                    model: categoriesModel
+                    selectedIndexes: []
+
+                    delegate: CategorySelectorDelegate {
+                        text: name
+                        selected: isSelected
+
+                        onClicked: {
+                            if (isSelected) {
+                                var idx = recipeCategory.selectedIndexes.indexOf(id.toString())
+                                recipeCategory.selectedIndexes.splice(idx, 1);
+                            } else {
+                                recipeCategory.selectedIndexes.pushBack(id.toString())
+                            }
+                            listView.model.setProperty(index, "isSelected", !isSelected)
+                        }
+
+                        onItemRemoved: {
+                            if (isSelected) {
+                                var idx = recipeCategory.selectedIndexes.indexOf(id.toString())
+                                recipeCategory.selectedIndexes.splice(idx, 1);
+                            }
+                            database.deleteCategory(id)
+                        }
+                    }
+
+                    onSelectedIndexesChanged: {
+                        updateSelections()
+                    }
+
+                    function updateSelections() {
+                        // console.log("selectedIndexes", selectedIndexes)
+                        recipeCategory.selectedIndex = 0
+                        for (var i = 0; i < model.count; i++) {
+                            var obj = model.get(i)
+                            var index = selectedIndexes.indexOf(obj.id.toString())
+                            model.setProperty(i, "isSelected", index > -1)
+                        }
+                    }
+
+                    Connections {
+                        target: categoriesModel
+                        onUpdated: recipeCategory.updateSelections()
+                    }
+
                 }
 
                 Label {
-                    text: i18n.tr("Ingredients")
+                    text: i18n.tr("Restriction")
+                    fontSize: "large"
+                }
+
+                OptionSelector {
+                    id: recipeRestriction
                     width: parent.width
+                    model: database.restrictions
+                    delegate: OptionSelectorDelegate {
+                        text: modelData.name
+                        iconSource: mainView.icon("64/restriction-%1".arg(modelData.id))
+                        constrainImage: true
+                    }
+                }
+
+                Item {
+                    width: parent.width
+                    height: childrenRect.height
+
+                    Label {
+                        text: i18n.tr("Ingredients")
+                        fontSize: "large"
+                    }
+
+                    AbstractButton {
+                        id: newIngredientButton
+                        width: units.gu(2)
+                        height: width
+                        anchors.right: parent.right
+
+                        Icon {
+                            anchors.fill: parent
+                            name: "add"
+                            color: colors.white
+                        }
+                        onClicked: ingredientsLayout.addIngredient(true)
+                    }
                 }
 
                 IngredientLayout {
                     id: ingredientsLayout
                     width: parent.width
-                }
-
-                Button {
-                    width: parent.width
-                    height: units.gu(4)
-                    text: i18n.tr("Add new ingredient")
-
-                    onClicked: ingredientsLayout.addIngredient(true)
-                    gradient: colors.redGradient
-                }
-
-                ThinDivider {
-                    anchors.margins: units.gu(-2)
-                    visible: !wideAspect
                 }
 
                 Behavior on width { UbuntuNumberAnimation { } }
@@ -171,6 +269,11 @@ Page {
                 id: secondColumn
                 width: wideAspect ? parent.width / 2 - units.gu(2) : parent.width
                 spacing: units.gu(2)
+
+                Label {
+                    text: i18n.tr("Directions")
+                    fontSize: "large"
+                }
 
                 TextArea {
                     id: recipeDirections
@@ -183,12 +286,6 @@ Page {
                     autoSize: true
                 }
 
-                PhotoLayout {
-                    id: photoLayout
-                    width: parent.width
-                    clip: wideAspect
-                }
-
                 Behavior on width { UbuntuNumberAnimation { } }
             }
         }
@@ -196,40 +293,61 @@ Page {
 
     function saveRecipe() {
 
-        recipe.name = recipeName.text.trim() ? recipeName.text.trim() : i18n.tr("Misterious Recipe");
-        recipe.category = categories[recipeCategory.selectedIndex];
-        recipe.difficulty = recipeDifficulty.selectedIndex;
-        recipe.restriction = recipeRestriction.selectedIndex;
+        if (page.state == "edit") {
+            var recipe = database.recipe
+        } else {
+            var recipe = { }
+            recipe.favorite = false
+        }
 
-        recipe.preptime = prepTime.time;
-        recipe.cooktime = cookTime.time;
+        recipe.name = recipeName.text.trim()
+        recipe.preptime = prepTime.time
+        recipe.cooktime = cookTime.time
+        recipe.directions = recipeDirections.getFormattedText(0, recipeDirections.text.length)
+        recipe.restriction = recipeRestriction.selectedIndex
 
-        recipe.ingredients = ingredientsLayout.getIngredients();
+        recipe.categories = recipeCategory.selectedIndexes
+        console.log(recipe.categories)
 
-        recipe.directions = recipeDirections.getFormattedText(0, recipeDirections.text.length);
+        recipe.ingredients = ingredientsLayout.getIngredients()
 
-        recipe.photos = photoLayout.photos;
-        recipe.restriction = recipeRestriction.selectedIndex;
+        recipe.photos = photoLayout.photos
 
-        recipe.save();
-
-        pageStack.pop();
+        database.addRecipe(recipe)
+        pageStack.pop()
 
     }
 
-    Component.onCompleted: {
+    function editRecipe(recipe) {
+        console.log("edit")
         recipeName.text = recipe.name
-        recipeCategory.selectedIndex = recipe.category ? categories.indexOf(recipe.category) : 0;
-        recipeDifficulty.selectedIndex = recipe.difficulty;
-        recipeRestriction.selectedIndex = recipe.restriction;
+        recipeCategory.selectedIndexes = recipe.categories
+        // recipeDifficulty.selectedIndex = recipe.difficulty
+        recipeRestriction.selectedIndex = recipe.restriction
 
         prepTime.time = recipe.preptime
         cookTime.time = recipe.cooktime
 
         ingredientsLayout.ingredients = recipe.ingredients
 
-        recipeDirections.text = recipe.directions;
+        recipeDirections.text = recipe.directions
 
         photoLayout.photos = recipe.photos
+    }
+
+    function newRecipe() {
+        recipeName.text = ""
+        recipeCategory.selectedIndexes = []
+        // recipeDifficulty.selectedIndex = recipe.difficulty
+        recipeRestriction.selectedIndex = 0
+
+        prepTime.time = 0
+        cookTime.time = 0
+
+        ingredientsLayout.ingredients = []
+
+        recipeDirections.text = ""
+
+        photoLayout.photos = []
     }
 }

@@ -36,7 +36,7 @@ Rectangle {
     height: _dataRow.height + units.gu(3)
     radius: units.gu(15)
 
-    z: parent.z + 1
+    z: parent.z + 10
     anchors.centerIn: parent
 
     opacity: isShown ? 1 : 0

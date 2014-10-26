@@ -17,158 +17,109 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-import QtQuick 2.0
+import QtQuick 2.3
 import Ubuntu.Components 1.1
 import Ubuntu.Components.ListItems 1.0
 import Ubuntu.Layouts 1.0
-import U1db 1.0 as U1db
 
 import "../components"
 
 Page {
     id: page
 
-    title: i18n.tr("All Recipes")
-
-    actions: [ newRecipeAction, searchAction ]
+    title: sidePanelContent.selectedItem
 
     tools: ToolbarItems {
         ToolbarButton {
-            action: aboutAction
+            action: refreshAction
         }
         ToolbarButton {
             action: newRecipeAction
         }
+        ToolbarButton {
+            action: searchAction
+        }
     }
+    actions: [ refreshAction, newRecipeAction, searchAction ]
 
     property Flickable pageFlickable
     flickable: wideAspect ? null : pageFlickable
 
-    U1db.Query {
-        id: recipesQuery
-        index: recipes
-        query: "*"
-    }
-
     Layouts {
         id: layouts
         anchors.fill: parent
-
         layouts: [
             ConditionalLayout {
-                name: "firstStartLayout"
-                when: recipesdb.count == 0
-
-                Label {
-                    id: firstStartLabel
-
-                    anchors {
-                        verticalCenter: parent.verticalCenter
-                        left: parent.left
-                        right: parent.right
-                        margins: units.gu(2)
-                    }
-
-                    text: i18n.tr("No Recipes!\n\nGo to Search tab\nTap on New to create a new recipe")
-                    elide: Text.ElideRight
-                    wrapMode: Text.WordWrap
-                    horizontalAlignment: Text.AlignHCenter
-                    fontSize: "large"
-                }
-            },
-
-            ConditionalLayout {
-                name: "tabletLayout"
-                when: wideAspect && recipesdb.count > 0
+                name: "wideAspect"
+                when: wideAspect
 
                 Row {
                     anchors.fill: parent
-
-                    Sidebar {
+                    Rectangle {
                         id: sidebar
-                        mode: "left"
                         anchors {
                             top: parent.top
                             bottom: parent.bottom
                         }
-
-                        property string selectedItem
-
-                        Column {
-                            anchors {
-                                left: parent.left
-                                right: parent.right
-                            }
-
-                            Standard {
-                                text: i18n.tr("All")
-                                progression: sidebar.selectedItem == text
-                                onClicked: { 
-                                    filter("name", "*");
-                                    sidebar.selectedItem = text;
-                                }
-                                Component.onCompleted: sidebar.selectedItem = text
-                            }
-
-                            Standard {
-                                text: i18n.tr("Favorites")
-                                progression: sidebar.selectedItem == text
-                                onClicked: { 
-                                    filter("favorite", true);
-                                    sidebar.selectedItem = text;
-                                }
-                            }
-
-                            Header {
-                                text: i18n.tr("Categories")
-                            }
-
-                            Repeater {
-                                model: categories
-                                Standard {
-                                    text: modelData
-                                    progression: sidebar.selectedItem == text
-                                    onClicked: { 
-                                        filter("category", modelData); 
-                                        sidebar.selectedItem = modelData; 
-                                    }
-                                }
-                            }
-
-                            Header {
-                                text: i18n.tr("Restrictions")
-                            }
-
-                            Repeater {
-                                model: restrictions
-                                Standard {
-                                    text: modelData
-                                    progression: sidebar.selectedItem == text
-                                    onClicked: { 
-                                        filter("restriction", index); 
-                                        sidebar.selectedItem = modelData; 
-                                    }
-                                }
-                            }
+                        width: units.gu(40)
+                        color: Qt.rgba(0.2, 0.2, 0.2, 0.4)
+                        ItemLayout {
+                            item: "panelContent"
+                            anchors.fill: parent
                         }
                     }
-
-                    ItemLayout {
-                        item: "gridView"
+                    Item {
                         anchors {
                             top: parent.top
                             bottom: parent.bottom
                         }
                         width: parent.width - sidebar.width
+                        ItemLayout {
+                            item: "gridView"
+                            anchors.fill: parent
+                        }
                     }
                 }
             }
         ]
 
+        Panel {
+            id: sidePanel
+            align: Qt.AlignBottom
+            anchors {
+                fill: parent
+                topMargin: header.height
+            }
+
+            z: 100
+
+            Rectangle {
+                id: sidePanelBackground
+                anchors.fill: sidePanelContent
+                color: colors.darkerRed
+            }
+
+            SidePanelContent {
+                id: sidePanelContent
+                Layouts.item: "panelContent"
+
+                anchors {
+                    top: parent.top
+                    bottom: parent.bottom
+                    left: parent.left
+                    horizontalCenter: parent.horizontalCenter
+                }
+                width: units.gu(40)
+
+                onFilter: page.filter(type, id)
+                onSelectedItemChanged: sidePanel.close()
+            }
+        }
+
         GridView {
             id: gridView
-            Layouts.item: "gridView"
             objectName: "gridView"
+            Layouts.item: "gridView"
 
             anchors {
                 fill: parent
@@ -180,29 +131,25 @@ Page {
             cellWidth: width / Math.floor(width / units.gu(16))
             cellHeight: 4 / 3 * cellWidth
 
-            model: recipesQuery
-
-            property string filter
-            property bool onlyfav
+            model: database.recipes
 
             delegate: SquareListItem {
                 width: gridView.cellWidth
                 height: gridView.cellHeight
 
-                title: contents.name
-                imageSource: contents.photos[0] ? contents.photos[0] : ""
-                favorite: contents.favorite
-                restriction: contents.restriction
-                difficulty: contents.difficulty
+                title: modelData.name
+                imageSource: modelData.photos[0] ? modelData.photos[0] : ""
+                favorite: modelData.favorite
+                restriction: modelData.restriction
             }
 
             Component.onCompleted: pageFlickable = gridView
         }
     }
 
-    function filter(prop, expression) {
-        var query = { }
-        query[prop] = expression;
-        recipesQuery.query = query;
+    function filter(type, id) {
+        var query = { "type": type, "id": id }
+        database.filter = query;
     }
+
 }

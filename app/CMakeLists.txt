@@ -8,4 +8,3 @@ install(DIRECTORY "graphics/" DESTINATION ${SAUCYBACON_DIR}/graphics)
 
 add_subdirectory(components)
 add_subdirectory(ui)
-add_subdirectory(backend)

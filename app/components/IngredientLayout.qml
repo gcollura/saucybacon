@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-import QtQuick 2.0
-import Ubuntu.Components 0.1
+import QtQuick 2.3
+import Ubuntu.Components 1.1
 
 Column {
     id: container
@@ -36,12 +36,12 @@ Column {
             if (container.children[i].name.length < 1) // Don't push non-sense ingredients
                 continue;
 
-            var tmpingredient = { "name" : "", "quantity": 1, "type": "gr" }
+            var tmpingredient = { "name" : "", "quantity": 1, "unit": "gr" }
 
             tmpingredient.name = container.children[i].name;
             tmpingredient.quantity = container.children[i].quantity ?
                         parseInt(container.children[i].quantity) : 1;
-            tmpingredient.type = container.children[i].type;
+            tmpingredient.unit = container.children[i].unit;
 
             result.push(tmpingredient);
         }
@@ -56,7 +56,7 @@ Column {
 
             container.children[i].name = ingredients[i].name;
             container.children[i].quantity = typeof ingredients[i].quantity !== "undefined" ? ingredients[i].quantity : 0
-            container.children[i].type = ingredients[i].type;
+            container.children[i].unit = ingredients[i].unit;
         }
 
         // Make room for another ingredient

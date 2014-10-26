@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-import QtQuick 2.0
+import QtQuick 2.3
 import Ubuntu.Components 1.1
 import Ubuntu.Components.Popups 1.0
 import Ubuntu.Components.ListItems 1.0 as ListItem
@@ -27,37 +27,36 @@ ToolbarItems {
 
     ToolbarButton {
         action: Action {
-            visible: recipe.exists()
+            visible: recipe.saved
             text: i18n.tr("Favorite")
-            iconName: recipe.favorite ? "favorite-selected" : "favorite-unselected"
+            iconName: database.recipe.favorite ? "favorite-selected" : "favorite-unselected"
 
             onTriggered: {
-                recipe.favorite = !recipe.favorite;
-                recipe.save();
+                recipe.favorite = !recipe.favorite
+                database.addRecipe(recipe)
             }
         }
     }
 
     ToolbarButton {
         action: Action {
-            visible: recipe.ready && !recipe.exists()
+            visible: !recipe.saved
             text: i18n.tr("Save")
             iconName: "save"
 
             onTriggered: {
-                toolbar.opened = false;
-                recipe.save()
+                database.addRecipe(recipe)
             }
         }
     }
 
     ToolbarButton {
-        action: recipe.ready ? editRecipeAction : null
+        action: editRecipeAction
     }
 
     ToolbarButton {
         action: Action {
-            visible: recipe.exists()
+            visible: recipe.saved
             text: i18n.tr("Delete")
             iconName: "delete"
 

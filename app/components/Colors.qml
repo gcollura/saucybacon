@@ -21,7 +21,11 @@ import QtQuick 2.2
 
 QtObject {
 
+    readonly property color white: "#ffffff"
     readonly property color darkRed: "#540810"
+    readonly property color darkerRed: "#370517"
+    readonly property color headerColor: "#6d0a0a"
+    readonly property color footerColor: darkerRed
 
     property Gradient redGradient: Gradient {
         GradientStop { position: 0.0; color: "#45060c" }

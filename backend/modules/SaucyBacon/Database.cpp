@@ -17,12 +17,188 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
+#include <QtCore>
+#include <QSqlQuery>
+#include <QSqlRecord>
+#include <QSqlResult>
+#include <QSqlError>
+#include <QJsonObject>
+
 #include "Database.h"
+#include "QueryThread.h"
+#include "RecipeParser.h"
+
+#include <QDebug>
 
 Database::Database(QObject *parent) :
-    U1db::Database(parent) {
+    QObject(parent) {
 
+    m_db = new QueryThread();
+    connect(m_db, &QueryThread::ready, this, &Database::setReady);
+    m_db->start();
+
+    m_rParser = new RecipeParser(this);
+    connect(m_rParser, &RecipeParser::recipeAvailable, this, &Database::setCurrentRecipe);
+    connect(m_rParser, &RecipeParser::loading, this, &Database::setLoading);
+    // force loading to false
+    setLoading(false);
 }
 
 Database::~Database() {
+    m_db->quit();
+    m_db->wait();
+    delete m_db;
+}
+
+void Database::addRecipe(const QVariantMap &recipe) {
+    emit addRecipefwd(recipe);
+}
+
+void Database::deleteRecipe(int id) {
+    emit deleteRecipefwd(id);
+}
+
+void Database::getRecipe(int id) {
+    emit getRecipefwd(id);
+}
+
+void Database::getRecipeOnline(const QString &id, const QString &url, const QString &service, const QString &image) {
+    m_rParser->get(id, url, service, image);
+}
+
+void Database::addCategory(const QString &category) {
+    emit addCategoryfwd(category);
+}
+
+void Database::deleteCategory(int id) {
+    emit deleteCategoryfwd(id);
+}
+
+void Database::addSearch(const QString &search) {
+    emit addSearchfwd(search);
+}
+
+void Database::setError(const QString &error) {
+    qWarning() << "Database error:" << error;
+    m_error = error;
+    errorChanged(error);
+}
+
+void Database::setReady(bool ready) {
+    qWarning() << "Database ready:" << ready;
+    if (ready != m_ready) {
+        m_ready = ready;
+        readyChanged(ready);
+    }
+
+    if (ready) {
+        // Connect signals with the worker
+        connect(m_db->worker(), &Worker::error, this, &Database::setError);
+        connect(m_db->worker(), &Worker::working, this, &Database::setWorking);
+
+        connect(this, &Database::update, m_db->worker(), &Worker::update);
+
+        connect(this, &Database::setDatabaseName, m_db->worker(), &Worker::setDatabaseName);
+        connect(this, &Database::addRecipefwd, m_db->worker(), &Worker::addRecipe);
+        connect(this, &Database::deleteRecipefwd, m_db->worker(), &Worker::deleteRecipe);
+        connect(this, &Database::getRecipefwd, m_db->worker(), &Worker::getRecipe);
+        connect(this, &Database::addCategoryfwd, m_db->worker(), &Worker::addCategory);
+        connect(this, &Database::deleteCategoryfwd, m_db->worker(), &Worker::deleteCategory);
+        connect(this, &Database::addSearchfwd, m_db->worker(), &Worker::addSearch);
+        connect(this, &Database::setFilterfwd, m_db->worker(), &Worker::setFilter);
+
+        connect(m_db->worker(), &Worker::recipesUpdated, this, &Database::setRecipes);
+        connect(m_db->worker(), &Worker::recipeAvailable, this, &Database::setCurrentRecipe);
+        connect(m_db->worker(), &Worker::categoriesUpdated, this, &Database::setCategories);
+        connect(m_db->worker(), &Worker::restrictionsUpdated, this, &Database::setRestrictions);
+        connect(m_db->worker(), &Worker::searchesUpdated, this, &Database::setSearches);
+
+        emit setDatabaseName("saucybacon.db");
+    }
+}
+
+void Database::setWorking(bool working) {
+    if (working != m_working) {
+        qWarning() << "Database working:" << working;
+        m_working = working;
+        workingChanged(working);
+    }
+}
+
+void Database::setLoading(bool loading) {
+    if (loading != m_loading) {
+        m_loading = loading;
+        loadingChanged(loading);
+    }
+}
+
+QString Database::error() const {
+    return m_error;
+}
+
+bool Database::ready() const {
+    return m_ready;
+}
+
+bool Database::working() const {
+    return m_working;
+}
+
+bool Database::loading() const {
+    return m_loading;
+}
+
+void Database::setCurrentRecipe(const QVariant &recipe) {
+    m_recipe = recipe;
+    currentRecipeChanged();
+}
+
+void Database::setRecipes(const QList<QVariant> &recipes) {
+    m_recipes = recipes;
+    recipesChanged();
+}
+
+void Database::setCategories(const QList<QVariant> &cats) {
+    m_categories = cats;
+    categoriesChanged();
+}
+
+void Database::setRestrictions(const QList<QVariant> &restrictions) {
+    m_restrictions = restrictions;
+    restrictionsChanged();
+}
+
+void Database::setSearches(const QList<QVariant> &searches) {
+    m_searches = searches;
+    searchesChanged();
+}
+
+void Database::setFilter(const QVariantMap &filter) {
+    m_filter = filter;
+    filterChanged();
+    setFilterfwd(filter);
+}
+
+QVariant Database::currentRecipe() const {
+    return m_recipe;
+}
+
+QList<QVariant> Database::recipes() const {
+    return m_recipes;
+}
+
+QList<QVariant> Database::categories() const {
+    return m_categories;
+}
+
+QList<QVariant> Database::restrictions() const {
+    return m_restrictions;
+}
+
+QList<QVariant> Database::searches() const {
+    return m_searches;
+}
+
+QVariantMap Database::filter() const {
+    return m_filter;
 }

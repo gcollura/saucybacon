@@ -30,8 +30,8 @@ RecipeSearch::RecipeSearch(QObject *parent) :
     m_manager = new QNetworkAccessManager(this);
     setLoading(false);
 
-    connect(m_manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
-    connect(this, SIGNAL(queryChanged()), this, SLOT(makeRequest()));
+    connect(m_manager, &QNetworkAccessManager::finished, this, &RecipeSearch::replyFinished);
+    connect(this, &RecipeSearch::queryChanged, this, &RecipeSearch::makeRequest);
 
     resetModel();
 }

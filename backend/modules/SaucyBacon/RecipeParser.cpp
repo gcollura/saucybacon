@@ -33,7 +33,7 @@ static QJsonValue evaluate(const QString &expr) {
 
 static QJsonArray parseIngredients(const QJsonArray &ingredients) {
     QJsonArray result;
-    QRegularExpression regex("(?<quantity>[\\d\\-/?]+)[\\s+]?(?<type>\\w+)?[\\s+](?<name>.*)",
+    QRegularExpression regex("(?<quantity>[\\d\\-/?]+)[\\s+]?(?<unit>\\w+)?[\\s+](?<name>.*)",
                              QRegularExpression::CaseInsensitiveOption);
     for (int i = 0; i < ingredients.count(); i++) {
         QJsonObject ingredient;
@@ -41,11 +41,11 @@ static QJsonArray parseIngredients(const QJsonArray &ingredients) {
         if (match.hasMatch() || match.hasPartialMatch()) {
             ingredient["name"] = match.captured("name");
             ingredient["quantity"] = match.captured("quantity");
-            ingredient["type"] = match.captured("type");
+            ingredient["unit"] = match.captured("unit");
         } else {
             ingredient["name"] = ingredients[i].toString().trimmed();
             ingredient["quantity"] = 0;
-            ingredient["type"] = QString();
+            ingredient["unit"] = QString();
         }
         result.push_back(ingredient);
     }
@@ -186,8 +186,15 @@ RecipeParser::RecipeParser(QObject *parent) :
     // And more soon...
 
     m_manager = new QNetworkAccessManager(this);
-    connect(m_manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
+    connect(m_manager, &QNetworkAccessManager::finished, this, &RecipeParser::replyFinished);
 
+    QDir dataPath(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
+    if (!dataPath.mkdir("imgs") && !dataPath.cd("imgs"))
+        qWarning() << "Failed to make data folder" << dataPath.absolutePath();
+
+    m_destPath = dataPath.absolutePath();
+
+    loading(false);
 }
 
 RecipeParser::~RecipeParser() {
@@ -195,7 +202,7 @@ RecipeParser::~RecipeParser() {
 }
 
 void RecipeParser::get(const QString &recipeId, const QString &recipeUrl, const QString &serviceUrl, const QString &imageUrl) {
-    setLoading(true);
+    loading(true);
     m_parseHtml = false;
     m_parseJson = false;
     m_parseImage = false;
@@ -248,7 +255,7 @@ void RecipeParser::parseHtml(const QByteArray &html) {
     RecipeRegex defaultRegex;
     bool supported;
     QString directions;
-    int preptime, cooktime, offset = 1;
+    int preptime = 0, cooktime = 0, offset = 1;
 
     if (m_services.contains(m_service)) {
         defaultRegex = m_services[m_service];
@@ -312,6 +319,11 @@ void RecipeParser::parseJson(const QByteArray &json) {
     m_contents["source"] = recipe["source_url"].toString();
     m_contents["f2f"] = recipe["f2f_url"].toString();
 
+    m_contents["categories"] = QJsonArray();
+    m_contents["restriction"] = 0;
+    m_contents["favorite"] = 0;
+    m_contents["saved"] = false;
+
     m_parseJson = true;
     hasFinishedParsing();
 }
@@ -332,7 +344,7 @@ void RecipeParser::parseImage(const QByteArray &imgData) {
 void RecipeParser::hasFinishedParsing() {
     // If all processes are completed, trigger all signals
     if (m_parseJson && m_parseHtml && m_parseImage) {
-        setLoading(false);
-        emit contentsChanged();
+        emit loading(false);
+        emit recipeAvailable(m_contents);
     }
 }

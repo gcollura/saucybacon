@@ -115,18 +115,17 @@ Flickable {
 
             if (utils.exists(filename)) {
                 console.log("File %1 already existed".arg(filename))
-            } else if (importItems[i].move(destDir)) {
-                console.log("Moved file: %1 to %1".arg(importedItem, destDir))
+            } else if (utils.cp(imageUrl, filename)) {
+                console.log("Moved file: %1 to %2".arg(imageUrl).arg(destDir))
             } else {
-                console.error("Failed to move %1 to %2".arg(importedItem).arg(destDir))
+                console.error("Failed to move %1 to %2".arg(imageUrl).arg(filename))
                 return
             }
 
-            console.log(filename)
+            console.log(imageUrl, filename)
             addPhoto(filename)
         }
     }
-
 
     Component {
         id: previewerComponent

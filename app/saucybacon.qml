@@ -100,7 +100,19 @@ MainView {
         iconName: "delete"
         onTriggered: {
             database.deleteRecipe(database.recipe.id)
-            // pageStack.pop()
+            deleteRecipeTimer.start()
+        }
+    }
+
+    // WORKAROUND: if pageStack.pop() is called as soon as the dialog closes,
+    // the app freezes, with this trick, everything goes fine
+    Timer {
+        id: deleteRecipeTimer
+        interval: 100
+        repeat: false
+
+        onTriggered: {
+            pageStack.pop()
         }
     }
 
@@ -123,7 +135,7 @@ MainView {
         }
 
     }
-    
+
     ActivityIndicator {
         anchors {
             bottom: parent.bottom

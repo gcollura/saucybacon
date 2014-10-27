@@ -260,6 +260,8 @@ Page {
                 IngredientLayout {
                     id: ingredientsLayout
                     width: parent.width
+
+                    Component.onCompleted: addIngredient()
                 }
 
                 Behavior on width { UbuntuNumberAnimation { } }

@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-import QtQuick 2.0
-import Ubuntu.Components 0.1
+import QtQuick 2.3
+import Ubuntu.Components 1.1
 
 Page {
     title: i18n.tr("About")
@@ -32,7 +32,7 @@ Page {
             bottomMargin: units.gu(2)
         }
         contentHeight: layout.height
-        interactive: contentHeight + units.gu(5) > height // +5 because of strange ValueSelector height
+        interactive: contentHeight + units.gu(5) > height
 
         Column {
             id: layout
@@ -83,21 +83,21 @@ Page {
                 }
 
                 Label {
-                    text: i18n.tr("<a href=\"mailto:random.cpp@gmail.com?subject=SaucyBacon%20support\">random.cpp@gmail.com</a>")
+                    text: i18n.tr("<a href=\"mailto:giulio.collura@gmail.com?subject=SaucyBacon%20support\">random.cpp@gmail.com</a>")
                     onLinkActivated: Qt.openUrlExternally(link)
                     linkColor: "white"
                 }
             }
 
             Label {
-                text: i18n.tr("<a href=\"https://github.com/random-cpp/saucybacon/issues/\">Report a Bug</a>")
+                text: i18n.tr("<a href=\"https://github.com/gcollura/saucybacon/issues/\">Report a Bug</a>")
                 anchors.horizontalCenter: parent.horizontalCenter
                 onLinkActivated: Qt.openUrlExternally(link)
                 linkColor: "white"
             }
 
             Label {
-                text: i18n.tr("<a href=\"https://github.com/random-cpp/saucybacon\">Website</a>")
+                text: i18n.tr("<a href=\"https://github.com/gcollura/saucybacon\">Website</a>")
                 anchors.horizontalCenter: parent.horizontalCenter
                 onLinkActivated: Qt.openUrlExternally(link)
                 linkColor: "white"

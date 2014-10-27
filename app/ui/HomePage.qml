@@ -18,6 +18,7 @@
 **/
 
 import QtQuick 2.3
+import QtQuick.Layouts 1.1
 import Ubuntu.Components 1.1
 import Ubuntu.Components.ListItems 1.0
 import Ubuntu.Layouts 1.0
@@ -53,7 +54,7 @@ Page {
                 name: "wideAspect"
                 when: wideAspect
 
-                Row {
+                RowLayout {
                     anchors.fill: parent
                     Rectangle {
                         id: sidebar
@@ -61,7 +62,7 @@ Page {
                             top: parent.top
                             bottom: parent.bottom
                         }
-                        width: units.gu(40)
+                        width: units.gu(35)
                         color: Qt.rgba(0.2, 0.2, 0.2, 0.4)
                         ItemLayout {
                             item: "panelContent"
@@ -73,7 +74,7 @@ Page {
                             top: parent.top
                             bottom: parent.bottom
                         }
-                        width: parent.width - sidebar.width
+                        Layout.fillWidth: true
                         ItemLayout {
                             item: "gridView"
                             anchors.fill: parent
@@ -95,8 +96,19 @@ Page {
 
             Rectangle {
                 id: sidePanelBackground
-                anchors.fill: sidePanelContent
+                anchors.fill: parent
                 color: colors.darkerRed
+            }
+
+            Rectangle {
+                id: sidePanelHandler
+                anchors {
+                    top: parent.top
+                    left: parent.left
+                    right: parent.right
+                }
+                height: units.gu(3)
+                color: Qt.rgba(0, 0, 0, 0.4)
             }
 
             SidePanelContent {
@@ -104,12 +116,9 @@ Page {
                 Layouts.item: "panelContent"
 
                 anchors {
-                    top: parent.top
-                    bottom: parent.bottom
-                    left: parent.left
-                    horizontalCenter: parent.horizontalCenter
+                    fill: parent
+                    topMargin: units.gu(3)
                 }
-                width: units.gu(40)
 
                 onFilter: page.filter(type, id)
                 onSelectedItemChanged: sidePanel.close()

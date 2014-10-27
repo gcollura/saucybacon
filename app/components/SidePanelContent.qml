@@ -21,65 +21,78 @@ import QtQuick 2.3
 import Ubuntu.Components 1.1
 import Ubuntu.Components.ListItems 1.0
 
-Column {
+Flickable {
     id: root
-    property string selectedItem
+    anchors {
+        fill: parent
+    }
+    contentHeight: column.height
+    clip: true
+    interactive: contentHeight > parent.height
 
+    property string selectedItem
     signal filter(string type, int id)
 
-    Standard {
-        text: i18n.tr("All recipes")
-        progression: root.selectedItem == text
-        onClicked: {
-            filter("", "");
-            root.selectedItem = text;
+    Column {
+        id: column
+        anchors {
+            left: parent.left
+            right: parent.right
         }
-        Component.onCompleted: root.selectedItem = text
-    }
 
-    Standard {
-        text: i18n.tr("Favorites")
-        progression: root.selectedItem == text
-        onClicked: {
-            filter("favorite", 1);
-            root.selectedItem = text;
-        }
-    }
-
-    Header {
-        text: i18n.tr("Categories")
-    }
-
-    Repeater {
-        model: database.categories
-        StandardWithCount {
-            text: modelData.name
-            count: modelData.count
+        Standard {
+            text: i18n.tr("All recipes")
             progression: root.selectedItem == text
-            visible: count > 0
             onClicked: {
-                filter("category", modelData.id);
-                root.selectedItem = modelData.name;
+                filter("", "");
+                root.selectedItem = text;
+            }
+            Component.onCompleted: root.selectedItem = text
+        }
+
+        Standard {
+            text: i18n.tr("Favorites")
+            progression: root.selectedItem == text
+            onClicked: {
+                filter("favorite", 1);
+                root.selectedItem = text;
             }
         }
-    }
 
-    Header {
-        text: i18n.tr("Restrictions")
-    }
+        Header {
+            text: i18n.tr("Categories")
+        }
 
-    Repeater {
-        model: database.restrictions
-        StandardWithCount {
-            text: modelData.name
-            count: modelData.count
-            progression: root.selectedItem == text
-            visible: count > 0
-            onClicked: {
-                filter("restriction", index);
-                root.selectedItem = modelData.name;
+        Repeater {
+            model: database.categories
+            StandardWithCount {
+                text: modelData.name
+                count: modelData.count
+                progression: root.selectedItem == text
+                visible: count > 0
+                onClicked: {
+                    filter("category", modelData.id);
+                    root.selectedItem = modelData.name;
+                }
+            }
+        }
+
+        Header {
+            text: i18n.tr("Restrictions")
+        }
+
+        Repeater {
+            model: database.restrictions
+            StandardWithCount {
+                text: modelData.name
+                count: modelData.count
+                progression: root.selectedItem == text
+                visible: count > 0
+                onClicked: {
+                    filter("restriction", index);
+                    root.selectedItem = modelData.name;
+                }
             }
         }
     }
 }
-

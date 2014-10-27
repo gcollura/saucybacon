@@ -47,6 +47,7 @@ Item {
 
             Rectangle {
                 anchors.fill: parent
+                color: colors.darkRed
 
                 ContentPeerPicker {
                     id: peerPicker

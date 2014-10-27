@@ -60,7 +60,7 @@ Column {
         }
 
         // Make room for another ingredient
-        addIngredient();
+        // addIngredient();
     }
 
     function addIngredient(setfocus) {

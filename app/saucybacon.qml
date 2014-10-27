@@ -21,8 +21,6 @@ import QtQuick 2.3
 import Ubuntu.Components 1.1
 import SaucyBacon 1.0
 
-import Ubuntu.PerformanceMetrics 1.0
-
 import "ui"
 import "components"
 
@@ -32,13 +30,14 @@ MainView {
     objectName: "mainView"
     id: mainView
 
-    // NOTE: applicationName needs to match the .desktop filename
     applicationName: "com.ubuntu.developer.gcollura.saucybacon"
 
     automaticOrientation: true
     anchorToKeyboard: true
     useDeprecatedToolbar: false
+
     property bool wideAspect: width > units.gu(80)
+    property bool appActive: Qt.application.active
 
     width: units.gu(55)
     height: units.gu(85)

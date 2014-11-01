@@ -85,13 +85,6 @@ protected slots:
 
 signals:
     void update();
-    void addRecipefwd(const QVariantMap &recipe);
-    void deleteRecipefwd(int id);
-    void getRecipefwd(int id);
-    void addCategoryfwd(const QString &name);
-    void deleteCategoryfwd(int id);
-    void addSearchfwd(const QString &search);
-    void setFilterfwd(const QVariantMap &filter);
 
 private:
     bool initDb(const QString &path = ":memory:");

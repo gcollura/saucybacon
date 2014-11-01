@@ -51,15 +51,18 @@ Database::~Database() {
 }
 
 void Database::addRecipe(const QVariantMap &recipe) {
-    emit addRecipefwd(recipe);
+    QMetaObject::invokeMethod(m_db->worker(), "addRecipe", Qt::QueuedConnection,
+            Q_ARG(QVariantMap, recipe));
 }
 
 void Database::deleteRecipe(int id) {
-    emit deleteRecipefwd(id);
+    QMetaObject::invokeMethod(m_db->worker(), "deleteRecipe", Qt::QueuedConnection,
+            Q_ARG(int, id));
 }
 
 void Database::getRecipe(int id) {
-    emit getRecipefwd(id);
+    QMetaObject::invokeMethod(m_db->worker(), "getRecipe", Qt::QueuedConnection,
+            Q_ARG(int, id));
 }
 
 void Database::getRecipeOnline(const QString &id, const QString &url, const QString &service, const QString &image) {
@@ -67,15 +70,18 @@ void Database::getRecipeOnline(const QString &id, const QString &url, const QStr
 }
 
 void Database::addCategory(const QString &category) {
-    emit addCategoryfwd(category);
+    QMetaObject::invokeMethod(m_db->worker(), "addCategory", Qt::QueuedConnection,
+            Q_ARG(QString, category));
 }
 
 void Database::deleteCategory(int id) {
-    emit deleteCategoryfwd(id);
+    QMetaObject::invokeMethod(m_db->worker(), "deleteCategory", Qt::QueuedConnection,
+            Q_ARG(int, id));
 }
 
 void Database::addSearch(const QString &search) {
-    emit addSearchfwd(search);
+    QMetaObject::invokeMethod(m_db->worker(), "addSearch", Qt::QueuedConnection,
+            Q_ARG(QString, search));
 }
 
 void Database::setError(const QString &error) {
@@ -99,13 +105,6 @@ void Database::setReady(bool ready) {
         connect(this, &Database::update, m_db->worker(), &Worker::update);
 
         connect(this, &Database::setDatabaseName, m_db->worker(), &Worker::setDatabaseName);
-        connect(this, &Database::addRecipefwd, m_db->worker(), &Worker::addRecipe);
-        connect(this, &Database::deleteRecipefwd, m_db->worker(), &Worker::deleteRecipe);
-        connect(this, &Database::getRecipefwd, m_db->worker(), &Worker::getRecipe);
-        connect(this, &Database::addCategoryfwd, m_db->worker(), &Worker::addCategory);
-        connect(this, &Database::deleteCategoryfwd, m_db->worker(), &Worker::deleteCategory);
-        connect(this, &Database::addSearchfwd, m_db->worker(), &Worker::addSearch);
-        connect(this, &Database::setFilterfwd, m_db->worker(), &Worker::setFilter);
 
         connect(m_db->worker(), &Worker::recipesUpdated, this, &Database::setRecipes);
         connect(m_db->worker(), &Worker::recipeAvailable, this, &Database::setCurrentRecipe);
@@ -176,7 +175,8 @@ void Database::setSearches(const QList<QVariant> &searches) {
 void Database::setFilter(const QVariantMap &filter) {
     m_filter = filter;
     filterChanged();
-    setFilterfwd(filter);
+    QMetaObject::invokeMethod(m_db->worker(), "setFilter", Qt::QueuedConnection,
+            Q_ARG(QVariantMap, filter));
 }
 
 QVariant Database::currentRecipe() const {

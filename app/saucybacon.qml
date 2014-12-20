@@ -39,7 +39,7 @@ MainView {
     property bool wideAspect: width > units.gu(80)
     property bool appActive: Qt.application.active
 
-    width: units.gu(55)
+    width: units.gu(120)
     height: units.gu(85)
 
     // Thanks Lucas Di Benedetto
@@ -55,8 +55,7 @@ MainView {
         text: i18n.tr("New")
         iconName: "add"
         onTriggered: {
-            pageStack.push(editPage, { title: i18n.tr("New recipe") })
-            editPage.state = "new"
+            pageStack.push(editPage, { title: i18n.tr("New recipe"), state: "new" })
             editPage.newRecipe()
         }
     }
@@ -66,8 +65,7 @@ MainView {
         text: i18n.tr("Edit")
         iconName: "edit"
         onTriggered: {
-            pageStack.push(editPage, { title: i18n.tr("Edit recipe") })
-            editPage.state = "edit"
+            pageStack.push(editPage, { title: i18n.tr("Edit recipe"), state: "edit" })
             editPage.editRecipe(recipe)
         }
     }

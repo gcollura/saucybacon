@@ -30,9 +30,50 @@ Page {
     title: recipe.name ? recipe.name : i18n.tr("Recipe")
     anchors.fill: parent
 
-    tools: RecipePageToolbar {
-        objectName: "recipePageToolbar"
-    }
+    head.actions: [
+        Action {
+            visible: recipe.saved
+            text: i18n.tr("Favorite")
+            iconName: database.recipe.favorite ? "favorite-selected" : "favorite-unselected"
+
+            onTriggered: {
+                recipe.favorite = !recipe.favorite
+                database.addRecipe(recipe)
+            }
+        },
+        Action {
+            visible: !recipe.saved
+            text: i18n.tr("Save")
+            iconName: "save"
+
+            onTriggered: {
+                database.addRecipe(recipe)
+            }
+        },
+        Action {
+            text: editRecipeAction.text
+            iconName: editRecipeAction.iconName
+            onTriggered: editRecipeAction.trigger()
+        },
+        Action {
+            visible: recipe.saved
+            text: i18n.tr("Delete")
+            iconName: "delete"
+
+            onTriggered: PopupUtils.open(Qt.resolvedUrl("dialogs/DeleteDialog.qml"))
+        },
+        Action {
+            visible: recipe.source.length > 0
+            text: i18n.tr("Source")
+            iconName: "stock_website"
+
+            onTriggered: {
+                if (utils.open(recipe.source)) {
+                    console.log("Open " + recipe.source);
+                }
+            }
+        }
+    ]
 
     property Flickable pageFlickable
 

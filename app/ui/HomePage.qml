@@ -30,18 +30,11 @@ Page {
 
     title: sidePanelContent.selectedItem
 
-    tools: ToolbarItems {
-        ToolbarButton {
-            action: refreshAction
-        }
-        ToolbarButton {
-            action: newRecipeAction
-        }
-        ToolbarButton {
-            action: searchAction
-        }
-    }
-    actions: [ refreshAction, newRecipeAction, searchAction ]
+    head.actions: [
+        refreshAction,
+        newRecipeAction,
+        searchAction
+    ]
 
     property Flickable pageFlickable
     flickable: wideAspect ? null : pageFlickable
@@ -56,6 +49,7 @@ Page {
 
                 RowLayout {
                     anchors.fill: parent
+                    spacing: 0
                     Rectangle {
                         id: sidebar
                         anchors {
@@ -83,6 +77,50 @@ Page {
                 }
             }
         ]
+
+        UbuntuShape {
+            id: tip
+            objectName: "bottomEdgeTip"
+
+            anchors {
+                bottom: parent.bottom
+                horizontalCenter: parent.horizontalCenter
+                bottomMargin: -units.gu(1)
+                Behavior on bottomMargin {
+                    SequentialAnimation {
+                        // wait some msecs in case of the focus change again, to avoid flickering
+                        PauseAnimation {
+                            duration: 300
+                        }
+                        UbuntuNumberAnimation {
+                            duration: UbuntuAnimation.SnapDuration
+                        }
+                    }
+                }
+            }
+
+            z: 1
+            width: tipLabel.paintedWidth + units.gu(6)
+            height: units.gu(4)
+            color: Theme.palette.normal.background
+            Label {
+                id: tipLabel
+
+                text: i18n.tr("Filter")
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    verticalCenter: parent.verticalCenter
+                }
+                horizontalAlignment: Text.AlignHCenter
+                opacity: tip.hidden ? 0.0 : 1.0
+                Behavior on opacity {
+                    UbuntuNumberAnimation {
+                        duration: UbuntuAnimation.SnapDuration
+                    }
+                }
+            }
+        }
 
         Panel {
             id: sidePanel
@@ -122,6 +160,10 @@ Page {
 
                 onFilter: page.filter(type, id)
                 onSelectedItemChanged: sidePanel.close()
+            }
+
+            onOpenedChanged: {
+                page.head.show()
             }
         }
 

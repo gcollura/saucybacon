@@ -29,23 +29,19 @@ Page {
 
     flickable: null
 
-    Action {
-        id: saveRecipeAction
-        description: i18n.tr("Save the current recipe")
-        keywords: "save;recipe"
-        iconName: 'save'
-        text: i18n.tr("Save")
+    head.actions: [ 
+        Action {
+            id: saveRecipeAction
+            description: i18n.tr("Save the current recipe")
+            keywords: "save;recipe"
+            iconName: 'save'
+            text: i18n.tr("Save")
 
-        onTriggered: {
-            saveRecipe();
+            onTriggered: {
+                saveRecipe();
+            }
         }
-    }
-
-    tools: ToolbarItems {
-        ToolbarButton {
-            action: saveRecipeAction
-        }
-    }
+    ]
 
     states: [
         State {
@@ -295,7 +291,7 @@ Page {
 
     function saveRecipe() {
 
-        if (page.state == "edit") {
+        if (page.state === "edit") {
             var recipe = database.recipe
         } else {
             var recipe = { }

@@ -31,7 +31,7 @@ Page {
     title: sidePanelContent.selectedItem
 
     property var actions: [
-        refreshAction,
+        // refreshAction,
         newRecipeAction,
         searchAction
     ]
@@ -135,7 +135,8 @@ Page {
                 anchors {
                     left: parent.left
                     right: parent.right
-                    verticalCenter: parent.verticalCenter
+                    top: parent.top
+                    topMargin: units.dp(4)
                 }
                 horizontalAlignment: Text.AlignHCenter
                 opacity: tip.hidden ? 0.0 : 1.0

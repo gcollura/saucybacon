@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.ubuntu.developer.gcollura.saucybacon 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-22 22:32+0100\n"
+"POT-Creation-Date: 2014-12-22 23:43+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -54,7 +54,7 @@ msgstr ""
 msgid "Recipe"
 msgstr ""
 
-#: ../app/ui/RecipePage.qml:36 ../app/ui/RecipePage.qml:309
+#: ../app/ui/RecipePage.qml:36 ../app/ui/RecipePage.qml:281
 msgid "Favorite"
 msgstr ""
 
@@ -70,31 +70,23 @@ msgstr ""
 msgid "Downloading recipe..."
 msgstr ""
 
-#: ../app/ui/RecipePage.qml:126
-msgid "Recipes"
-msgstr ""
-
-#: ../app/ui/RecipePage.qml:130 ../app/ui/EditPage.qml:101
-msgid "Total time: "
-msgstr ""
-
-#: ../app/ui/RecipePage.qml:328
+#: ../app/ui/RecipePage.qml:300
 msgid "Categories: "
 msgstr ""
 
-#: ../app/ui/RecipePage.qml:365 ../app/ui/EditPage.qml:237
+#: ../app/ui/RecipePage.qml:337 ../app/ui/EditPage.qml:237
 msgid "Ingredients"
 msgstr ""
 
-#: ../app/ui/RecipePage.qml:407 ../app/ui/EditPage.qml:272
+#: ../app/ui/RecipePage.qml:379 ../app/ui/EditPage.qml:272
 msgid "Directions"
 msgstr ""
 
-#: ../app/ui/RecipePage.qml:434
+#: ../app/ui/RecipePage.qml:406
 msgid "Prep Time: "
 msgstr ""
 
-#: ../app/ui/RecipePage.qml:438
+#: ../app/ui/RecipePage.qml:410
 msgid "Cook Time: "
 msgstr ""
 
@@ -200,6 +192,10 @@ msgstr ""
 
 #: ../app/ui/EditPage.qml:89
 msgid "Enter a name for your recipe"
+msgstr ""
+
+#: ../app/ui/EditPage.qml:101
+msgid "Total time: "
 msgstr ""
 
 #: ../app/ui/EditPage.qml:117

@@ -7,7 +7,8 @@ find . -name "moc*" -exec rm "{}" \;
 find . -name "*automoc*" -exec rm "{}" \;
 find . -name Makefile -exec rm "{}" \;
 find . -type d -name CMakeFiles -exec rm -r "{}" \;
+find . -name install_manifest.txt -exec rm "{}" \;
 rm resources/saucybacon.desktop
-rm install_manifest.txt
 rm -r backend/SaucyBacon
+rm manifest.json
 set +x

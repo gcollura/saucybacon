@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# Copyright (C) YEAR Giulio Collura.
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: com.ubuntu.developer.gcollura.saucybacon 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-10-29 22:54+0100\n"
+"POT-Creation-Date: 2014-12-22 22:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,90 +17,113 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../app/components/IngredientInput.qml:50
-msgid "Qty"
-msgstr ""
-
-#: ../app/components/IngredientInput.qml:63
-msgid "Type"
-msgstr ""
-
-#: ../app/components/IngredientInput.qml:77
-msgid "Insert ingredient name"
-msgstr ""
-
-#: ../app/components/LoadingIndicator.qml:63
-msgid "Loading..."
-msgstr ""
-
-#: ../app/components/PhotoLayout.qml:158
-msgid "Remove"
-msgstr ""
-
-#: ../app/components/PhotoLayout.qml:158
-msgid "View"
-msgstr ""
-
-#: ../app/components/SidePanelContent.qml:44
-msgid "All recipes"
-msgstr ""
-
-#: ../app/components/SidePanelContent.qml:54
-msgid "Favorites"
-msgstr ""
-
-#: ../app/components/SidePanelContent.qml:63 ../app/ui/EditPage.qml:137
-msgid "Categories"
-msgstr ""
-
-#: ../app/components/SidePanelContent.qml:81
-msgid "Restrictions"
-msgstr ""
-
-#: ../app/components/TimePicker.qml:42
-msgid "Pick a time"
-msgstr ""
-
-#: ../app/components/TimePicker.qml:51 ../app/ui/dialogs/CategoryDialog.qml:37
-#: ../app/ui/dialogs/DeleteDialog.qml:32
-msgid "Cancel"
-msgstr ""
-
-#: ../app/components/TimePicker.qml:58
-msgid "Accept"
-msgstr ""
-
-#: ../app/saucybacon.qml:56
+#: ../app/saucybacon.qml:55
 msgid "New"
 msgstr ""
 
-#: ../app/saucybacon.qml:59
+#: ../app/saucybacon.qml:58
 msgid "New recipe"
 msgstr ""
 
-#: ../app/saucybacon.qml:67
+#: ../app/saucybacon.qml:65
 msgid "Edit"
 msgstr ""
 
-#: ../app/saucybacon.qml:70
+#: ../app/saucybacon.qml:68
 msgid "Edit recipe"
 msgstr ""
 
-#: ../app/saucybacon.qml:78 ../app/ui/SearchPage.qml:31
+#: ../app/saucybacon.qml:75 ../app/ui/SearchPage.qml:31
 msgid "Search"
 msgstr ""
 
-#: ../app/saucybacon.qml:85 ../app/ui/AboutPage.qml:24
+#: ../app/saucybacon.qml:82 ../app/ui/AboutPage.qml:24
 msgid "About"
 msgstr ""
 
-#: ../app/saucybacon.qml:92
+#: ../app/saucybacon.qml:89
 msgid "Refresh"
 msgstr ""
 
-#: ../app/saucybacon.qml:99 ../app/ui/RecipePageToolbar.qml:60
+#: ../app/saucybacon.qml:96 ../app/ui/RecipePage.qml:59
 #: ../app/ui/dialogs/DeleteDialog.qml:39
 msgid "Delete"
+msgstr ""
+
+#: ../app/ui/RecipePage.qml:30
+msgid "Recipe"
+msgstr ""
+
+#: ../app/ui/RecipePage.qml:36 ../app/ui/RecipePage.qml:309
+msgid "Favorite"
+msgstr ""
+
+#: ../app/ui/RecipePage.qml:48 ../app/ui/EditPage.qml:38
+msgid "Save"
+msgstr ""
+
+#: ../app/ui/RecipePage.qml:68
+msgid "Source"
+msgstr ""
+
+#: ../app/ui/RecipePage.qml:94
+msgid "Downloading recipe..."
+msgstr ""
+
+#: ../app/ui/RecipePage.qml:126
+msgid "Recipes"
+msgstr ""
+
+#: ../app/ui/RecipePage.qml:130 ../app/ui/EditPage.qml:101
+msgid "Total time: "
+msgstr ""
+
+#: ../app/ui/RecipePage.qml:328
+msgid "Categories: "
+msgstr ""
+
+#: ../app/ui/RecipePage.qml:365 ../app/ui/EditPage.qml:237
+msgid "Ingredients"
+msgstr ""
+
+#: ../app/ui/RecipePage.qml:407 ../app/ui/EditPage.qml:272
+msgid "Directions"
+msgstr ""
+
+#: ../app/ui/RecipePage.qml:434
+msgid "Prep Time: "
+msgstr ""
+
+#: ../app/ui/RecipePage.qml:438
+msgid "Cook Time: "
+msgstr ""
+
+#: ../app/ui/HomePage.qml:134
+msgid "Filter"
+msgstr ""
+
+#: ../app/ui/SearchPage.qml:36
+msgid "Top Rated"
+msgstr ""
+
+#: ../app/ui/SearchPage.qml:37
+msgid "Search top rated recipes"
+msgstr ""
+
+#: ../app/ui/SearchPage.qml:53 ../app/ui/SearchPage.qml:220
+msgid "Searching..."
+msgstr ""
+
+#: ../app/ui/SearchPage.qml:85
+msgid "Search history"
+msgstr ""
+
+#: ../app/ui/SearchPage.qml:157
+msgid "Powered by Food2Fork.com"
+msgstr ""
+
+#: ../app/ui/SearchPage.qml:204
+msgid "Loading error, please try again"
 msgstr ""
 
 #: ../app/ui/AboutPage.qml:64
@@ -113,13 +136,6 @@ msgstr ""
 
 #: ../app/ui/AboutPage.qml:82
 msgid "Contact:"
-msgstr ""
-
-#: ../app/ui/AboutPage.qml:86
-#, c-format, qt-format
-msgid ""
-"<a href=\"mailto:giulio.collura@gmail.com?subject=SaucyBacon%20support"
-"\">random.cpp@gmail.com</a>"
 msgstr ""
 
 #: ../app/ui/AboutPage.qml:93
@@ -149,98 +165,6 @@ msgstr ""
 msgid "Copyright (C) 2013-2014 Giulio Collura"
 msgstr ""
 
-#: ../app/ui/EditPage.qml:34
-msgid "Save the current recipe"
-msgstr ""
-
-#: ../app/ui/EditPage.qml:37 ../app/ui/RecipePageToolbar.qml:44
-msgid "Save"
-msgstr ""
-
-#: ../app/ui/EditPage.qml:93
-msgid "Enter a name for your recipe"
-msgstr ""
-
-#: ../app/ui/EditPage.qml:105 ../app/ui/RecipePage.qml:81
-msgid "Total time: "
-msgstr ""
-
-#: ../app/ui/EditPage.qml:121
-msgid "Photos"
-msgstr ""
-
-#: ../app/ui/EditPage.qml:221
-msgid "Restriction"
-msgstr ""
-
-#: ../app/ui/EditPage.qml:241 ../app/ui/RecipePage.qml:316
-msgid "Ingredients"
-msgstr ""
-
-#: ../app/ui/EditPage.qml:276 ../app/ui/RecipePage.qml:358
-msgid "Directions"
-msgstr ""
-
-#: ../app/ui/EditPage.qml:286
-msgid "Write your directions"
-msgstr ""
-
-#: ../app/ui/RecipePage.qml:30
-msgid "Recipe"
-msgstr ""
-
-#: ../app/ui/RecipePage.qml:45
-msgid "Downloading recipe..."
-msgstr ""
-
-#: ../app/ui/RecipePage.qml:77
-msgid "Recipes"
-msgstr ""
-
-#: ../app/ui/RecipePage.qml:260 ../app/ui/RecipePageToolbar.qml:31
-msgid "Favorite"
-msgstr ""
-
-#: ../app/ui/RecipePage.qml:279
-msgid "Categories: "
-msgstr ""
-
-#: ../app/ui/RecipePage.qml:385
-msgid "Prep Time: "
-msgstr ""
-
-#: ../app/ui/RecipePage.qml:389
-msgid "Cook Time: "
-msgstr ""
-
-#: ../app/ui/RecipePageToolbar.qml:70
-msgid "Source"
-msgstr ""
-
-#: ../app/ui/SearchPage.qml:36
-msgid "Top Rated"
-msgstr ""
-
-#: ../app/ui/SearchPage.qml:37
-msgid "Search top rated recipes"
-msgstr ""
-
-#: ../app/ui/SearchPage.qml:53 ../app/ui/SearchPage.qml:220
-msgid "Searching..."
-msgstr ""
-
-#: ../app/ui/SearchPage.qml:85
-msgid "Search history"
-msgstr ""
-
-#: ../app/ui/SearchPage.qml:157
-msgid "Powered by Food2Fork.com"
-msgstr ""
-
-#: ../app/ui/SearchPage.qml:204
-msgid "Loading error, please try again"
-msgstr ""
-
 #: ../app/ui/dialogs/CategoryDialog.qml:28
 msgid "New category"
 msgstr ""
@@ -251,6 +175,11 @@ msgstr ""
 
 #: ../app/ui/dialogs/CategoryDialog.qml:33
 msgid "Name your category..."
+msgstr ""
+
+#: ../app/ui/dialogs/CategoryDialog.qml:37
+#: ../app/ui/dialogs/DeleteDialog.qml:32 ../app/components/TimePicker.qml:51
+msgid "Cancel"
 msgstr ""
 
 #: ../app/ui/dialogs/CategoryDialog.qml:46
@@ -265,26 +194,72 @@ msgstr ""
 msgid "Are you sure you want to delete this recipe?"
 msgstr ""
 
-#: ../backend/modules/SaucyBacon/QueryThread.cpp:667
-msgid "No restriction"
+#: ../app/ui/EditPage.qml:35
+msgid "Save the current recipe"
 msgstr ""
 
-#: ../backend/modules/SaucyBacon/QueryThread.cpp:676
-msgid "Vegetarian"
+#: ../app/ui/EditPage.qml:89
+msgid "Enter a name for your recipe"
 msgstr ""
 
-#: ../backend/modules/SaucyBacon/QueryThread.cpp:685
-msgid "Vegan"
+#: ../app/ui/EditPage.qml:117
+msgid "Photos"
 msgstr ""
 
-#: ../backend/modules/SaucyBacon/RecipeParser.cpp:295
-msgid ""
-"This website is supported yet. It was impossible to load the directions."
+#: ../app/ui/EditPage.qml:133 ../app/components/SidePanelContent.qml:69
+msgid "Categories"
 msgstr ""
 
-#: ../backend/modules/SaucyBacon/RecipeParser.cpp:299
-#, qt-format
-msgid "<br />Recipe from %1.<br />Directions are not part of F2F API."
+#: ../app/ui/EditPage.qml:217
+msgid "Restriction"
+msgstr ""
+
+#: ../app/ui/EditPage.qml:282
+msgid "Write your directions"
+msgstr ""
+
+#: ../app/components/PhotoLayout.qml:158
+msgid "Remove"
+msgstr ""
+
+#: ../app/components/PhotoLayout.qml:158
+msgid "View"
+msgstr ""
+
+#: ../app/components/TimePicker.qml:42
+msgid "Pick a time"
+msgstr ""
+
+#: ../app/components/TimePicker.qml:58
+msgid "Accept"
+msgstr ""
+
+#: ../app/components/IngredientInput.qml:50
+msgid "Qty"
+msgstr ""
+
+#: ../app/components/IngredientInput.qml:63
+msgid "Type"
+msgstr ""
+
+#: ../app/components/IngredientInput.qml:77
+msgid "Insert ingredient name"
+msgstr ""
+
+#: ../app/components/LoadingIndicator.qml:63
+msgid "Loading..."
+msgstr ""
+
+#: ../app/components/SidePanelContent.qml:49
+msgid "All recipes"
+msgstr ""
+
+#: ../app/components/SidePanelContent.qml:59
+msgid "Favorites"
+msgstr ""
+
+#: ../app/components/SidePanelContent.qml:87
+msgid "Restrictions"
 msgstr ""
 
 #: ../backend/modules/SaucyBacon/Utils.cpp:138
@@ -307,4 +282,26 @@ msgstr ""
 
 #: ../backend/modules/SaucyBacon/Utils.cpp:155
 msgid "<h2>Photos</h2><br />"
+msgstr ""
+
+#: ../backend/modules/SaucyBacon/QueryThread.cpp:670
+msgid "No restriction"
+msgstr ""
+
+#: ../backend/modules/SaucyBacon/QueryThread.cpp:679
+msgid "Vegetarian"
+msgstr ""
+
+#: ../backend/modules/SaucyBacon/QueryThread.cpp:688
+msgid "Vegan"
+msgstr ""
+
+#: ../backend/modules/SaucyBacon/RecipeParser.cpp:295
+msgid ""
+"This website is supported yet. It was impossible to load the directions."
+msgstr ""
+
+#: ../backend/modules/SaucyBacon/RecipeParser.cpp:299
+#, qt-format
+msgid "<br />Recipe from %1.<br />Directions are not part of F2F API."
 msgstr ""

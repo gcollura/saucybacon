@@ -29,8 +29,10 @@ set(APP_NAME                saucybacon)
 set(FULL_APP_NAME           "SaucyBacon")
 set(SAUCYBACON_DIR          "share/qml/${APP_NAME}")
 set(MAIN_QML                "saucybacon.qml")
-set(ICON                    "icons/SaucyBacon_icon.png")
-set(VERSION                 2.0.0)
+set(APP_ICON                    "icons/SaucyBacon_icon.png")
+set(APP_VERSION             2.0.0)
+set(APP_PACKAGE             com.ubuntu.developer.gcollura.saucybacon)
+set(FRAMEWORK               ubuntu-sdk-14.10)
 
 # set install paths
 set(CMAKE_INSTALL_PREFIX /)
@@ -39,6 +41,7 @@ set(DESKTOP_DIR ${DATA_DIR})
 set(DESKTOP_FILE "${CMAKE_PROJECT_NAME}.desktop")
 
 set(EXEC "qmlscene ${SAUCYBACON_DIR}/${MAIN_QML}")
+configure_file(manifest.json.in ${CMAKE_CURRENT_BINARY_DIR}/manifest.json)
 
 install(FILES manifest.json DESTINATION ${CMAKE_INSTALL_PREFIX})
 install(DIRECTORY "resources/icons" DESTINATION ${DATA_DIR})

@@ -11,7 +11,7 @@ file(GLOB_RECURSE I18N_SRC_FILES
 )
 
 set(DOMAIN ${PROJECT_NAME})
-set(POT_FILE com.ubuntu.developer.gcollura.saucybacon.pot)
+set(POT_FILE ${APP_PACKAGE}.pot)
 file(GLOB PO_FILES ${CMAKE_SOURCE_DIR}/po/*.po)
 
 add_custom_target(${POT_FILE} ALL
@@ -22,8 +22,8 @@ add_custom_target(${POT_FILE} ALL
     --from-code=UTF-8
     --c++ --qt --add-comments=TRANSLATORS
     --keyword=tr --keyword=tr:1,2
-    --package-name='com.ubuntu.developer.gcollura.saucybacon'
-    --package-version=${VERSION}
+    --package-name='${APP_PACKAGE}'
+    --package-version=${APP_VERSION}
     --copyright-holder='Giulio Collura.'
     ${I18N_SRC_FILES}
     COMMENT "Copying new pot template back to source tree"
@@ -38,5 +38,5 @@ foreach(PO_FILE ${PO_FILES})
     set(INSTALL_DIR ${CMAKE_INSTALL_LOCALEDIR}/${LANG}/LC_MESSAGES)
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${LANG}.gmo
             DESTINATION ${INSTALL_DIR}
-            RENAME ${DOMAIN}.mo)
+            RENAME ${APP_PACKAGE}.mo)
 endforeach(PO_FILE)

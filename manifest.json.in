@@ -1,0 +1,16 @@
+{
+    "name": "@APP_PACKAGE@",
+    "title": "@FULL_APP_NAME@",
+    "version": "@APP_VERSION@",
+    "architecture": "armhf",
+    "description": "Manage and search recipes with ease",
+    "framework": "@FRAMEWORK@",
+    "hooks": {
+        "saucybacon": {
+            "apparmor": "@APP_NAME@.apparmor",
+            "desktop": "@APP_NAME@.desktop"
+        }
+    },
+    "maintainer": "Giulio Collura <giulio.collura@gmail.com>",
+    "icon": "@APP_ICON@"
+}

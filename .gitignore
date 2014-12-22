@@ -13,3 +13,4 @@ get_log.sh
 .excludes
 *.log
 *.click
+manifest.json

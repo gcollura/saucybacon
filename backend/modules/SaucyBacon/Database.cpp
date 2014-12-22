@@ -111,6 +111,7 @@ void Database::setReady(bool ready) {
         connect(m_db->worker(), &Worker::categoriesUpdated, this, &Database::setCategories);
         connect(m_db->worker(), &Worker::restrictionsUpdated, this, &Database::setRestrictions);
         connect(m_db->worker(), &Worker::searchesUpdated, this, &Database::setSearches);
+        connect(m_db->worker(), &Worker::favoriteCountUpdated, this, &Database::setFavoriteCount);
 
         emit setDatabaseName("saucybacon.db");
     }
@@ -172,6 +173,11 @@ void Database::setSearches(const QList<QVariant> &searches) {
     searchesChanged();
 }
 
+void Database::setFavoriteCount(int favoriteCount) {
+    m_favoriteCount = favoriteCount;
+    favoriteCountChanged();
+}
+
 void Database::setFilter(const QVariantMap &filter) {
     m_filter = filter;
     filterChanged();
@@ -197,6 +203,10 @@ QList<QVariant> Database::restrictions() const {
 
 QList<QVariant> Database::searches() const {
     return m_searches;
+}
+
+int Database::favoriteCount() const {
+    return m_favoriteCount;
 }
 
 QVariantMap Database::filter() const {

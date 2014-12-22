@@ -30,49 +30,57 @@ Page {
     title: recipe.name ? recipe.name : i18n.tr("Recipe")
     anchors.fill: parent
 
-    head.actions: [
-        Action {
-            visible: recipe.saved
-            text: i18n.tr("Favorite")
-            iconName: database.recipe.favorite ? "favorite-selected" : "favorite-unselected"
+    Action {
+        id: favoriteRecipeAction
+        visible: recipe.saved
+        text: i18n.tr("Favorite")
+        iconName: database.recipe.favorite ? "favorite-selected" : "favorite-unselected"
 
-            onTriggered: {
-                recipe.favorite = !recipe.favorite
-                database.addRecipe(recipe)
-            }
-        },
-        Action {
-            visible: !recipe.saved
-            text: i18n.tr("Save")
-            iconName: "save"
+        onTriggered: {
+            recipe.favorite = !recipe.favorite
+            database.addRecipe(recipe)
+        }
+    }
 
-            onTriggered: {
-                database.addRecipe(recipe)
-            }
-        },
-        Action {
-            text: editRecipeAction.text
-            iconName: editRecipeAction.iconName
-            onTriggered: editRecipeAction.trigger()
-        },
-        Action {
-            visible: recipe.saved
-            text: i18n.tr("Delete")
-            iconName: "delete"
+    Action {
+        id: saveRecipeAction
+        visible: !recipe.saved
+        text: i18n.tr("Save")
+        iconName: "save"
 
-            onTriggered: PopupUtils.open(Qt.resolvedUrl("dialogs/DeleteDialog.qml"))
-        },
-        Action {
-            visible: recipe.source.length > 0
-            text: i18n.tr("Source")
-            iconName: "stock_website"
+        onTriggered: {
+            database.addRecipe(recipe)
+        }
+    }
 
-            onTriggered: {
-                if (utils.open(recipe.source)) {
-                    console.log("Open " + recipe.source);
-                }
+    Action {
+        id: deleteRecipeAction
+        visible: recipe.saved
+        text: i18n.tr("Delete")
+        iconName: "delete"
+
+        onTriggered: PopupUtils.open(Qt.resolvedUrl("dialogs/DeleteDialog.qml"))
+    }
+
+    Action {
+        id: sourceRecipeAction
+        visible: recipe.source.length > 0
+        text: i18n.tr("Source")
+        iconName: "stock_website"
+
+        onTriggered: {
+            if (utils.open(recipe.source)) {
+                console.log("Open " + recipe.source);
             }
         }
+    }
+
+    head.actions: [
+        saveRecipeAction,
+        favoriteRecipeAction,
+        editRecipeAction,
+        deleteRecipeAction,
+        sourceRecipeAction
     ]
 
     property Flickable pageFlickable

@@ -30,14 +30,39 @@ Page {
 
     title: sidePanelContent.selectedItem
 
-    head.actions: [
+    property var actions: [
         refreshAction,
         newRecipeAction,
         searchAction
     ]
+    property bool backVisible: false
 
-    property Flickable pageFlickable
-    flickable: wideAspect ? null : pageFlickable
+    state: "default"
+    states: [
+        PageHeadState {
+            name: "default"
+            head: page.head
+            actions: page.actions
+            backAction: Action {
+                iconName: "back"
+                visible: backVisible && !wideAspect
+                onTriggered: sidePanelContent.resetSelection()
+            }
+        },
+        PageHeadState {
+            name: "filter"
+            head: page.head
+            backAction: Action {
+                iconName: "back"
+                onTriggered: {
+                    sidePanel.close()
+                    page.state = "default"
+                }
+            }
+        }
+    ]
+
+    flickable: null
 
     Layouts {
         id: layouts
@@ -125,10 +150,7 @@ Page {
         Panel {
             id: sidePanel
             align: Qt.AlignBottom
-            anchors {
-                fill: parent
-                topMargin: header.height
-            }
+            anchors.fill: parent
 
             z: 100
 
@@ -138,32 +160,22 @@ Page {
                 color: colors.darkerRed
             }
 
-            Rectangle {
-                id: sidePanelHandler
-                anchors {
-                    top: parent.top
-                    left: parent.left
-                    right: parent.right
-                }
-                height: units.gu(3)
-                color: Qt.rgba(0, 0, 0, 0.4)
-            }
-
             SidePanelContent {
                 id: sidePanelContent
                 Layouts.item: "panelContent"
 
-                anchors {
-                    fill: parent
-                    topMargin: units.gu(3)
-                }
+                anchors.fill: parent
 
                 onFilter: page.filter(type, id)
                 onSelectedItemChanged: sidePanel.close()
             }
 
             onOpenedChanged: {
-                page.head.show()
+                if (opened) {
+                    page.state = "filter"
+                } else {
+                    page.state = "default"
+                }
             }
         }
 
@@ -177,7 +189,7 @@ Page {
                 margins: units.gu(1)
             }
 
-            clip: wideAspect
+            clip: true
 
             cellWidth: width / Math.floor(width / units.gu(16))
             cellHeight: 4 / 3 * cellWidth
@@ -193,13 +205,16 @@ Page {
                 favorite: modelData.favorite
                 restriction: modelData.restriction
             }
-
-            Component.onCompleted: pageFlickable = gridView
         }
     }
 
     function filter(type, id) {
-        var query = { "type": type, "id": id }
+        if (type === "") {
+            backVisible = false;
+        } else {
+            backVisible = true;
+        }
+        var query = { "type": type, "id": id };
         database.filter = query;
     }
 

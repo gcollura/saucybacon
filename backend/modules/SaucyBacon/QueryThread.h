@@ -66,6 +66,7 @@ public slots:
     void updateCategories();
     void updateRestrictions();
     void updateSearches();
+    void updateFavoriteCount();
 
     void upgrade();
 
@@ -80,6 +81,7 @@ signals:
     void categoriesUpdated(const QList<QVariant> &cats);
     void restrictionsUpdated(const QList<QVariant> &restrictions);
     void searchesUpdated(const QList<QVariant> &searches);
+    void favoriteCountUpdated(int favoriteCount);
 
 private:
     QSqlDatabase m_db;

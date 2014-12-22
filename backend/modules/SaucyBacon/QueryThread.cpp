@@ -167,6 +167,7 @@ void Worker::update() {
     updateCategories();
     updateRestrictions();
     updateSearches();
+    updateFavoriteCount();
     working(false);
 }
 
@@ -252,6 +253,7 @@ void Worker::addRecipe(QVariantMap recipe) {
     updateRecipes();
     updateCategories();
     updateRestrictions();
+    updateFavoriteCount();
 
     working(false);
 }
@@ -292,6 +294,7 @@ void Worker::deleteRecipe(int id) {
     updateRecipes();
     updateCategories();
     updateRestrictions();
+    updateFavoriteCount();
 
     working(false);
 }
@@ -708,6 +711,20 @@ void Worker::updateSearches() {
 
     searchesUpdated(searches);
 }
+
+void Worker::updateFavoriteCount() {
+    QSqlQuery q(m_db);
+    q.prepare("SELECT count(*) as count FROM Recipes WHERE favorite = 1 GROUP BY favorite");
+
+    if (!q.exec() || !q.next()) {
+        error(QString("Error while loading favoriteCount: %1").arg(q.lastError().text()));
+        favoriteCountUpdated(0);
+        return;
+    }
+
+    favoriteCountUpdated(q.value("count").toInt());
+}
+
 ////
 
 QueryThread::QueryThread(QObject *parent)

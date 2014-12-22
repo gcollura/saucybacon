@@ -35,6 +35,7 @@ set(ICON                    "icons/SaucyBacon_icon.png")
 set(CMAKE_INSTALL_PREFIX /)
 set(DATA_DIR /)
 set(DESKTOP_DIR ${DATA_DIR})
+set(DESKTOP_FILE "${CMAKE_PROJECT_NAME}.desktop")
 
 set(EXEC "qmlscene ${SAUCYBACON_DIR}/${MAIN_QML}")
 
@@ -45,6 +46,7 @@ install(FILES "saucybacon.apparmor" DESTINATION ${DATA_DIR})
 add_subdirectory(app)
 add_subdirectory(backend)
 add_subdirectory(resources)
+#add_subdirectory(po)
 
 add_custom_target("autopilot" chmod +x ${CMAKE_SOURCE_DIR}/app/tests/autopilot/run
     COMMAND ${CMAKE_SOURCE_DIR}/app/tests/autopilot/run

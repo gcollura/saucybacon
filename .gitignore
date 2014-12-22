@@ -12,3 +12,4 @@ resources/saucybacon.desktop
 get_log.sh
 .excludes
 *.log
+*.click

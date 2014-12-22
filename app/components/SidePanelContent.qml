@@ -33,6 +33,10 @@ Flickable {
     property string selectedItem
     signal filter(string type, int id)
 
+    function resetSelection() {
+        defaultSelection.clicked()
+    }
+
     Column {
         id: column
         anchors {
@@ -41,6 +45,7 @@ Flickable {
         }
 
         Standard {
+            id: defaultSelection
             text: i18n.tr("All recipes")
             progression: root.selectedItem == text
             onClicked: {
@@ -50,9 +55,10 @@ Flickable {
             Component.onCompleted: root.selectedItem = text
         }
 
-        Standard {
+        StandardWithCount {
             text: i18n.tr("Favorites")
             progression: root.selectedItem == text
+            count: database.favoriteCount
             onClicked: {
                 filter("favorite", 1);
                 root.selectedItem = text;

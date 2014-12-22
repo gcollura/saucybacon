@@ -39,6 +39,7 @@ class Database : public QObject {
     Q_PROPERTY(QList<QVariant> categories READ categories NOTIFY categoriesChanged)
     Q_PROPERTY(QList<QVariant> restrictions READ restrictions NOTIFY restrictionsChanged)
     Q_PROPERTY(QList<QVariant> searches READ searches NOTIFY searchesChanged)
+    Q_PROPERTY(int favoriteCount READ favoriteCount NOTIFY favoriteCountChanged)
 
     Q_PROPERTY(QVariantMap filter READ filter WRITE setFilter NOTIFY filterChanged)
 
@@ -68,6 +69,7 @@ signals:
     void restrictionsChanged();
     void searchesChanged();
     void filterChanged();
+    void favoriteCountChanged();
 
 protected slots:
     void setError(const QString &error);
@@ -80,6 +82,7 @@ protected slots:
     void setCategories(const QList<QVariant> &cats);
     void setRestrictions(const QList<QVariant> &restrictions);
     void setSearches(const QList<QVariant> &searches);
+    void setFavoriteCount(int favoriteCount);
 
     void setFilter(const QVariantMap &filter);
 
@@ -100,6 +103,7 @@ private:
     QList<QVariant> categories() const;
     QList<QVariant> restrictions() const;
     QList<QVariant> searches() const;
+    int favoriteCount() const;
     QVariantMap filter() const;
 
     QueryThread *m_db;
@@ -115,6 +119,7 @@ private:
     QList<QVariant> m_restrictions;
     QList<QVariant> m_searches;
     QVariantMap m_filter;
+    int m_favoriteCount;
 };
 
 #endif // DATABASE_H

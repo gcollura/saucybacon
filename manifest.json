@@ -1,7 +1,7 @@
 {
     "architecture": "armhf",
     "description": "Manage and search recipes with ease",
-    "framework": "ubuntu-sdk-14.10-dev2",
+    "framework": "ubuntu-sdk-14.10",
     "hooks": {
         "saucybacon": {
             "apparmor": "saucybacon.apparmor",

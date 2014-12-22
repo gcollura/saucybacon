@@ -17,251 +17,147 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-import QtQuick 2.0
-import Ubuntu.Components 0.1
-import U1db 1.0 as U1db
-import SaucyBacon 0.1
+import QtQuick 2.3
+import Ubuntu.Components 1.1
+import SaucyBacon 1.0
 
 import "ui"
-import "backend"
+import "components"
+
+import "prototypes.js" as Prototypes
 
 MainView {
     objectName: "mainView"
     id: mainView
 
-    // NOTE: applicationName needs to match the .desktop filename
     applicationName: "com.ubuntu.developer.gcollura.saucybacon"
 
     automaticOrientation: true
     anchorToKeyboard: true
-    property bool wideAspect: width > units.gu(80)
-    property bool extraWideAspect: width > units.gu(130)
+    useDeprecatedToolbar: false
 
-    width: units.gu(135)
+    property bool wideAspect: width > units.gu(80)
+    property bool appActive: Qt.application.active
+
+    width: units.gu(120)
     height: units.gu(85)
 
-    headerColor: "#640707"
-    backgroundColor: "#790f0f"
-    footerColor: "#641616"
+    // Thanks Lucas Di Benedetto
+    headerColor: colors.headerColor
+    backgroundColor: colors.darkRed
+    footerColor: colors.footerColor
+
+    property alias recipe: database.recipe
 
     // Global actions
-
     Action {
         id: newRecipeAction
         text: i18n.tr("New")
-        description: i18n.tr("Create a new recipe")
-        iconSource: icon("add")
-        keywords: "new;recipe"
+        iconName: "add"
         onTriggered: {
-            recipe.newRecipe();
-            pageStack.push(editRecipePage);
+            pageStack.push(editPage, { title: i18n.tr("New recipe"), state: "new" })
+            editPage.newRecipe()
         }
     }
 
     Action {
         id: editRecipeAction
         text: i18n.tr("Edit")
-        description: i18n.tr("Edit the current recipe")
-        iconSource: icon("edit")
-        keywords: "edit;recipe"
-        onTriggered: pageStack.push(editRecipePage)
+        iconName: "edit"
+        onTriggered: {
+            pageStack.push(editPage, { title: i18n.tr("Edit recipe"), state: "edit" })
+            editPage.editRecipe(recipe)
+        }
     }
 
     Action {
         id: searchAction
         text: i18n.tr("Search")
-        description: i18n.tr("Search for a new recipe on the internet")
-        iconSource: icon("edit")
-        keywords: "search;new;recipe"
-        onTriggered: { pageStack.push(tabs); tabs.selectedTabIndex = 1; }
+        iconName: "search"
+        onTriggered: pageStack.push(Qt.resolvedUrl("ui/SearchPage.qml"))
     }
 
-    actions: [ newRecipeAction, searchAction ]
+    Action {
+        id: aboutAction
+        text: i18n.tr("About")
+        iconName: "help"
+        onTriggered: pageStack.push(Qt.resolvedUrl("ui/AboutPage.qml"))
+    }
+
+    Action {
+        id: refreshAction
+        text: i18n.tr("Refresh")
+        iconName: "reload"
+        onTriggered: database.update()
+    }
+
+    Action {
+        id: deleteAction
+        text: i18n.tr("Delete")
+        iconName: "delete"
+        onTriggered: {
+            database.deleteRecipe(database.recipe.id)
+            deleteRecipeTimer.start()
+        }
+    }
+
+    // WORKAROUND: if pageStack.pop() is called as soon as the dialog closes,
+    // the app freezes, with this trick, everything goes fine
+    Timer {
+        id: deleteRecipeTimer
+        interval: 100
+        repeat: false
+
+        onTriggered: {
+            pageStack.pop()
+        }
+    }
 
     PageStack {
         objectName: "pageStack"
         id: pageStack
 
-        Tabs {
-            objectName: "tabs"
-            id: tabs
-            visible: false
-
-            Tab {
-                objectName: "recipeListTab"
-                title: page.title
-                page: RecipeListPage {
-                    objectName: "recipeListPage"
-                    id: recipeListPage
-                }
-            }
-
-            Tab {
-                objectName: "searchTab"
-                title: page.title
-                page: SearchPage {
-                    objectName: "searchPage"
-                    id: searchPage
-                }
-            }
-
-            Tab {
-                objectName: "aboutTab"
-                title: page.title
-                page: AboutPage {
-                    objectName: "aboutPage"
-                    id: aboutPage
-                }
-            }
+        Component.onCompleted: {
+            push(homePage);
         }
 
-        RecipePage {
-            objectName: "recipePage"
-            id: recipePage
+        HomePage {
+            objectName: "homePage"
+            id: homePage
+        }
 
+        EditPage {
+            id: editPage
             visible: false
         }
 
-        EditRecipePage {
-            objectName: "newRecipePage"
-            id: editRecipePage
-
-            visible: false
-        }
-
-        CameraPage {
-            objectName: "cameraPage"
-            id: cameraPage
-
-            visible: false
-        }
-
-        function back() {
-            pageStack.currentPage.tools.back.trigger();
-        }
     }
 
-    Component.onCompleted: {
-        loadSettings();
-
-        pageStack.push(recipePage);
-        pageStack.push(tabs);
+    ActivityIndicator {
+        anchors {
+            bottom: parent.bottom
+            right: parent.right
+            margins: units.gu(1)
+        }
+        z: 100
+        running: database.working
     }
 
-    /* Component.onDestruction: {
-        saveSettings();
-    } */
+    Colors {
+        id: colors
+    }
 
-    // SaucyBacon Utils library
+    Database {
+        id: database
+    }
+
     Utils {
         id: utils
     }
 
-    /* Recipe Database */
-    U1db.Database {
-        id: recipesdb
-        path: utils.path(Utils.SettingsLocation, "sb-recipes.db")
-
-        property bool count: recipesdb.listDocs().length
-        function update() {
-            count = recipesdb.listDocs().length
-        }
-    }
-
-    /* Base recipe document - just for reference
-    U1db.Document {
-        database: db
-        create: false
-        defaults: { "name": "", "category": "", "difficulty": 1, "restriction": 0,
-            "preptime": "0", "cooktime": "0", "totaltime": "0", "ingredients": [ ],
-            "directions": "", "servings": 4, "photos" : [ ], "favorite": false }
-    } */
-
-    property Recipe r: Recipe { id: recipe }
-    property var menus: [ ]
-
-    /* Recipe addons */
-    property var difficulties: [ i18n.tr("No difficulty"), i18n.tr("Easy"), i18n.tr("Medium"), i18n.tr("Hard") ] // FIXME: Strange name
-    property var categories: [ ]
-    property var restrictions: [ i18n.tr("Non-veg"), i18n.tr("Vegetarian"), i18n.tr("Vegan") ]
-    property var searches: [ ]
-
-    function loadSettings() {
-
-        Array.prototype.pushBack = function(item) {
-            // Reimplement Array.push(..) to have always unique arrays
-            if (this.indexOf(item) < 0)
-                this.push(item);
-        }
-
-        Array.prototype.last = function() {
-            return this.slice(-1)[0];
-        }
-
-        Array.prototype.unique = function() {
-            var o = {}, i, l = this.length, r = [];
-            for (i = 0; i < l; i += 1)
-                o[this[i]] = this[i];
-            for (i in o)
-                r.push(o[i]);
-            return r;
-        }
-
-        String.prototype.capitalize = function() {
-            return this.charAt(0).toUpperCase() + this.slice(1);
-        }
-
-        if (!utils.get("firstLoad")) {
-            categories = [ i18n.tr("Uncategorized") ];
-
-            utils.set("firstLoad", 1);
-        } else {
-            // Restore previous size
-            height = utils.get("windowSize").height;
-            width = utils.get("windowSize").width;
-            categories = utils.get("categories");
-            searches = utils.get("searches");
-        }
-
-        // Component.onDestruction isn't called on the phone
-        categoriesChanged.connect(saveSettings)
-        searchesChanged.connect(saveSettings)
-    }
-
-    function saveSettings() {
-        utils.set("windowSize", { "height": height, "width": width });
-        utils.set("categories", categories);
-        utils.set("searches", searches);
-        utils.save();
-    }
-
     // Helper functions
-    function icon(name, local) {
-        local = typeof local === "undefined" ? "" : local
-        if (local === "app")
-            return "/usr/share/icons/ubuntu-mobile/apps/scalable/" + name + ".svg"
-        if (local)
-            return Qt.resolvedUrl("../resources/images/" + name + ".png")
-        return "/usr/share/icons/ubuntu-mobile/actions/scalable/" + name + ".svg"
+    function icon(name) {
+        return Qt.resolvedUrl("graphics/" + name + ".png")
     }
 
-    function truncate(name, width, unit) {
-        unit = typeof unit === "undefined" ? units.gu(2) : unit
-        if (name.length > width / unit) {
-            name = name.substring(0, width / (unit + units.gu(0.2)));
-            name += "...";
-        }
-        return name;
-    }
-
-    function computeTotalTime(time1, time2) {
-        var t1 = time1 ? parseInt(time1) : 0;
-        var t2 = time2 ? parseInt(time2) : 0;
-
-        var total = t1 + t2;
-        if (!total)
-            total = 0;
-
-        return total.toString();
-    }
 }

@@ -17,56 +17,86 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-import QtQuick 2.0
-import Ubuntu.Components 0.1
+import QtQuick 2.3
+import Ubuntu.Components 1.1
 
-Row {
-    id: object
+Item {
+    id: item
 
-    anchors.left: parent.left
-    anchors.right: parent.right
-    spacing: units.gu(1)
-
-    property alias name: ingredientName.text
-    property alias quantity: ingredientQuantity.text
-    property alias type: ingredientQuantityType.text
-
-    TextField {
-        id: ingredientQuantity
-        width: units.gu(8)
-
-        inputMethodHints: Qt.ImhFormattedNumbersOnly
-        placeholderText: i18n.tr("Qty")
+    anchors {
+        left: parent.left
+        right: parent.right
     }
 
-    TextField {
-        id: ingredientQuantityType
-        width: units.gu(8)
+    height: _quantity.height
 
-        placeholderText: i18n.tr("Type")
+    property alias name: _name.text
+    property alias quantity: _quantity.text
+    property alias unit: _unit.text
+
+    Item {
+        id: row
+
+        anchors.fill: parent
+
+        TextField {
+            id: _quantity
+            width: focus ? units.gu(16) : units.gu(6)
+            anchors {
+                left: parent.left
+            }
+
+            inputMethodHints: Qt.ImhFormattedNumbersOnly
+            placeholderText: i18n.tr("Qty")
+
+            Behavior on width { UbuntuNumberAnimation { } }
+        }
+
+        TextField {
+            id: _unit
+            width: focus ? units.gu(16) : units.gu(6)
+            anchors {
+                left: _quantity.right
+                leftMargin: units.gu(1)
+            }
+
+            placeholderText: i18n.tr("Type")
+
+            Behavior on width { UbuntuNumberAnimation { } }
+        }
+
+        TextField {
+            id: _name
+            anchors {
+                left: _unit.right
+                right: cancelButton.left
+                leftMargin: units.gu(1)
+                rightMargin: units.gu(1)
+            }
+
+            placeholderText: i18n.tr("Insert ingredient name")
+        }
+
+        AbstractButton {
+            id: cancelButton
+            width: units.gu(3)
+            height: width
+            anchors {
+                verticalCenter: parent.verticalCenter
+                right: parent.right
+            }
+
+            Icon {
+                anchors.fill: parent
+                name: "edit-clear"
+                color: colors.white
+            }
+
+            onClicked: item.destroy()
+        }
     }
-
-    TextField {
-        id: ingredientName
-        width: parent.width - units.gu(23)
-
-        placeholderText: i18n.tr("Insert ingredient name")
-    }
-
-    Button {
-        id: cancelButton
-        width: units.gu(4)
-        height: width
-
-        iconSource: icon("32/delete", true)
-
-        onClicked: object.destroy()
-    }
-
-    // UbuntuNumberAnimation on opacity { from: 0; to: 100 }
 
     function focus() {
-        ingredientName.forceActiveFocus();
+        _name.forceActiveFocus();
     }
-
 }

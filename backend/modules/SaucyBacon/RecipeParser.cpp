@@ -33,19 +33,19 @@ static QJsonValue evaluate(const QString &expr) {
 
 static QJsonArray parseIngredients(const QJsonArray &ingredients) {
     QJsonArray result;
-    QRegularExpression regex("(?<quantity>[\\d\\-/?]+)[\\s+]?(?<type>\\w+)?[\\s+](?<name>.*)",
+    QRegularExpression regex("(?<quantity>[\\d\\-/?]+)[\\s+]?(?<unit>\\w+)?[\\s+](?<name>.*)",
                              QRegularExpression::CaseInsensitiveOption);
     for (int i = 0; i < ingredients.count(); i++) {
         QJsonObject ingredient;
         auto match = regex.match(ingredients[i].toString(), 0, QRegularExpression::PartialPreferCompleteMatch);
         if (match.hasMatch() || match.hasPartialMatch()) {
             ingredient["name"] = match.captured("name");
-            ingredient["quantity"] = evaluate(match.captured("quantity").replace("-", "+"));
-            ingredient["type"] = match.captured("type");
+            ingredient["quantity"] = match.captured("quantity");
+            ingredient["unit"] = match.captured("unit");
         } else {
             ingredient["name"] = ingredients[i].toString().trimmed();
             ingredient["quantity"] = 0;
-            ingredient["type"] = QString();
+            ingredient["unit"] = QString();
         }
         result.push_back(ingredient);
     }
@@ -73,43 +73,43 @@ RecipeParser::RecipeParser(QObject *parent) :
     // SimplyRecipes
     recipeRegex["directions"] = QRegularExpression("itemprop=\"recipeInstructions\">(.+?)</div>",
                                                    QRegularExpression::DotMatchesEverythingOption);
-    recipeRegex["preptime"] = QRegularExpression("class=\"preptime\".*?>(\\d+) ([mM]inutes|[hH]ours)<span");
-    recipeRegex["cooktime"] = QRegularExpression("class=\"cooktime\".*?>(\\d+) ([mM]inutes|[hH]ours)<span");
+    recipeRegex["preptime"] = QRegularExpression("class=\"preptime\".*?>(\\d+) ([mM]inutes|[hH]our[s]?)<span");
+    recipeRegex["cooktime"] = QRegularExpression("class=\"cooktime\".*?>(\\d+) ([mM]inutes|[hH]our[s]?)<span");
     m_services["http://simplyrecipes.com"] = recipeRegex;
 
     // PioneerWoman
     recipeRegex["directions"] = QRegularExpression("itemprop=\"instructions\">(.+?)</div>",
                                                    QRegularExpression::DotMatchesEverythingOption);
-    recipeRegex["preptime"] = QRegularExpression("itemprop=\'prepTime\'.+?>(\\d+) ([mM]inutes|[hH]ours)</time");
-    recipeRegex["cooktime"] = QRegularExpression("itemprop=\'cookTime\'.+?>(\\d+) ([mM]inutes|[hH]ours)</time");
+    recipeRegex["preptime"] = QRegularExpression("itemprop=\'prepTime\'.+?>(\\d+) ([mM]inutes|[hH]our[s]?)</time");
+    recipeRegex["cooktime"] = QRegularExpression("itemprop=\'cookTime\'.+?>(\\d+) ([mM]inutes|[hH]our[s]?)</time");
     m_services["http://thepioneerwoman.com"] = recipeRegex;
 
     // Two peas and their pot
     recipeRegex["directions"] = QRegularExpression("<div class=\"instructions\">(.*?)</div>",
                                                    QRegularExpression::DotMatchesEverythingOption);
-    recipeRegex["preptime"] = QRegularExpression("class=\"preptime\".*?>(\\d+) ([mM]inutes|[hH]ours)</span");
-    recipeRegex["cooktime"] = QRegularExpression("class=\"cooktime\".*?>(\\d+) ([mM]inutes|[hH]ours)</span");
+    recipeRegex["preptime"] = QRegularExpression("class=\"preptime\".*?>(\\d+) ([mM]inutes|[hH]our[s]?)</span");
+    recipeRegex["cooktime"] = QRegularExpression("class=\"cooktime\".*?>(\\d+) ([mM]inutes|[hH]our[s]?)</span");
     m_services["http://www.twopeasandtheirpod.com"] = recipeRegex;
 
     // Tasty Kitchen
     recipeRegex["directions"] = QRegularExpression("<span itemprop=\"instructions\">(.*?)</span>",
                                                    QRegularExpression::DotMatchesEverythingOption);
-    recipeRegex["preptime"] = QRegularExpression("itemprop=\'prepTime\'.*?>(\\d+) ([mM]inutes|[hH]ours)</time");
-    recipeRegex["cooktime"] = QRegularExpression("itemprop=\'cookTime\'.*?>(\\d+) ([mM]inutes|[hH]ours)</time");
+    recipeRegex["preptime"] = QRegularExpression("itemprop=\'prepTime\'.*?>(\\d+) ([mM]inutes|[hH]our[s]?)</time");
+    recipeRegex["cooktime"] = QRegularExpression("itemprop=\'cookTime\'.*?>(\\d+) ([mM]inutes|[hH]our[s]?)</time");
     m_services["http://tastykitchen.com"] = recipeRegex;
 
     // Jamie Oliver's Recipes
     recipeRegex["directions"] = QRegularExpression("<p class=\"instructions\">(.*?)</p>",
                                                    QRegularExpression::DotMatchesEverythingOption);
-    recipeRegex["preptime"] = QRegularExpression("class=\"preptime\".*?>(\\d+) ([mM]inutes|[hH]ours)</span");
-    recipeRegex["cooktime"] = QRegularExpression("class=\"cooktime\".*?>(\\d+) ([mM]inutes|[hH]ours)</span");
+    recipeRegex["preptime"] = QRegularExpression("class=\"preptime\".*?>(\\d+) ([mM]inutes|[hH]our[s]?)</span");
+    recipeRegex["cooktime"] = QRegularExpression("class=\"cooktime\".*?>(\\d+) ([mM]inutes|[hH]our[s]?)</span");
     m_services["http://www.jamieoliver.com"] = recipeRegex;
 
     // Closet cooking
     recipeRegex["directions"] = QRegularExpression("<ol class=\"instructions\">(.*?)</ol>",
                                                    QRegularExpression::DotMatchesEverythingOption);
-    recipeRegex["preptime"] = QRegularExpression("class=\"prepTime\".*?>(\\d+) ([mM]inutes|[hH]ours)</span");
-    recipeRegex["cooktime"] = QRegularExpression("class=\"cookTime\".*?>(\\d+) ([mM]inutes|[hH]ours)</span");
+    recipeRegex["preptime"] = QRegularExpression("class=\"prepTime\".*?>(\\d+) ([mM]inutes|[hH]our[s]?)</span");
+    recipeRegex["cooktime"] = QRegularExpression("class=\"cookTime\".*?>(\\d+) ([mM]inutes|[hH]our[s]?)</span");
     m_services["http://closetcooking.com"] = recipeRegex;
 
     // 101 Cookbooks
@@ -186,8 +186,15 @@ RecipeParser::RecipeParser(QObject *parent) :
     // And more soon...
 
     m_manager = new QNetworkAccessManager(this);
-    connect(m_manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
+    connect(m_manager, &QNetworkAccessManager::finished, this, &RecipeParser::replyFinished);
 
+    QDir dataPath(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
+    if (!dataPath.mkdir("imgs") && !dataPath.cd("imgs"))
+        qWarning() << "Failed to make data folder" << dataPath.absolutePath();
+
+    m_destPath = dataPath.absolutePath();
+
+    loading(false);
 }
 
 RecipeParser::~RecipeParser() {
@@ -195,7 +202,7 @@ RecipeParser::~RecipeParser() {
 }
 
 void RecipeParser::get(const QString &recipeId, const QString &recipeUrl, const QString &serviceUrl, const QString &imageUrl) {
-    setLoading(true);
+    loading(true);
     m_parseHtml = false;
     m_parseJson = false;
     m_parseImage = false;
@@ -248,8 +255,7 @@ void RecipeParser::parseHtml(const QByteArray &html) {
     RecipeRegex defaultRegex;
     bool supported;
     QString directions;
-    QString preptime;
-    QString cooktime;
+    int preptime = 0, cooktime = 0, offset = 1;
 
     if (m_services.contains(m_service)) {
         defaultRegex = m_services[m_service];
@@ -269,12 +275,21 @@ void RecipeParser::parseHtml(const QByteArray &html) {
         }
 
         auto match = defaultRegex["preptime"].match(html);
-        if (match.hasMatch())
-            preptime = match.captured(1);
+        if (match.hasMatch()) {
+            if (match.captured(2).contains(QRegularExpression("[hH]our[s]?")))
+                offset = 60;
+            preptime = match.captured(1).toInt() * offset;
+        } else
+            preptime = 0;
 
+        offset = 1;
         match = defaultRegex["cooktime"].match(html);
-        if (match.hasMatch())
-            cooktime = match.captured(1);
+        if (match.hasMatch()) {
+            if (match.captured(2).contains(QRegularExpression("[hH]our[s]?")))
+                offset = 60;
+            cooktime = match.captured(1).toInt() * offset;
+        } else
+            cooktime = 0;
 
     } else {
         directions.append(tr("This website is supported yet. It was impossible to load the directions."));
@@ -283,6 +298,11 @@ void RecipeParser::parseHtml(const QByteArray &html) {
     // Default copyright string
     directions.append(tr("<br />Recipe from %1.<br />Directions are not part of F2F API.").arg(m_service));
 
+    // Check if we get acceptable values or some junk
+    if (preptime > 200000 || preptime < 0)
+        preptime = 0;
+    if (cooktime > 200000 || cooktime < 0)
+        cooktime = 0;
 
     m_contents["directions"] = directions;
     m_contents["preptime"] = preptime;
@@ -298,6 +318,11 @@ void RecipeParser::parseJson(const QByteArray &json) {
     m_contents["ingredients"] = parseIngredients(recipe["ingredients"].toArray());
     m_contents["source"] = recipe["source_url"].toString();
     m_contents["f2f"] = recipe["f2f_url"].toString();
+
+    m_contents["categories"] = QJsonArray();
+    m_contents["restriction"] = 0;
+    m_contents["favorite"] = 0;
+    m_contents["saved"] = false;
 
     m_parseJson = true;
     hasFinishedParsing();
@@ -319,7 +344,7 @@ void RecipeParser::parseImage(const QByteArray &imgData) {
 void RecipeParser::hasFinishedParsing() {
     // If all processes are completed, trigger all signals
     if (m_parseJson && m_parseHtml && m_parseImage) {
-        setLoading(false);
-        emit contentsChanged();
+        emit loading(false);
+        emit recipeAvailable(m_contents);
     }
 }

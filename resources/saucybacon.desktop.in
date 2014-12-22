@@ -2,10 +2,14 @@
 Version=1.0
 Type=Application
 Terminal=false
-Name=SaucyBacon
+Name=@FULL_APP_NAME@
 Comment=Manage and search recipes online with ease
 Exec=@EXEC@
 Icon=@ICON@
+X-Ubuntu-Touch=true
 X-Ubuntu-StageHint=SideStage
 X-Ubuntu-Gettext-Domain=com.ubuntu.developer.gcollura.saucybacon
-X-Ubuntu-Touch=true
+X-Ubuntu-Single-Instance=true
+X-Ubuntu-Splash-Show-Header=true
+X-Ubuntu-Splash-Title=@FULL_APP_NAME@
+X-Ubuntu-Splash-Color=#540810

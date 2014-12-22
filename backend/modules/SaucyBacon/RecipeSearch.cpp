@@ -28,16 +28,28 @@ RecipeSearch::RecipeSearch(QObject *parent) :
     QAbstractListModel(parent)
 {
     m_manager = new QNetworkAccessManager(this);
-    connect(m_manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
+    setLoading(false);
 
-    connect(this, SIGNAL(queryChanged()), this, SLOT(makeRequest()));
+    connect(m_manager, &QNetworkAccessManager::finished, this, &RecipeSearch::replyFinished);
+    connect(this, &RecipeSearch::queryChanged, this, &RecipeSearch::makeRequest);
+
+    resetModel();
 }
 
 RecipeSearch::~RecipeSearch() { }
 
+bool RecipeSearch::loadMore() {
+    m_page++;
+    makeRequest();
+
+    // FIXME
+    return true;
+}
+
 void RecipeSearch::setQuery(const QString &query) {
     m_query = query;
     m_query = m_query.replace(" ", ",");
+    m_page = 1;
 
     queryChanged();
 }
@@ -62,11 +74,13 @@ int RecipeSearch::rowCount(const QModelIndex &parent) const {
 
 void RecipeSearch::resetModel() {
     beginResetModel();
+    m_recipes = QJsonArray();
+    m_count = 0;
     endResetModel();
 }
 
 void RecipeSearch::makeRequest() {
-    setSearching(true);
+    setLoading(true);
 
     QNetworkRequest request;
     QUrl url;
@@ -74,6 +88,7 @@ void RecipeSearch::makeRequest() {
     query.addQueryItem("key", ApiKeys::F2FKEY);
     query.addQueryItem("q", m_query);
     query.addQueryItem("sort", "r");
+    query.addQueryItem("page", QString::number(m_page));
     url.setUrl(ApiKeys::F2FSEARCHURL);
     url.setQuery(query);
 
@@ -91,6 +106,7 @@ void RecipeSearch::replyFinished(QNetworkReply *reply) {
 
     } else {
         qDebug() << reply->errorString();
+        loadingError(reply->errorString());
     }
 
     reply->deleteLater();
@@ -99,10 +115,17 @@ void RecipeSearch::replyFinished(QNetworkReply *reply) {
 void RecipeSearch::parseJson(const QJsonDocument &contents) {
     beginResetModel();
 
-    m_recipes = contents.object()["recipes"].toArray();
-    m_count = contents.object()["count"].toDouble();
+    if (m_page > 1) {
+        // FIXME: really tricky, maybe we should use QVariantList in first place?
+        m_recipes = QJsonArray::fromVariantList(m_recipes.toVariantList() + contents.object()["recipes"].toArray().toVariantList());
+        m_count += contents.object()["count"].toDouble();
+    } else {
+        m_recipes = contents.object()["recipes"].toArray();
+        m_count = contents.object()["count"].toDouble();
+    }
 
     endResetModel();
 
-    setSearching(false);
+    setLoading(false);
+    loadingCompleted();
 }

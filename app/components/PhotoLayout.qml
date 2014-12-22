@@ -17,20 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-import QtQuick 2.0
-import Ubuntu.Components 0.1
-import Ubuntu.Components.Popups 0.1
-import Ubuntu.Components.ListItems 0.1 as ListItem
-import Ubuntu.Content 0.1
-import SaucyBacon 0.1
+import QtQuick 2.3
+import Ubuntu.Components 1.1
+import Ubuntu.Components.Popups 1.0
+import Ubuntu.Components.ListItems 1.0 as ListItem
+import Ubuntu.Content 1.0
+import SaucyBacon 1.0
 
 Flickable {
     id: root
-
-    anchors {
-        left: parent.left
-        right: parent.right
-    }
 
     height: photoRow.height
 
@@ -43,9 +38,7 @@ Flickable {
     // Component properties
     property var photos: [ ]
     property bool editable: true
-    property int iconSize: units.gu(8)
-
-    property var activeTransfer: null
+    property int iconSize: units.gu(10)
 
     Row {
         id: photoRow
@@ -58,7 +51,8 @@ Flickable {
 
             visible: editable
 
-            onClicked: selectPhoto();
+            onClicked: selectPhoto()
+            gradient: colors.redGradient
         }
 
         Repeater {
@@ -68,7 +62,7 @@ Flickable {
             delegate: UbuntuShape {
                 id: photo
                 width: iconSize
-                height: width
+                height: editable ? width : 1.5 * iconSize
 
                 property bool expanded: false
                 property int idx: index
@@ -99,7 +93,8 @@ Flickable {
     }
 
     function selectPhoto() {
-        activeTransfer = picSourceMulti.request();
+        root.forceActiveFocus()
+        imageImport.requestNewImage()
     }
 
     function addPhoto(filename) {
@@ -112,41 +107,23 @@ Flickable {
         photosChanged();
     }
 
-    ContentPeer {
-        id: picSourceMulti
-        contentType: ContentType.Pictures
-        handler: ContentHandler.Source
-        selectionType: ContentTransfer.Multiple
-    }
+    ImageImport {
+        id: imageImport
+        onImageReceived: {
+            var destDir = utils.path(Utils.SettingsLocation, "imgs/")
+            var filename = utils.path(destDir, utils.fileName(imageUrl))
 
-    // ContentHub features
-    ContentTransferHint {
-        id: importHint
-        anchors.fill: parent
-        activeTransfer: root.activeTransfer
-    }
-
-    Connections {
-        target: root.activeTransfer
-        onStateChanged: {
-            if (root.activeTransfer.state === ContentTransfer.Charged) {
-                var importItems = root.activeTransfer.items;
-                for (var i = 0; i < importItems.length; i++) {
-                    // TODO: Use QUrl::fromLocalFile to decode the path
-                    // Workaround: QFile doesn't play well with "file://" prefix
-                    var importedItem = importItems[i].url.toString().replace("file://", "");
-                    var filename = utils.fileName(importedItem);
-                    filename = utils.path(Utils.SettingsLocation, "imgs/" + filename);
-
-                    if (!utils.cp(importedItem, filename)) {
-                        console.log(" *** ERROR: utils.cp() failed (%1 -> %2)".arg(importedItem).arg(filename));
-                        continue;
-                    }
-
-                    photos.pushBack(filename);
-                }
-                photosChanged();
+            if (utils.exists(filename)) {
+                console.log("File %1 already existed".arg(filename))
+            } else if (utils.cp(imageUrl, filename)) {
+                console.log("Moved file: %1 to %2".arg(imageUrl).arg(destDir))
+            } else {
+                console.error("Failed to move %1 to %2".arg(imageUrl).arg(filename))
+                return
             }
+
+            console.log(imageUrl, filename)
+            addPhoto(filename)
         }
     }
 

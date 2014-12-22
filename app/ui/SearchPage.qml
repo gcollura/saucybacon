@@ -18,14 +18,16 @@
 **/
 
 import QtQuick 2.0
-import Ubuntu.Components 0.1
-import Ubuntu.Components.ListItems 0.1 as ListItem
+import Ubuntu.Components 1.1
+import Ubuntu.Components.ListItems 1.0 as ListItem
+import Ubuntu.Layouts 1.0
 import U1db 1.0 as U1db
-import SaucyBacon 0.1
+import SaucyBacon 1.0
 
 import "../components"
 
 Page {
+    id: page
     title: i18n.tr("Search")
 
     actions: [
@@ -33,7 +35,7 @@ Page {
             id: searchTopRatedAction
             text: i18n.tr("Top Rated")
             description: i18n.tr("Search top rated recipes")
-            iconSource: icon("favorite-selected")
+            iconName: "favorite-selected"
             keywords: "search;top;rated;recipe"
             onTriggered: { searchOnline(""); }
         }
@@ -46,94 +48,103 @@ Page {
         }
     }
 
-    Sidebar {
-        id: searchSidebar
-        autoFlick: false
-        expanded: wideAspect
-        header: i18n.tr("Search history")
-
-        ListView {
-            id: sidebarListView
-            anchors.fill: parent
-
-            model: searches
-
-            delegate: ListItem.Standard {
-                text: modelData
-                onClicked: {
-                    searchField.text = modelData;
-                    searchOnline(modelData);
-                }
-            }
-        }
+    LoadingIndicator {
+        id: loadingIndicator
+        text: i18n.tr("Searching...")
+        isShown: search.loading
     }
 
-    Item {
-        anchors {
-            left: searchSidebar.right
-            right: parent.right
-        }
-        height: parent.height
+    Layouts {
+        id: layouts
+        anchors.fill: parent
+
+        layouts: [
+            ConditionalLayout {
+                name: "tabletLayout"
+                when: wideAspect
+
+                Row {
+                    anchors.fill: parent
+
+                    Sidebar {
+                        id: sidebar
+                        mode: "left"
+                        anchors {
+                            top: parent.top
+                            bottom: parent.bottom
+                        }
+                        height: page.height
+
+                        Column {
+                            anchors {
+                                left: parent.left
+                                right: parent.right
+                            }
+
+                            ListItem.Header {
+                                text: i18n.tr("Search history")
+                            }
+
+                            Repeater {
+                                model: database.searches
+
+                                ListItem.Standard {
+                                    text: modelData.name
+                                    onClicked: {
+                                        searchField.text = modelData.name;
+                                        searchOnline(modelData.name);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    ItemLayout {
+                        item: "searchColumn"
+                        anchors {
+                            top: parent.top
+                            bottom: parent.bottom
+                            margins: units.gu(2)
+                        }
+                        width: parent.width - sidebar.width
+                    }
+                }
+            }
+        ]
 
         Column {
             id: searchColumn
+            Layouts.item: "searchColumn"
+            objectName: "searchColumn"
 
             anchors {
-                margins: units.gu(2)
                 fill: parent
+                topMargin: units.gu(2)
+                bottomMargin: units.gu(2)
             }
             spacing: units.gu(2)
 
             Row {
                 id: searchRow
 
-                width: parent.width
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    margins: units.gu(2)
+                }
                 spacing: units.gu(2)
 
                 TextField {
-                    objectName: "searchField"
                     id: searchField
+                    objectName: "searchField"
 
-                    width: parent.width - searchButton.width - parent.spacing
+                    width: parent.width
                     placeholderText: "Search for a recipe..."
 
                     onAccepted: searchOnline(searchField.text)
                     onTextChanged: searchLocally(searchField.text)
 
                     Behavior on width { UbuntuNumberAnimation { } }
-
-                }
-
-                Button {
-                    objectName: "searchButton"
-                    id: searchButton
-                    anchors.verticalCenter: parent.verticalCenter
-                    visible: !search.loading
-
-                    height: searchField.height
-                    width: units.gu(5)
-
-                    Image {
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        source: icon("32/search", true)
-                        sourceSize {
-                            height: parent.height - units.gu(1.5)
-                            width: parent.width - units.gu(1.5)
-                        }
-                    }
-
-                    onClicked: searchOnline(searchField.text)
-                    Behavior on visible { UbuntuNumberAnimation { } }
-                }
-
-                ActivityIndicator {
-                    objectName: "activityIndicator"
-                    id: activity
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: searchButton.width
-                    running: search.loading
-                    visible: running
                 }
             }
 
@@ -141,19 +152,18 @@ Page {
                 id: creditLabel
                 anchors {
                     right: parent.right
-                    rightMargin: units.gu(2)
+                    rightMargin: units.gu(4)
                 }
                 text: i18n.tr("Powered by Food2Fork.com")
                 fontSize: "small"
             }
 
-            ListView {
-                objectName: "resultList"
+            RefreshableListView {
                 id: resultList
+                objectName: "resultList"
                 anchors {
                     left: parent.left
                     right: parent.right
-                    margins: units.gu(-2)
                 }
 
                 height: parent.height - searchRow.height - creditLabel.height - units.gu(2)
@@ -168,10 +178,18 @@ Page {
                     text: contents.title
                     subText: contents.publisher_url
                     onClicked: {
-                        recipe.load(contents.recipe_id, contents.source_url, contents.publisher_url, contents.image_url);
-                        pageStack.push(recipePage);
+                        database.getRecipeOnline(contents.recipe_id, contents.source_url, contents.publisher_url, contents.image_url);
+                        pageStack.push(Qt.resolvedUrl("RecipePage.qml"));
                     }
                 }
+
+                onPulledUp: {
+                    console.log("Load more results")
+                    oldContentY = contentY;
+                    search.loadMore();
+                }
+
+                property double oldContentY;
 
                 Scrollbar {
                     flickableItem: resultList
@@ -182,6 +200,15 @@ Page {
 
     RecipeSearch {
         id: search
+        onLoadingError: {
+            loadingIndicator.text = i18n.tr("Loading error, please try again");
+        }
+        onLoadingCompleted: {
+            if (search.page > 1) {
+                resultList.contentY = resultList.oldContentY + units.gu(3);
+            }
+        }
+
     }
 
     function searchOnline(querystr) {
@@ -190,11 +217,11 @@ Page {
         // TODO: have money to buy an unlimited API
 
         console.log("Perfoming remote search...");
+        loadingIndicator.text = i18n.tr("Searching...");
         search.query = querystr;
 
         if (querystr.length > 0) {
-            searches.pushBack(querystr);
-            searchesChanged();
+            database.addSearch(querystr);
         }
     }
 

@@ -104,13 +104,13 @@ QString Utils::read(const QString& dirName, const QString& fileName) {
 }
 
 bool Utils::mv(const QString &oldName, const QString &newName) {
-    QFile file(oldName);
-    file.rename(newName);
-    return file.exists();
+    QFile file(oldName.split("file://").last());
+    return file.rename(newName) || QFile::exists(newName);
 }
 
 bool Utils::cp(const QString &oldName, const QString &newName) {
-    return QFile::copy(oldName, newName) || QFile::exists(newName);
+    QString oldFileName(oldName.split("file://").last());
+    return QFile::copy(oldFileName, newName) || QFile::exists(newName);
 }
 
 bool Utils::exists(const QString& fileName) {

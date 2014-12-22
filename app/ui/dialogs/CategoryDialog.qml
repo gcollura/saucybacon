@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-import QtQuick 2.0
-import Ubuntu.Components 0.1
-import Ubuntu.Components.Popups 0.1
+import QtQuick 2.3
+import Ubuntu.Components 1.1
+import Ubuntu.Components.Popups 1.0
 
 // New category dialog
 
@@ -38,7 +38,6 @@ Dialog {
 
         gradient: UbuntuColors.greyGradient
         onClicked: {
-            caller.selectedIndex = 0;
             PopupUtils.close(dialogue);
         }
     }
@@ -47,10 +46,8 @@ Dialog {
         text: i18n.tr("Create")
 
         onClicked: {
-            categories.pushBack(nameField.text)
-            categoriesChanged()
+            database.addCategory(nameField.text.trim())
 
-            caller.selectedIndex = categories.indexOf(nameField.text)
             PopupUtils.close(dialogue)
         }
     }

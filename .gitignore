@@ -3,12 +3,13 @@
 *.pyc
 *.swp
 build/
-sb*db
 *.qmltypes
 *.so
 click-pkg/
 clicks/
 resources/saucybacon.desktop
 *_click.sh
-.excludes
 get_log.sh
+.excludes
+*.log
+*.click

@@ -1,15 +1,15 @@
 {
     "architecture": "armhf",
     "description": "Manage and search recipes with ease",
-    "framework": "ubuntu-sdk-13.10",
+    "framework": "ubuntu-sdk-14.10",
     "hooks": {
         "saucybacon": {
-            "apparmor": "saucybacon.json",
+            "apparmor": "saucybacon.apparmor",
             "desktop": "saucybacon.desktop"
         }
     },
-    "maintainer": "Giulio Collura <random.cpp@gmail.com>",
+    "maintainer": "Giulio Collura <giulio.collura@gmail.com>",
     "name": "com.ubuntu.developer.gcollura.saucybacon",
     "title": "SaucyBacon",
-    "version": "1.0.15"
+    "version": "2.0.0"
 }

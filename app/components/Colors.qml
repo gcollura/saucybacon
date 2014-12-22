@@ -17,41 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-#ifndef SAUCYBACON_PLUGIN_H
-#define SAUCYBACON_PLUGIN_H
+import QtQuick 2.2
 
-#include <QtQml/QQmlEngine>
-#include <QtQml/QQmlExtensionPlugin>
+QtObject {
 
-/*
- ----8<-----
+    readonly property color white: "#ffffff"
+    readonly property color darkRed: "#540810"
+    readonly property color darkerRed: "#370517"
+    readonly property color headerColor: "#6d0a0a"
+    readonly property color footerColor: darkerRed
 
- import SaucyBacon 1.0
-
- Rectangle {
-   width: 200
-   height: 200
-
-   Utils {
-      id: utils
-   }
-
-   Text {
-     anchors.centerIn: parent
-     text: utils.homePath()
-   }
- }
-
- -----8<------
-*/
-class SaucyBaconPlugin : public QQmlExtensionPlugin
-{
-    Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface")
-
-public:
-    void registerTypes(const char *uri);
-    void initializeEngine(QQmlEngine *engine, const char *uri);
-};
-#endif // SAUCYBACON_PLUGIN_H
-
+    property Gradient redGradient: Gradient {
+        GradientStop { position: 0.0; color: "#45060c" }
+        GradientStop { position: 1.0; color: "#5f0911" }
+    }
+}

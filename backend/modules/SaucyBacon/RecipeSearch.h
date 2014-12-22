@@ -29,10 +29,13 @@ class Q_DECL_EXPORT RecipeSearch : public QAbstractListModel {
     Q_OBJECT
     Q_PROPERTY(QString query READ query WRITE setQuery NOTIFY queryChanged)
     Q_PROPERTY(bool loading READ loading NOTIFY loadingChanged)
+    Q_PROPERTY(int page READ page)
 
 public:
     explicit RecipeSearch(QObject *parent = 0);
     virtual ~RecipeSearch();
+
+    Q_INVOKABLE bool loadMore();
 
     // QAbstractListModel
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
@@ -43,6 +46,8 @@ public:
 signals:
     void queryChanged();
     void loadingChanged();
+    void loadingCompleted();
+    void loadingError(const QString& error);
 
 public slots:
 
@@ -55,12 +60,15 @@ private:
     void setQuery(const QString& query);
 
     bool loading() const { return m_loading; }
-    void setSearching(const bool loading) { m_loading = loading; loadingChanged(); }
+    void setLoading(const bool loading) { m_loading = loading; loadingChanged(); }
+
+    int page() const { return m_page; }
 
     void parseJson(const QJsonDocument &contents);
 
     int m_count;
     QJsonArray m_recipes;
+    int m_page;
 
     QNetworkAccessManager *m_manager;
     QString m_query;

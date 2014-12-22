@@ -1,5 +1,5 @@
 project(saucybacon C CXX)
-cmake_minimum_required(VERSION 2.8.9)
+cmake_minimum_required(VERSION 2.8.10)
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set(UBUNTU_PROJECT_TYPE "ClickApp" CACHE INTERNAL "Tells QtCreator this is a Click app project")
@@ -30,6 +30,7 @@ set(FULL_APP_NAME           "SaucyBacon")
 set(SAUCYBACON_DIR          "share/qml/${APP_NAME}")
 set(MAIN_QML                "saucybacon.qml")
 set(ICON                    "icons/SaucyBacon_icon.png")
+set(VERSION                 2.0.0)
 
 # set install paths
 set(CMAKE_INSTALL_PREFIX /)
@@ -46,7 +47,7 @@ install(FILES "saucybacon.apparmor" DESTINATION ${DATA_DIR})
 add_subdirectory(app)
 add_subdirectory(backend)
 add_subdirectory(resources)
-#add_subdirectory(po)
+add_subdirectory(po)
 
 add_custom_target("autopilot" chmod +x ${CMAKE_SOURCE_DIR}/app/tests/autopilot/run
     COMMAND ${CMAKE_SOURCE_DIR}/app/tests/autopilot/run

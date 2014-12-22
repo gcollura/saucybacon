@@ -83,7 +83,7 @@ Page {
                 }
 
                 Label {
-                    text: i18n.tr("<a href=\"mailto:giulio.collura@gmail.com?subject=SaucyBacon%20support\">random.cpp@gmail.com</a>")
+                    text: "<a href=\"mailto:giulio.collura@gmail.com?subject=SaucyBacon%20support\">giulio.collura@gmail.com</a>"
                     onLinkActivated: Qt.openUrlExternally(link)
                     linkColor: "white"
                 }

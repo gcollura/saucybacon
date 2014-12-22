@@ -75,7 +75,7 @@ Page {
         }
     }
 
-    head.actions: [
+    head.actions: database.loading ? [] : [
         saveRecipeAction,
         favoriteRecipeAction,
         editRecipeAction,
@@ -110,34 +110,6 @@ Page {
                         fill: parent
                     }
 
-                    Sidebar {
-                        id: sidebar
-                        mode: "left"
-                        anchors {
-                            top: parent.top
-                            bottom: parent.bottom
-                        }
-
-                        ListView {
-                            width: sidebar.width
-                            height: sidebar.height
-                            model: database.recipes
-                            header: ListItem.Header {
-                                text: i18n.tr("Recipes")
-                            }
-                            delegate: ListItem.Subtitled {
-                                text: modelData.name
-                                subText: i18n.tr("Total time: " + (modelData.preptime + modelData.cooktime).toTime())
-                                iconSource: modelData.photos[0] ? modelData.photos[0] : ""
-                                progression: recipe.id === modelData.id
-                                onClicked: {
-                                    console.log("Opening recipe: " + modelData.id)
-                                    database.getRecipe(modelData.id)
-                                }
-                            }
-                        }
-                    }
-
                     Flickable {
                         clip: true
                         anchors {
@@ -145,8 +117,8 @@ Page {
                             bottom: parent.bottom
                             margins: units.gu(2)
                         }
-                        width: page.width / 2 - sidebar.width / 2
-                        contentHeight: leftColumn.height
+                        width: page.width / 2
+                        contentHeight: leftColumn.height + units.gu(5)
                         interactive: contentHeight > height
 
                         Column {
@@ -222,7 +194,7 @@ Page {
                             bottom: parent.bottom
                             margins: units.gu(2)
                         }
-                        width: page.width / 2 - sidebar.width / 2
+                        width: page.width / 2
                         contentHeight: rightColumn.height
                         interactive: contentHeight > height
 

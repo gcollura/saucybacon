@@ -186,7 +186,16 @@ Page {
 
             anchors {
                 fill: parent
-                margins: units.gu(1)
+                leftMargin: units.gu(1)
+                rightMargin: units.gu(1)
+            }
+
+            header: Item {
+                height: wideAspect ? 0 : units.gu(1)
+            }
+
+            footer: Item {
+                height: wideAspect ? 0 : units.gu(1)
             }
 
             clip: true

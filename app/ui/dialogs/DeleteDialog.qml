@@ -29,18 +29,17 @@ Dialog {
     text: i18n.tr("Are you sure you want to delete this recipe?")
 
     Button {
-        text: i18n.tr("Cancel")
-
-        gradient: UbuntuColors.greyGradient
-        onClicked: PopupUtils.close(dialogue)
-    }
-
-    Button {
         text: i18n.tr("Delete")
-
+        color: UbuntuColors.red
         onClicked: {
             PopupUtils.close(dialogue);
             deleteAction.trigger();
         }
+    }
+
+    Button {
+        text: i18n.tr("Cancel")
+
+        onClicked: PopupUtils.close(dialogue)
     }
 }

@@ -33,6 +33,7 @@ class Database : public QObject {
     Q_PROPERTY(bool ready READ ready NOTIFY readyChanged)
     Q_PROPERTY(bool working READ working NOTIFY workingChanged)
     Q_PROPERTY(bool loading READ loading NOTIFY loadingChanged)
+    Q_PROPERTY(bool isEmpty READ isEmpty NOTIFY isEmptyChanged)
 
     Q_PROPERTY(QVariant recipe READ currentRecipe NOTIFY currentRecipeChanged)
     Q_PROPERTY(QList<QVariant> recipes READ recipes NOTIFY recipesChanged)
@@ -61,6 +62,7 @@ signals:
     void readyChanged(bool ready);
     void workingChanged(bool working);
     void loadingChanged(bool loading);
+    void isEmptyChanged(bool isEmpty);
     void setDatabaseName(const QString &name);
 
     void currentRecipeChanged();
@@ -76,6 +78,7 @@ protected slots:
     void setReady(bool ready);
     void setWorking(bool work);
     void setLoading(bool loading);
+    void setIsEmpty(bool isEmpty);
 
     void setCurrentRecipe(const QVariant &recipe);
     void setRecipes(const QList<QVariant> &recipes);
@@ -97,6 +100,7 @@ private:
     bool ready() const;
     bool working() const;
     bool loading() const;
+    bool isEmpty() const;
 
     QVariant currentRecipe() const;
     QList<QVariant> recipes() const;
@@ -112,6 +116,7 @@ private:
     bool m_ready;
     bool m_working;
     bool m_loading;
+    bool m_isEmpty;
 
     QVariant m_recipe;
     QList<QVariant> m_recipes;

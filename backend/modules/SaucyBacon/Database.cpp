@@ -31,7 +31,8 @@
 #include <QDebug>
 
 Database::Database(QObject *parent) :
-    QObject(parent) {
+    QObject(parent),
+    m_isEmpty(false) {
 
     m_db = new QueryThread();
     connect(m_db, &QueryThread::ready, this, &Database::setReady);
@@ -132,6 +133,13 @@ void Database::setLoading(bool loading) {
     }
 }
 
+void Database::setIsEmpty(bool isEmpty) {
+    if (isEmpty != m_isEmpty) {
+        m_isEmpty = isEmpty;
+        isEmptyChanged(isEmpty);
+    }
+}
+
 QString Database::error() const {
     return m_error;
 }
@@ -148,6 +156,10 @@ bool Database::loading() const {
     return m_loading;
 }
 
+bool Database::isEmpty() const {
+    return m_isEmpty;
+}
+
 void Database::setCurrentRecipe(const QVariant &recipe) {
     m_recipe = recipe;
     currentRecipeChanged();
@@ -155,6 +167,7 @@ void Database::setCurrentRecipe(const QVariant &recipe) {
 
 void Database::setRecipes(const QList<QVariant> &recipes) {
     m_recipes = recipes;
+    setIsEmpty(recipes.isEmpty());
     recipesChanged();
 }
 

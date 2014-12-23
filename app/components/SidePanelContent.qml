@@ -37,6 +37,16 @@ Flickable {
         defaultSelection.clicked()
     }
 
+    function filterModel(model) {
+        var result = [];
+        for (var i = 0; i < model.length; i++) {
+            if (model[i].count > 0) {
+                result.push(model[i]);
+            }
+        }
+        return result;
+    }
+
     Column {
         id: column
         anchors {
@@ -59,6 +69,7 @@ Flickable {
             text: i18n.tr("Favorites")
             progression: root.selectedItem == text
             count: database.favoriteCount
+            visible: database.favoriteCount > 0
             onClicked: {
                 filter("favorite", 1);
                 root.selectedItem = text;
@@ -67,15 +78,16 @@ Flickable {
 
         Header {
             text: i18n.tr("Categories")
+            visible: categoriesRepeater.model.length > 0
         }
 
         Repeater {
-            model: database.categories
+            id: categoriesRepeater
+            model: filterModel(database.categories)
             StandardWithCount {
                 text: modelData.name
                 count: modelData.count
                 progression: root.selectedItem == text
-                visible: count > 0
                 onClicked: {
                     filter("category", modelData.id);
                     root.selectedItem = modelData.name;
@@ -88,12 +100,11 @@ Flickable {
         }
 
         Repeater {
-            model: database.restrictions
+            model: filterModel(database.restrictions)
             StandardWithCount {
                 text: modelData.name
                 count: modelData.count
                 progression: root.selectedItem == text
-                visible: count > 0
                 onClicked: {
                     filter("restriction", index);
                     root.selectedItem = modelData.name;

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.ubuntu.developer.gcollura.saucybacon 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-22 23:43+0100\n"
+"POT-Creation-Date: 2014-12-23 19:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -45,52 +45,56 @@ msgstr ""
 msgid "Refresh"
 msgstr ""
 
-#: ../app/saucybacon.qml:96 ../app/ui/RecipePage.qml:59
-#: ../app/ui/dialogs/DeleteDialog.qml:39
+#: ../app/saucybacon.qml:96 ../app/ui/RecipePage.qml:60
+#: ../app/ui/dialogs/DeleteDialog.qml:32
 msgid "Delete"
 msgstr ""
 
-#: ../app/ui/RecipePage.qml:30
+#: ../app/ui/RecipePage.qml:31
 msgid "Recipe"
 msgstr ""
 
-#: ../app/ui/RecipePage.qml:36 ../app/ui/RecipePage.qml:281
+#: ../app/ui/RecipePage.qml:37 ../app/ui/RecipePage.qml:282
 msgid "Favorite"
 msgstr ""
 
-#: ../app/ui/RecipePage.qml:48 ../app/ui/EditPage.qml:38
+#: ../app/ui/RecipePage.qml:49 ../app/ui/EditPage.qml:38
 msgid "Save"
 msgstr ""
 
-#: ../app/ui/RecipePage.qml:68
+#: ../app/ui/RecipePage.qml:69
 msgid "Source"
 msgstr ""
 
-#: ../app/ui/RecipePage.qml:94
+#: ../app/ui/RecipePage.qml:95
 msgid "Downloading recipe..."
 msgstr ""
 
-#: ../app/ui/RecipePage.qml:300
+#: ../app/ui/RecipePage.qml:301
 msgid "Categories: "
 msgstr ""
 
-#: ../app/ui/RecipePage.qml:337 ../app/ui/EditPage.qml:237
+#: ../app/ui/RecipePage.qml:338 ../app/ui/EditPage.qml:237
 msgid "Ingredients"
 msgstr ""
 
-#: ../app/ui/RecipePage.qml:379 ../app/ui/EditPage.qml:272
+#: ../app/ui/RecipePage.qml:380 ../app/ui/EditPage.qml:272
 msgid "Directions"
 msgstr ""
 
-#: ../app/ui/RecipePage.qml:406
+#: ../app/ui/RecipePage.qml:407
 msgid "Prep Time: "
 msgstr ""
 
-#: ../app/ui/RecipePage.qml:410
+#: ../app/ui/RecipePage.qml:411
 msgid "Cook Time: "
 msgstr ""
 
-#: ../app/ui/HomePage.qml:134
+#: ../app/ui/HomePage.qml:69
+msgid "Welcome in SaucyBacon"
+msgstr ""
+
+#: ../app/ui/HomePage.qml:156
 msgid "Filter"
 msgstr ""
 
@@ -170,7 +174,7 @@ msgid "Name your category..."
 msgstr ""
 
 #: ../app/ui/dialogs/CategoryDialog.qml:37
-#: ../app/ui/dialogs/DeleteDialog.qml:32 ../app/components/TimePicker.qml:51
+#: ../app/ui/dialogs/DeleteDialog.qml:41 ../app/components/TimePicker.qml:51
 msgid "Cancel"
 msgstr ""
 
@@ -202,7 +206,7 @@ msgstr ""
 msgid "Photos"
 msgstr ""
 
-#: ../app/ui/EditPage.qml:133 ../app/components/SidePanelContent.qml:69
+#: ../app/ui/EditPage.qml:133 ../app/components/SidePanelContent.qml:70
 msgid "Categories"
 msgstr ""
 
@@ -246,6 +250,10 @@ msgstr ""
 msgid "Loading..."
 msgstr ""
 
+#: ../app/components/WelcomeItem.qml:56
+msgid "To start, choose one of the following actions"
+msgstr ""
+
 #: ../app/components/SidePanelContent.qml:49
 msgid "All recipes"
 msgstr ""
@@ -254,7 +262,7 @@ msgstr ""
 msgid "Favorites"
 msgstr ""
 
-#: ../app/components/SidePanelContent.qml:87
+#: ../app/components/SidePanelContent.qml:89
 msgid "Restrictions"
 msgstr ""
 

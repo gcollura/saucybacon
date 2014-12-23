@@ -36,21 +36,51 @@ Page {
         searchAction
     ]
     property bool backVisible: false
+    flickable: null
+
+    // Connections {
+    //     target: database
+    //     onIsEmptyChanged: {
+    //         console.log("isEmpty", isEmpty);
+    //         if (database.isEmpty) {
+    //             state = "firstLaunch";
+    //         } else {
+    //             state = "default";
+    //         }
+    //         console.log("layouts.visible", layouts.visible);
+    //     }
+    // }
+
+    Action {
+        id: defaultBackAction
+        iconName: "back"
+        visible: backVisible && !wideAspect
+        onTriggered: sidePanelContent.resetSelection()
+    }
 
     state: "default"
     states: [
-        PageHeadState {
+        State {
             name: "default"
-            head: page.head
-            actions: page.actions
-            backAction: Action {
-                iconName: "back"
-                visible: backVisible && !wideAspect
-                onTriggered: sidePanelContent.resetSelection()
+            when: !database.isEmpty
+            PropertyChanges {
+                target: page.head
+                actions: page.actions
+                backAction: defaultBackAction
+            }
+            // Restore visibility manually, if not we may encounter bugs.
+            PropertyChanges {
+                target: layouts
+                visible: true
+            }
+            PropertyChanges {
+                target: welcomeItem
+                visible: false
             }
         },
         PageHeadState {
             name: "filter"
+            extend: "default"
             head: page.head
             backAction: Action {
                 iconName: "back"
@@ -59,14 +89,36 @@ Page {
                     page.state = "default"
                 }
             }
+        },
+        State {
+            name: "firstLaunch"
+            when: database.isEmpty
+            PropertyChanges {
+                target: page
+                title: i18n.tr("Welcome in SaucyBacon")
+            }
+            PropertyChanges {
+                target: layouts
+                visible: false
+            }
+            PropertyChanges {
+                target: welcomeItem
+                visible: true
+            }
         }
     ]
 
-    flickable: null
+    WelcomeItem {
+        id: welcomeItem
+        anchors.fill: parent
+        visible: false
+        actions: page.actions
+    }
 
     Layouts {
         id: layouts
         anchors.fill: parent
+        visible: true
         layouts: [
             ConditionalLayout {
                 name: "wideAspect"

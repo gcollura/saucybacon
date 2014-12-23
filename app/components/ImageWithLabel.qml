@@ -1,10 +1,12 @@
 import QtQuick 2.0
-import Ubuntu.Components 0.1
+import Ubuntu.Components 1.1
 
 Item {
     id: root
 
     property alias source: image.source
+    property alias iconName: image.name
+    property alias color: image.color
     property alias text: label.text
 
     width: childrenRect.width
@@ -13,11 +15,12 @@ Item {
     Column {
         spacing: units.gu(2)
 
-        Image {
+        Icon {
             id: image
             anchors.horizontalCenter: parent.horizontalCenter
-            smooth: true
-            sourceSize.height: units.gu(6)
+            height: units.gu(6)
+            width: units.gu(6)
+            color: Qt.rgba(1, 1, 1, 1)
         }
 
         Label {

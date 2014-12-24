@@ -103,7 +103,7 @@ Page {
             }
             PropertyChanges {
                 target: welcomeItem
-                visible: true
+                opacity: 1
             }
         }
     ]
@@ -111,8 +111,12 @@ Page {
     WelcomeItem {
         id: welcomeItem
         anchors.fill: parent
-        visible: false
+        opacity: 0
         actions: page.actions
+
+        Behavior on opacity {
+            UbuntuNumberAnimation { duration: 1000 }
+        }
     }
 
     Layouts {

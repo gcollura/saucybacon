@@ -27,10 +27,12 @@ Flickable {
         fill: parent
     }
     contentHeight: column.height
-    clip: true
     interactive: contentHeight > parent.height
+    clip: true
 
-    property string selectedItem
+    property Item __selectedItem
+    readonly property string selectedItem: __selectedItem.text
+    readonly property bool isDefaultSelected: __selectedItem == defaultSelection
     signal filter(string type, int id)
 
     function resetSelection() {
@@ -47,6 +49,15 @@ Flickable {
         return result;
     }
 
+    Connections {
+        target: database
+        onRecipesChanged: {
+            if (database.recipes.length === 0 && __selectedItem != defaultSelection) {
+                resetSelection();
+            }
+        }
+    }
+
     Column {
         id: column
         anchors {
@@ -57,22 +68,23 @@ Flickable {
         Standard {
             id: defaultSelection
             text: i18n.tr("All recipes")
-            progression: root.selectedItem == text
+            progression: root.__selectedItem == defaultSelection
             onClicked: {
                 filter("", "");
-                root.selectedItem = text;
+                root.__selectedItem = defaultSelection;
             }
-            Component.onCompleted: root.selectedItem = text
+            Component.onCompleted: root.__selectedItem = defaultSelection
         }
 
         StandardWithCount {
+            id: favoriteSelection
             text: i18n.tr("Favorites")
-            progression: root.selectedItem == text
+            progression: root.__selectedItem == favoriteSelection
             count: database.favoriteCount
             visible: database.favoriteCount > 0
             onClicked: {
                 filter("favorite", 1);
-                root.selectedItem = text;
+                root.__selectedItem = favoriteSelection;
             }
         }
 
@@ -85,12 +97,13 @@ Flickable {
             id: categoriesRepeater
             model: filterModel(database.categories)
             StandardWithCount {
+                id: categorySelection
                 text: modelData.name
                 count: modelData.count
-                progression: root.selectedItem == text
+                progression: root.__selectedItem == categorySelection
                 onClicked: {
                     filter("category", modelData.id);
-                    root.selectedItem = modelData.name;
+                    root.__selectedItem = categorySelection;
                 }
             }
         }
@@ -102,12 +115,13 @@ Flickable {
         Repeater {
             model: filterModel(database.restrictions)
             StandardWithCount {
+                id: restrictionSelection
                 text: modelData.name
                 count: modelData.count
-                progression: root.selectedItem == text
+                progression: root.__selectedItem == restrictionSelection
                 onClicked: {
                     filter("restriction", index);
-                    root.selectedItem = modelData.name;
+                    root.__selectedItem = restrictionSelection;
                 }
             }
         }

@@ -104,7 +104,6 @@ void Database::setReady(bool ready) {
         connect(m_db->worker(), &Worker::working, this, &Database::setWorking);
 
         connect(this, &Database::update, m_db->worker(), &Worker::update);
-
         connect(this, &Database::setDatabaseName, m_db->worker(), &Worker::setDatabaseName);
 
         connect(m_db->worker(), &Worker::recipesUpdated, this, &Database::setRecipes);
@@ -134,10 +133,12 @@ void Database::setLoading(bool loading) {
 }
 
 void Database::setIsEmpty(bool isEmpty) {
-    if (isEmpty != m_isEmpty) {
-        m_isEmpty = isEmpty;
-        isEmptyChanged(isEmpty);
-    }
+    qDebug() << "m_filter" << m_filter;
+    if (m_filter.isEmpty() || m_filter["type"].toString().length() == 0)
+        if (isEmpty != m_isEmpty) {
+            m_isEmpty = isEmpty;
+            isEmptyChanged(isEmpty);
+        }
 }
 
 QString Database::error() const {

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.ubuntu.developer.gcollura.saucybacon 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-23 19:08+0100\n"
+"POT-Creation-Date: 2014-12-24 00:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -90,11 +90,11 @@ msgstr ""
 msgid "Cook Time: "
 msgstr ""
 
-#: ../app/ui/HomePage.qml:69
+#: ../app/ui/HomePage.qml:98
 msgid "Welcome in SaucyBacon"
 msgstr ""
 
-#: ../app/ui/HomePage.qml:156
+#: ../app/ui/HomePage.qml:190
 msgid "Filter"
 msgstr ""
 
@@ -206,7 +206,7 @@ msgstr ""
 msgid "Photos"
 msgstr ""
 
-#: ../app/ui/EditPage.qml:133 ../app/components/SidePanelContent.qml:70
+#: ../app/ui/EditPage.qml:133 ../app/components/SidePanelContent.qml:92
 msgid "Categories"
 msgstr ""
 
@@ -254,15 +254,15 @@ msgstr ""
 msgid "To start, choose one of the following actions"
 msgstr ""
 
-#: ../app/components/SidePanelContent.qml:49
+#: ../app/components/SidePanelContent.qml:70
 msgid "All recipes"
 msgstr ""
 
-#: ../app/components/SidePanelContent.qml:59
+#: ../app/components/SidePanelContent.qml:81
 msgid "Favorites"
 msgstr ""
 
-#: ../app/components/SidePanelContent.qml:89
+#: ../app/components/SidePanelContent.qml:112
 msgid "Restrictions"
 msgstr ""
 

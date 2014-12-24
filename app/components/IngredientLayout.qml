@@ -50,6 +50,7 @@ Column {
     }
 
     function loadIngredients() {
+        // We reuse the already created ingredient entries
         for (var i = 0; i < ingredients.length; i++) {
             if (!ingredientsLayout.children[i])
                 addIngredient();
@@ -58,9 +59,22 @@ Column {
             container.children[i].quantity = typeof ingredients[i].quantity !== "undefined" ? ingredients[i].quantity : 0
             container.children[i].unit = ingredients[i].unit;
         }
+        // Delete the remaining empty ingredient entries
+        if (ingredients.length < container.children.length) {
+            for ( ; i < container.children.length; i++) {
+                container.children[i].destroy();
+            }
+        }
 
         // Make room for another ingredient
         // addIngredient();
+    }
+
+    function clearIngredients() {
+        for (var i = 0; i < container.children.length; i++) {
+            container.children[i].destroy();
+        }
+        addIngredient();
     }
 
     function addIngredient(setfocus) {
@@ -74,8 +88,6 @@ Column {
 
     Component {
         id: ingredientComponent
-        IngredientInput {
-
-        }
+        IngredientInput { }
     }
 }

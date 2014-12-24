@@ -25,7 +25,10 @@ Item {
 
         Label {
             id: label
+            width: root.width
+            horizontalAlignment: Text.AlignHCenter
             anchors.horizontalCenter: parent.horizontalCenter
+            wrapMode: Text.WordWrap
         }
     }
 }

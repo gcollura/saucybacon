@@ -53,6 +53,7 @@ MainView {
     Action {
         id: newRecipeAction
         text: i18n.tr("New")
+        description: i18n.tr("Create a new recipe")
         iconName: "add"
         onTriggered: {
             pageStack.push(editPage, { title: i18n.tr("New recipe"), state: "new" })
@@ -73,6 +74,7 @@ MainView {
     Action {
         id: searchAction
         text: i18n.tr("Search")
+        description: i18n.tr("Search online for a new recipe")
         iconName: "search"
         onTriggered: pageStack.push(Qt.resolvedUrl("ui/SearchPage.qml"))
     }

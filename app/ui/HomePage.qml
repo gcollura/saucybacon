@@ -95,7 +95,7 @@ Page {
             when: database.isEmpty
             PropertyChanges {
                 target: page
-                title: i18n.tr("Welcome in SaucyBacon")
+                title: i18n.tr("Welcome to SaucyBacon")
             }
             PropertyChanges {
                 target: layouts

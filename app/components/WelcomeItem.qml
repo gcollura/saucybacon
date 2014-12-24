@@ -66,7 +66,8 @@ Item {
 
                 ImageWithLabel {
                     iconName: modelData.iconName
-                    text: modelData.text
+                    text: modelData.description
+                    width: root.width/3
                     MouseArea {
                         anchors.fill: parent
                         onClicked: modelData.trigger()

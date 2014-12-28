@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.ubuntu.developer.gcollura.saucybacon 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-24 00:56+0100\n"
+"POT-Creation-Date: 2014-12-28 22:45+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,31 +21,39 @@ msgstr ""
 msgid "New"
 msgstr ""
 
-#: ../app/saucybacon.qml:58
+#: ../app/saucybacon.qml:56
+msgid "Create a new recipe"
+msgstr ""
+
+#: ../app/saucybacon.qml:59
 msgid "New recipe"
 msgstr ""
 
-#: ../app/saucybacon.qml:65
+#: ../app/saucybacon.qml:66
 msgid "Edit"
 msgstr ""
 
-#: ../app/saucybacon.qml:68
+#: ../app/saucybacon.qml:69
 msgid "Edit recipe"
 msgstr ""
 
-#: ../app/saucybacon.qml:75 ../app/ui/SearchPage.qml:31
+#: ../app/saucybacon.qml:76 ../app/ui/SearchPage.qml:31
 msgid "Search"
 msgstr ""
 
-#: ../app/saucybacon.qml:82 ../app/ui/AboutPage.qml:24
+#: ../app/saucybacon.qml:77
+msgid "Search online for a new recipe"
+msgstr ""
+
+#: ../app/saucybacon.qml:84 ../app/ui/AboutPage.qml:24
 msgid "About"
 msgstr ""
 
-#: ../app/saucybacon.qml:89
+#: ../app/saucybacon.qml:91
 msgid "Refresh"
 msgstr ""
 
-#: ../app/saucybacon.qml:96 ../app/ui/RecipePage.qml:60
+#: ../app/saucybacon.qml:98 ../app/ui/RecipePage.qml:60
 #: ../app/ui/dialogs/DeleteDialog.qml:32
 msgid "Delete"
 msgstr ""
@@ -58,7 +66,7 @@ msgstr ""
 msgid "Favorite"
 msgstr ""
 
-#: ../app/ui/RecipePage.qml:49 ../app/ui/EditPage.qml:38
+#: ../app/ui/RecipePage.qml:49 ../app/ui/EditPage.qml:37
 msgid "Save"
 msgstr ""
 
@@ -74,11 +82,11 @@ msgstr ""
 msgid "Categories: "
 msgstr ""
 
-#: ../app/ui/RecipePage.qml:338 ../app/ui/EditPage.qml:237
+#: ../app/ui/RecipePage.qml:338 ../app/ui/EditPage.qml:236
 msgid "Ingredients"
 msgstr ""
 
-#: ../app/ui/RecipePage.qml:380 ../app/ui/EditPage.qml:272
+#: ../app/ui/RecipePage.qml:380 ../app/ui/EditPage.qml:271
 msgid "Directions"
 msgstr ""
 
@@ -91,7 +99,7 @@ msgid "Cook Time: "
 msgstr ""
 
 #: ../app/ui/HomePage.qml:98
-msgid "Welcome in SaucyBacon"
+msgid "Welcome to SaucyBacon"
 msgstr ""
 
 #: ../app/ui/HomePage.qml:190
@@ -194,27 +202,27 @@ msgstr ""
 msgid "Save the current recipe"
 msgstr ""
 
-#: ../app/ui/EditPage.qml:89
+#: ../app/ui/EditPage.qml:88
 msgid "Enter a name for your recipe"
 msgstr ""
 
-#: ../app/ui/EditPage.qml:101
+#: ../app/ui/EditPage.qml:100
 msgid "Total time: "
 msgstr ""
 
-#: ../app/ui/EditPage.qml:117
+#: ../app/ui/EditPage.qml:116
 msgid "Photos"
 msgstr ""
 
-#: ../app/ui/EditPage.qml:133 ../app/components/SidePanelContent.qml:92
+#: ../app/ui/EditPage.qml:132 ../app/components/SidePanelContent.qml:92
 msgid "Categories"
 msgstr ""
 
-#: ../app/ui/EditPage.qml:217
+#: ../app/ui/EditPage.qml:216
 msgid "Restriction"
 msgstr ""
 
-#: ../app/ui/EditPage.qml:282
+#: ../app/ui/EditPage.qml:281
 msgid "Write your directions"
 msgstr ""
 

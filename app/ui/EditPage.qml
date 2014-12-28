@@ -29,11 +29,10 @@ Page {
 
     flickable: null
 
-    head.actions: [ 
+    head.actions: [
         Action {
             id: saveRecipeAction
             description: i18n.tr("Save the current recipe")
-            keywords: "save;recipe"
             iconName: 'save'
             text: i18n.tr("Save")
 
@@ -141,7 +140,7 @@ Page {
 
                         Icon {
                             anchors.fill: parent
-                            name: "edit"
+                            name: "add"
                             color: colors.white
                         }
                         onClicked: PopupUtils.open(Qt.resolvedUrl("dialogs/CategoryDialog.qml"))

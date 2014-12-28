@@ -28,7 +28,7 @@ QtObject {
     readonly property color footerColor: darkerRed
 
     property Gradient redGradient: Gradient {
-        GradientStop { position: 0.0; color: "#45060c" }
-        GradientStop { position: 1.0; color: "#5f0911" }
+        GradientStop { position: 0.0; color: darkRed }
+        GradientStop { position: 1.0; color: darkRed }
     }
 }

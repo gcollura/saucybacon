@@ -34,21 +34,20 @@ Dialog {
     }
 
     Button {
+        text: i18n.tr("Create")
+
+        onClicked: {
+            database.addCategory(nameField.text.trim())
+            PopupUtils.close(dialogue)
+        }
+    }
+
+    Button {
         text: i18n.tr("Cancel")
 
         gradient: UbuntuColors.greyGradient
         onClicked: {
             PopupUtils.close(dialogue);
-        }
-    }
-
-    Button {
-        text: i18n.tr("Create")
-
-        onClicked: {
-            database.addCategory(nameField.text.trim())
-
-            PopupUtils.close(dialogue)
         }
     }
 

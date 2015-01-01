@@ -1,6 +1,6 @@
 # SaucyBacon
 
-Write recipes and save them online with the UbuntuOne sync feature.
+Write recipes or find them online with the [Food2Fork](http://food2fork.com/) API.
 
 ## Features
  * Recipe management
@@ -11,7 +11,6 @@ Write recipes and save them online with the UbuntuOne sync feature.
 ## Requirements
  * Ubuntu SDK
  * Ubuntu Mobile Icons - ubuntu-mobile-icons
- * U1db - qtdeclarative5-u1db1.0
  * Qt5 development packages
 
 ## Testing
@@ -29,9 +28,9 @@ Then to run SaucyBacon:
 $ make run
 ```
 
-To generate a new click package:
+To generate a new click package in project directory:
 ```
-$ make click
+$ click-buddy --arch armhf --framework ubuntu-sdk-14.10
 ```
 
 **Known problems**

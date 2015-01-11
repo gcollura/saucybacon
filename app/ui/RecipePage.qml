@@ -1,7 +1,7 @@
 /**
  * This file is part of SaucyBacon.
  *
- * Copyright 2013-2014 (C) Giulio Collura <random.cpp@gmail.com>
+ * Copyright 2013-2015 (C) Giulio Collura <random.cpp@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -151,6 +151,13 @@ Page {
                             }
 
                             ItemLayout {
+                                item: "categoriesHeaderLabel"
+                                width: parent.width
+                                height: categoriesHeaderLabel.height
+                                visible: recipe.categories.length > 0
+                            }
+
+                            ItemLayout {
                                 item: "categoriesLabel"
                                 width: parent.width
                                 height: categoriesLabel.height
@@ -293,18 +300,28 @@ Page {
                 }
 
                 Label {
+                    id: categoriesHeaderLabel
+                    Layouts.item: "categoriesHeaderLabel"
+                    visible: categoriesLabel.visible
+                    width: parent.width
+                    text: "Categories"
+                    font.bold: true
+                    fontSize: "large"
+                }
+
+                Label {
                     id: categoriesLabel
                     Layouts.item: "categoriesLabel"
                     visible: recipe.categories.length > 0
                     width: parent.width
                     text: {
-                        var txt = i18n.tr("Categories: ")
+                        var txt = "";
                         for (var i = 0; i < database.categories.length; i++) {
                             if (recipe.categories.indexOf(database.categories[i].id.toString()) > -1) {
-                                txt += database.categories[i].name + " "
+                                txt += database.categories[i].name + " ";
                             }
                         }
-                        return txt
+                        return txt;
                     }
                 }
 

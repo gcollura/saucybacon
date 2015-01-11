@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2013 Michael Spencer <sonrisesoftware@gmail.com>
- * Copyright (C) 2014 Giulio Collura <random.cpp@gmail.com>
+ * Copyright (C) 2015 Giulio Collura <random.cpp@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.ubuntu.developer.gcollura.saucybacon 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-28 22:45+0100\n"
+"POT-Creation-Date: 2015-12-28 22:45+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -166,7 +166,7 @@ msgid "Recipe directions are not obtained with Food2Fork.com API."
 msgstr ""
 
 #: ../app/ui/AboutPage.qml:127
-msgid "Copyright (C) 2013-2014 Giulio Collura"
+msgid "Copyright (C) 2013-2015 Giulio Collura"
 msgstr ""
 
 #: ../app/ui/dialogs/CategoryDialog.qml:28

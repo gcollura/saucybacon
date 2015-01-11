@@ -1,7 +1,7 @@
 /**
  * This file is part of SaucyBacon.
  *
- * Copyright 2013-2014 (C) Giulio Collura <random.cpp@gmail.com>
+ * Copyright 2013-2015 (C) Giulio Collura <random.cpp@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@ Button {
             DatePicker {
                 id: picker
                 mode: "Hours|Minutes"
-                date: new Date(2014, 3, 14, Math.floor(root.time / 60), root.time % 60, 0)
+                date: new Date(2015, 3, 14, Math.floor(root.time / 60), root.time % 60, 0)
             }
 
             Button {

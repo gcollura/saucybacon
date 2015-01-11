@@ -1,7 +1,7 @@
 /**
  * This file is part of SaucyBacon.
  *
- * Copyright 2013-2014 (C) Giulio Collura <random.cpp@gmail.com>
+ * Copyright 2013-2015 (C) Giulio Collura <random.cpp@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,20 +19,35 @@
 
 import QtQuick 2.3
 import Ubuntu.Components 1.1
+import Ubuntu.Components.Themes.Ambiance 0.1
 
 Item {
     id: item
 
-    anchors {
-        left: parent.left
-        right: parent.right
-    }
-
     height: _quantity.height
 
-    property alias name: _name.text
     property alias quantity: _quantity.text
     property alias unit: _unit.text
+    property alias name: _name.text
+
+    function get() {
+        return { "quantity": quantity, "unit": unit, "name": name };
+    }
+
+    function focus() {
+        _name.forceActiveFocus();
+    }
+
+    signal remove()
+    signal changed()
+
+    Component {
+        id: textFieldStyle
+        TextFieldStyle {
+            color: "white"
+            background: Item { anchors.fill: parent }
+        }
+    }
 
     Item {
         id: row
@@ -46,22 +61,27 @@ Item {
                 left: parent.left
             }
 
-            inputMethodHints: Qt.ImhFormattedNumbersOnly
+            // inputMethodHints: Qt.ImhFormattedNumbersOnly
             placeholderText: i18n.tr("Qty")
+            onTextChanged: item.changed()
+
+            style: textFieldStyle
 
             Behavior on width { UbuntuNumberAnimation { } }
         }
 
         TextField {
             id: _unit
-            width: focus ? units.gu(16) : units.gu(6)
+            width: focus ? units.gu(16) : units.gu(7)
             anchors {
                 left: _quantity.right
                 leftMargin: units.gu(1)
             }
 
             placeholderText: i18n.tr("Type")
+            onTextChanged: item.changed()
 
+            style: textFieldStyle
             Behavior on width { UbuntuNumberAnimation { } }
         }
 
@@ -75,6 +95,9 @@ Item {
             }
 
             placeholderText: i18n.tr("Insert ingredient name")
+            onTextChanged: item.changed()
+
+            style: textFieldStyle
         }
 
         AbstractButton {
@@ -92,11 +115,7 @@ Item {
                 color: colors.white
             }
 
-            onClicked: item.destroy()
+            onClicked: remove()
         }
-    }
-
-    function focus() {
-        _name.forceActiveFocus();
     }
 }

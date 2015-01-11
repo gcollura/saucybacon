@@ -1,7 +1,7 @@
 /**
  * This file is part of SaucyBacon.
  *
- * Copyright 2013-2014 (C) Giulio Collura <random.cpp@gmail.com>
+ * Copyright 2013-2015 (C) Giulio Collura <random.cpp@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 #include <QSqlError>
 #include <QVariant>
 #include <QVariantMap>
+#include <QQmlProperty>
 
 #include "QueryThread.h"
 
@@ -214,7 +215,7 @@ void Worker::addRecipe(QVariantMap recipe) {
         removeRecipeIngredient(recipeId, -1);
     }
 
-    QList<QVariant> ingredients = recipe["ingredients"].toList();
+    auto ingredients = recipe["ingredients"].toList();
     QString name, quantity, unit;
     Q_FOREACH(QVariant ingredient, ingredients) {
         name = ingredient.toMap()["name"].toString();

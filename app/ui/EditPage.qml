@@ -1,7 +1,7 @@
 /**
  * This file is part of SaucyBacon.
  *
- * Copyright 2013-2014 (C) Giulio Collura <random.cpp@gmail.com>
+ * Copyright 2013-2015 (C) Giulio Collura <random.cpp@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@ import QtQuick 2.3
 import Ubuntu.Components 1.1
 import Ubuntu.Components.Popups 1.0
 import Ubuntu.Components.ListItems 1.0
+import Ubuntu.Components.Themes.Ambiance 1.0
 
 import "../components"
 
@@ -86,6 +87,9 @@ Page {
                     width: parent.width
 
                     placeholderText: i18n.tr("Enter a name for your recipe")
+                    style: TextFieldStyle {
+                        color: "white"
+                    }
                 }
 
                 Row {
@@ -99,6 +103,7 @@ Page {
 
                         text: i18n.tr("Total time: ") + (prepTime.time + cookTime.time).toTime();
                         fontSize: "large"
+                        font.bold: true
                     }
 
                     TimePicker {
@@ -115,6 +120,7 @@ Page {
                 Label {
                     text: i18n.tr("Photos")
                     fontSize: "large"
+                    font.bold: true
                 }
 
                 PhotoLayout {
@@ -130,6 +136,7 @@ Page {
                     Label {
                         fontSize: "large"
                         text: i18n.tr("Categories")
+                        font.bold: true
                     }
 
                     AbstractButton {
@@ -196,7 +203,6 @@ Page {
                     }
 
                     function updateSelections() {
-                        // console.log("selectedIndexes", selectedIndexes)
                         recipeCategory.selectedIndex = 0
                         for (var i = 0; i < model.count; i++) {
                             var obj = model.get(i)
@@ -215,6 +221,7 @@ Page {
                 Label {
                     text: i18n.tr("Restriction")
                     fontSize: "large"
+                    font.bold: true
                 }
 
                 OptionSelector {
@@ -235,6 +242,7 @@ Page {
                     Label {
                         text: i18n.tr("Ingredients")
                         fontSize: "large"
+                        font.bold: true
                     }
 
                     AbstractButton {
@@ -256,6 +264,7 @@ Page {
                     id: ingredientsLayout
                     width: parent.width
 
+                    flickable: flickable
                     Component.onCompleted: addIngredient()
                 }
 
@@ -270,6 +279,7 @@ Page {
                 Label {
                     text: i18n.tr("Directions")
                     fontSize: "large"
+                    font.bold: true
                 }
 
                 TextArea {
@@ -281,6 +291,9 @@ Page {
                     placeholderText: i18n.tr("Write your directions")
                     maximumLineCount: 0
                     autoSize: true
+                    style: TextAreaStyle {
+                        color: (styledItem.focus || styledItem.highlighted) ? Theme.palette.selected.fieldText : "white"
+                    }
                 }
 
                 Behavior on width { UbuntuNumberAnimation { } }
@@ -304,7 +317,6 @@ Page {
         recipe.restriction = recipeRestriction.selectedIndex
 
         recipe.categories = recipeCategory.selectedIndexes
-        console.log(recipe.categories)
 
         recipe.ingredients = ingredientsLayout.getIngredients()
 

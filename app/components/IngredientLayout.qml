@@ -1,7 +1,7 @@
 /**
  * This file is part of SaucyBacon.
  *
- * Copyright 2013-2014 (C) Giulio Collura <random.cpp@gmail.com>
+ * Copyright 2013-2015 (C) Giulio Collura <random.cpp@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,68 +26,79 @@ Column {
 
     property var ingredients
 
+    property Flickable flickable: null
+
     onIngredientsChanged: {
         loadIngredients();
     }
 
+    ListModel {
+        id: listModel
+    }
+
+    Repeater {
+        id: repeater
+        model: listModel
+        delegate: ingredientComponent
+    }
+
     function getIngredients() {
-        var result = new Array();
-        for (var i = 0; i < container.children.length; i++) {
-            if (container.children[i].name.length < 1) // Don't push non-sense ingredients
-                continue;
-
-            var tmpingredient = { "name" : "", "quantity": 1, "unit": "gr" }
-
-            tmpingredient.name = container.children[i].name;
-            tmpingredient.quantity = container.children[i].quantity ?
-                        parseInt(container.children[i].quantity) : 1;
-            tmpingredient.unit = container.children[i].unit;
-
-            result.push(tmpingredient);
+        var result = [];
+        var ingredient;
+        for (var i = 0; i < listModel.count; i++) {
+            ingredient = listModel.get(i);
+            if (ingredient.name.length > 0) {
+                // Trash that useless ObjectModel
+                result.push(JSON.parse(JSON.stringify(ingredient)))
+            }
         }
 
         return result;
     }
 
     function loadIngredients() {
+        listModel.clear();
         // We reuse the already created ingredient entries
         for (var i = 0; i < ingredients.length; i++) {
-            if (!ingredientsLayout.children[i])
-                addIngredient();
-
-            container.children[i].name = ingredients[i].name;
-            container.children[i].quantity = typeof ingredients[i].quantity !== "undefined" ? ingredients[i].quantity : 0
-            container.children[i].unit = ingredients[i].unit;
+            listModel.append(ingredients[i]);
         }
-        // Delete the remaining empty ingredient entries
-        if (ingredients.length < container.children.length) {
-            for ( ; i < container.children.length; i++) {
-                container.children[i].destroy();
-            }
-        }
-
-        // Make room for another ingredient
-        // addIngredient();
     }
 
     function clearIngredients() {
-        for (var i = 0; i < container.children.length; i++) {
-            container.children[i].destroy();
-        }
-        addIngredient();
+        listModel.clear();
     }
 
     function addIngredient(setfocus) {
-        var object = ingredientComponent.createObject(container);
-
-        if (typeof object === 'undefined' || object === null)
-            console.log("Error while creating the object")
-        if (setfocus)
-            object.focus()
+        listModel.append({ name: '', quantity: '', unit: '', focus: true });
     }
 
     Component {
         id: ingredientComponent
-        IngredientInput { }
+        IngredientInput {
+            id: input
+            width: parent ? parent.width : 0
+            quantity: model.quantity
+            unit: model.unit
+            name: model.name
+            // opacity: ((y+height) >= flickable.contentY) && (y <= (flickable.contentY + flickable.height)) ? 1 : 0
+            onRemove: listModel.remove(model.index);
+            onChanged: modelTimer.restart()
+            focus: model.focus
+
+            Timer {
+                // we avoid that changed signal updates the listmodel entry before other
+                // fields get their correct values
+                id: modelTimer
+                interval: 1000
+
+                onTriggered: listModel.set(model.index, input.get())
+            }
+
+            Component.onCompleted: {
+                if (model.focus) {
+                    focus();
+                }
+            }
+        }
     }
 }

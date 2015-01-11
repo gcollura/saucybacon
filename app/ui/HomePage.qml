@@ -215,6 +215,9 @@ Page {
                 id: sidePanelBackground
                 anchors.fill: parent
                 color: colors.darkerRed
+                opacity: (wideAspect || sidePanel.opened || sidePanel.animating) ? 1 : 0
+
+                Behavior on opacity { UbuntuNumberAnimation { } }
             }
 
             SidePanelContent {
@@ -225,6 +228,8 @@ Page {
 
                 onFilter: page.filter(type, id)
                 onSelectedItemChanged: sidePanel.close()
+
+                opacity: (wideAspect || sidePanel.opened || sidePanel.animating) ? 1 : 0
             }
 
             onOpenedChanged: {

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.ubuntu.developer.gcollura.saucybacon 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-28 22:45+0100\n"
+"POT-Creation-Date: 2015-01-12 00:18+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,7 +37,7 @@ msgstr ""
 msgid "Edit recipe"
 msgstr ""
 
-#: ../app/saucybacon.qml:76 ../app/ui/SearchPage.qml:31
+#: ../app/saucybacon.qml:76 ../app/ui/SearchPage.qml:32
 msgid "Search"
 msgstr ""
 
@@ -62,11 +62,11 @@ msgstr ""
 msgid "Recipe"
 msgstr ""
 
-#: ../app/ui/RecipePage.qml:37 ../app/ui/RecipePage.qml:282
+#: ../app/ui/RecipePage.qml:37 ../app/ui/RecipePage.qml:289
 msgid "Favorite"
 msgstr ""
 
-#: ../app/ui/RecipePage.qml:49 ../app/ui/EditPage.qml:37
+#: ../app/ui/RecipePage.qml:49 ../app/ui/EditPage.qml:38
 msgid "Save"
 msgstr ""
 
@@ -78,23 +78,19 @@ msgstr ""
 msgid "Downloading recipe..."
 msgstr ""
 
-#: ../app/ui/RecipePage.qml:301
-msgid "Categories: "
-msgstr ""
-
-#: ../app/ui/RecipePage.qml:338 ../app/ui/EditPage.qml:236
+#: ../app/ui/RecipePage.qml:355 ../app/ui/EditPage.qml:252
 msgid "Ingredients"
 msgstr ""
 
-#: ../app/ui/RecipePage.qml:380 ../app/ui/EditPage.qml:271
+#: ../app/ui/RecipePage.qml:397 ../app/ui/EditPage.qml:289
 msgid "Directions"
 msgstr ""
 
-#: ../app/ui/RecipePage.qml:407
+#: ../app/ui/RecipePage.qml:423
 msgid "Prep Time: "
 msgstr ""
 
-#: ../app/ui/RecipePage.qml:411
+#: ../app/ui/RecipePage.qml:427
 msgid "Cook Time: "
 msgstr ""
 
@@ -106,27 +102,27 @@ msgstr ""
 msgid "Filter"
 msgstr ""
 
-#: ../app/ui/SearchPage.qml:36
+#: ../app/ui/SearchPage.qml:37
 msgid "Top Rated"
 msgstr ""
 
-#: ../app/ui/SearchPage.qml:37
+#: ../app/ui/SearchPage.qml:38
 msgid "Search top rated recipes"
 msgstr ""
 
-#: ../app/ui/SearchPage.qml:53 ../app/ui/SearchPage.qml:220
+#: ../app/ui/SearchPage.qml:60 ../app/ui/SearchPage.qml:208
 msgid "Searching..."
 msgstr ""
 
-#: ../app/ui/SearchPage.qml:85
+#: ../app/ui/SearchPage.qml:91
 msgid "Search history"
 msgstr ""
 
-#: ../app/ui/SearchPage.qml:157
+#: ../app/ui/SearchPage.qml:138
 msgid "Powered by Food2Fork.com"
 msgstr ""
 
-#: ../app/ui/SearchPage.qml:204
+#: ../app/ui/SearchPage.qml:189
 msgid "Loading error, please try again"
 msgstr ""
 
@@ -182,12 +178,12 @@ msgid "Name your category..."
 msgstr ""
 
 #: ../app/ui/dialogs/CategoryDialog.qml:37
-#: ../app/ui/dialogs/DeleteDialog.qml:41 ../app/components/TimePicker.qml:51
-msgid "Cancel"
+msgid "Create"
 msgstr ""
 
 #: ../app/ui/dialogs/CategoryDialog.qml:46
-msgid "Create"
+#: ../app/ui/dialogs/DeleteDialog.qml:41 ../app/components/TimePicker.qml:61
+msgid "Cancel"
 msgstr ""
 
 #: ../app/ui/dialogs/DeleteDialog.qml:28
@@ -198,31 +194,31 @@ msgstr ""
 msgid "Are you sure you want to delete this recipe?"
 msgstr ""
 
-#: ../app/ui/EditPage.qml:35
+#: ../app/ui/EditPage.qml:36
 msgid "Save the current recipe"
 msgstr ""
 
-#: ../app/ui/EditPage.qml:88
+#: ../app/ui/EditPage.qml:90
 msgid "Enter a name for your recipe"
 msgstr ""
 
-#: ../app/ui/EditPage.qml:100
+#: ../app/ui/EditPage.qml:106
 msgid "Total time: "
 msgstr ""
 
-#: ../app/ui/EditPage.qml:116
+#: ../app/ui/EditPage.qml:123
 msgid "Photos"
 msgstr ""
 
-#: ../app/ui/EditPage.qml:132 ../app/components/SidePanelContent.qml:92
+#: ../app/ui/EditPage.qml:143 ../app/components/SidePanelContent.qml:92
 msgid "Categories"
 msgstr ""
 
-#: ../app/ui/EditPage.qml:216
+#: ../app/ui/EditPage.qml:228
 msgid "Restriction"
 msgstr ""
 
-#: ../app/ui/EditPage.qml:281
+#: ../app/ui/EditPage.qml:300
 msgid "Write your directions"
 msgstr ""
 
@@ -238,19 +234,19 @@ msgstr ""
 msgid "Pick a time"
 msgstr ""
 
-#: ../app/components/TimePicker.qml:58
+#: ../app/components/TimePicker.qml:51
 msgid "Accept"
 msgstr ""
 
-#: ../app/components/IngredientInput.qml:50
+#: ../app/components/IngredientInput.qml:65
 msgid "Qty"
 msgstr ""
 
-#: ../app/components/IngredientInput.qml:63
+#: ../app/components/IngredientInput.qml:81
 msgid "Type"
 msgstr ""
 
-#: ../app/components/IngredientInput.qml:77
+#: ../app/components/IngredientInput.qml:97
 msgid "Insert ingredient name"
 msgstr ""
 
@@ -296,15 +292,15 @@ msgstr ""
 msgid "<h2>Photos</h2><br />"
 msgstr ""
 
-#: ../backend/modules/SaucyBacon/QueryThread.cpp:670
+#: ../backend/modules/SaucyBacon/QueryThread.cpp:671
 msgid "No restriction"
 msgstr ""
 
-#: ../backend/modules/SaucyBacon/QueryThread.cpp:679
+#: ../backend/modules/SaucyBacon/QueryThread.cpp:680
 msgid "Vegetarian"
 msgstr ""
 
-#: ../backend/modules/SaucyBacon/QueryThread.cpp:688
+#: ../backend/modules/SaucyBacon/QueryThread.cpp:689
 msgid "Vegan"
 msgstr ""
 

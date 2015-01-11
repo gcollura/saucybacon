@@ -17,7 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-import QtQuick 2.0
+import QtQuick 2.3
+import QtQuick.Layouts 1.0
 import Ubuntu.Components 1.1
 import Ubuntu.Components.ListItems 1.0 as ListItem
 import Ubuntu.Layouts 1.0
@@ -30,7 +31,7 @@ Page {
     id: page
     title: i18n.tr("Search")
 
-    actions: [
+    head.actions: [
         Action {
             id: searchTopRatedAction
             text: i18n.tr("Top Rated")
@@ -41,11 +42,17 @@ Page {
         }
     ]
 
-    tools: ToolbarItems {
-        ToolbarButton {
-            objectName: "searchTopRatedAction"
-            action: searchTopRatedAction
-        }
+    head.contents: TextField {
+        id: searchField
+        objectName: "searchField"
+
+        width: parent.width - units.gu(3)
+        placeholderText: "Search for a recipe..."
+
+        onAccepted: searchOnline(searchField.text)
+        onTextChanged: searchLocally(searchField.text)
+
+        Behavior on width { UbuntuNumberAnimation { } }
     }
 
     LoadingIndicator {
@@ -63,7 +70,7 @@ Page {
                 name: "tabletLayout"
                 when: wideAspect
 
-                Row {
+                RowLayout {
                     anchors.fill: parent
 
                     Sidebar {
@@ -73,7 +80,6 @@ Page {
                             top: parent.top
                             bottom: parent.bottom
                         }
-                        height: page.height
 
                         Column {
                             anchors {
@@ -104,15 +110,15 @@ Page {
                         anchors {
                             top: parent.top
                             bottom: parent.bottom
-                            margins: units.gu(2)
+                            topMargin: units.gu(2)
                         }
-                        width: parent.width - sidebar.width
+                        Layout.fillWidth: true
                     }
                 }
             }
         ]
 
-        Column {
+        ColumnLayout {
             id: searchColumn
             Layouts.item: "searchColumn"
             objectName: "searchColumn"
@@ -120,33 +126,8 @@ Page {
             anchors {
                 fill: parent
                 topMargin: units.gu(2)
-                bottomMargin: units.gu(2)
             }
             spacing: units.gu(2)
-
-            Row {
-                id: searchRow
-
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                    margins: units.gu(2)
-                }
-                spacing: units.gu(2)
-
-                TextField {
-                    id: searchField
-                    objectName: "searchField"
-
-                    width: parent.width
-                    placeholderText: "Search for a recipe..."
-
-                    onAccepted: searchOnline(searchField.text)
-                    onTextChanged: searchLocally(searchField.text)
-
-                    Behavior on width { UbuntuNumberAnimation { } }
-                }
-            }
 
             Label {
                 id: creditLabel
@@ -166,7 +147,7 @@ Page {
                     right: parent.right
                 }
 
-                height: parent.height - searchRow.height - creditLabel.height - units.gu(2)
+                Layout.fillHeight: true
                 clip: true
 
                 model: search
@@ -191,6 +172,10 @@ Page {
 
                 property double oldContentY;
 
+                UbuntuNumberAnimation on contentY {
+                    id: scrollingAnimation
+                }
+
                 Scrollbar {
                     flickableItem: resultList
                 }
@@ -205,10 +190,11 @@ Page {
         }
         onLoadingCompleted: {
             if (search.page > 1) {
-                resultList.contentY = resultList.oldContentY + units.gu(3);
+                resultList.contentY = resultList.oldContentY;
+                scrollingAnimation.to = resultList.contentY + units.gu(3);
+                scrollingAnimation.start();
             }
         }
-
     }
 
     function searchOnline(querystr) {

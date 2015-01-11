@@ -80,10 +80,10 @@ Column {
             quantity: model.quantity
             unit: model.unit
             name: model.name
-            // opacity: ((y+height) >= flickable.contentY) && (y <= (flickable.contentY + flickable.height)) ? 1 : 0
             onRemove: listModel.remove(model.index);
             onChanged: modelTimer.restart()
             focus: model.focus
+            opacity: ((container.y+y+height) >= flickable.contentY) && (container.y+y <= (flickable.contentY + flickable.height)) ? 1 : 0
 
             Timer {
                 // we avoid that changed signal updates the listmodel entry before other

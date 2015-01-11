@@ -32,7 +32,7 @@ Button {
         PopupUtils.open(dialog, root);
     }
 
-    gradient: colors.redGradient
+    color: Theme.palette.normal.field
 
     Component {
         id: dialog

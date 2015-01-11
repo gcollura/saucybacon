@@ -52,7 +52,7 @@ Flickable {
             visible: editable
 
             onClicked: selectPhoto()
-            gradient: colors.redGradient
+            color: Theme.palette.normal.field
         }
 
         Repeater {

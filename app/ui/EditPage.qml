@@ -86,6 +86,7 @@ Page {
                     id: recipeName
                     width: parent.width
 
+                    opacity: ((layout.y+y+height) >= flickable.contentY) && (layout.y+y <= (flickable.contentY + flickable.height)) ? 1 : 0
                     placeholderText: i18n.tr("Enter a name for your recipe")
                     style: TextFieldStyle {
                         color: "white"
@@ -95,6 +96,7 @@ Page {
                 Row {
                     width: parent.width
                     spacing: units.gu(1)
+                    opacity: ((layout.y+y+height) >= flickable.contentY) && (layout.y+y <= (flickable.contentY + flickable.height)) ? 1 : 0
 
                     Label {
                         id: totalTime
@@ -121,17 +123,20 @@ Page {
                     text: i18n.tr("Photos")
                     fontSize: "large"
                     font.bold: true
+                    opacity: ((layout.y+y+height) >= flickable.contentY) && (layout.y+y <= (flickable.contentY + flickable.height)) ? 1 : 0
                 }
 
                 PhotoLayout {
                     id: photoLayout
                     width: parent.width
                     clip: wideAspect
+                    opacity: ((layout.y+y+height) >= flickable.contentY) && (layout.y+y <= (flickable.contentY + flickable.height)) ? 1 : 0
                 }
 
                 Item {
                     width: parent.width
                     height: childrenRect.height
+                    opacity: ((layout.y+y+height) >= flickable.contentY) && (layout.y+y <= (flickable.contentY + flickable.height)) ? 1 : 0
 
                     Label {
                         fontSize: "large"
@@ -174,6 +179,7 @@ Page {
 
                     model: categoriesModel
                     selectedIndexes: []
+                    opacity: ((layout.y+y+height) >= flickable.contentY) && (layout.y+y <= (flickable.contentY + flickable.height)) ? 1 : 0
 
                     delegate: CategorySelectorDelegate {
                         text: name
@@ -222,6 +228,7 @@ Page {
                     text: i18n.tr("Restriction")
                     fontSize: "large"
                     font.bold: true
+                    opacity: ((layout.y+y+height) >= flickable.contentY) && (layout.y+y <= (flickable.contentY + flickable.height)) ? 1 : 0
                 }
 
                 OptionSelector {
@@ -233,11 +240,13 @@ Page {
                         iconSource: mainView.icon("64/restriction-%1".arg(modelData.id))
                         constrainImage: true
                     }
+                    opacity: ((layout.y+y+height) >= flickable.contentY) && (layout.y+y <= (flickable.contentY + flickable.height)) ? 1 : 0
                 }
 
                 Item {
                     width: parent.width
                     height: childrenRect.height
+                    opacity: ((layout.y+y+height) >= flickable.contentY) && (layout.y+y <= (flickable.contentY + flickable.height)) ? 1 : 0
 
                     Label {
                         text: i18n.tr("Ingredients")

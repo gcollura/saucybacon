@@ -417,7 +417,6 @@ Page {
         }
     }
 
-
     function formatTime(preptime, cooktime) {
         var string = "";
         if (preptime > 0)
@@ -431,7 +430,7 @@ Page {
 
     function formatIngredient(quantity, type, name) {
         var output = "";
-        output += quantity ? "%1 ".arg(quantity) : "";
+        output += quantity > 0 ? "%1 ".arg(quantity) : "";
         output += type ? "%1 ".arg(type) : "";
         output += name;
         return output.capitalize();

@@ -718,7 +718,8 @@ void Worker::updateFavoriteCount() {
     q.prepare("SELECT count(*) as count FROM Recipes WHERE favorite = 1 GROUP BY favorite");
 
     if (!q.exec() || !q.next()) {
-        error(QString("Error while loading favoriteCount: %1").arg(q.lastError().text()));
+        if (q.lastError().isValid())
+            error(QString("Error while loading favoriteCount: %1").arg(q.lastError().text()));
         favoriteCountUpdated(0);
         return;
     }

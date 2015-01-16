@@ -22,7 +22,6 @@ import QtQuick.Layouts 1.0
 import Ubuntu.Components 1.1
 import Ubuntu.Components.ListItems 1.0 as ListItem
 import Ubuntu.Layouts 1.0
-import U1db 1.0 as U1db
 import SaucyBacon 1.0
 
 import "../components"
@@ -47,7 +46,7 @@ Page {
         objectName: "searchField"
 
         width: parent.width - units.gu(3)
-        placeholderText: "Search for a recipe..."
+        placeholderText: i18n.tr("Search online for a recipe...")
 
         onAccepted: searchOnline(searchField.text)
         onTextChanged: searchLocally(searchField.text)

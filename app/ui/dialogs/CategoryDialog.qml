@@ -36,6 +36,7 @@ Dialog {
     Button {
         text: i18n.tr("Create")
 
+        color: UbuntuColors.green
         onClicked: {
             database.addCategory(nameField.text.trim())
             PopupUtils.close(dialogue)
@@ -45,7 +46,6 @@ Dialog {
     Button {
         text: i18n.tr("Cancel")
 
-        gradient: UbuntuColors.greyGradient
         onClicked: {
             PopupUtils.close(dialogue);
         }

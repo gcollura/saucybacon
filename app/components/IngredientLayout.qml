@@ -68,8 +68,8 @@ Column {
         listModel.clear();
     }
 
-    function addIngredient(setfocus) {
-        listModel.append({ name: '', quantity: '', unit: '', focus: true });
+    function addIngredient(focus) {
+        listModel.append({ name: '', quantity: '', unit: '', focus: focus });
     }
 
     Component {

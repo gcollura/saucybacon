@@ -46,7 +46,7 @@ bool Utils::mkdir(const QString &dirName) {
 
 QString Utils::path(StandardLocation location) const {
     if (location == Utils::SettingsLocation)
-        return QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation)[0] + "/com.ubuntu.developer.gcollura.saucybacon";
+        return QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation)[0] + "/saucybacon.gcollura";
     return QStandardPaths::standardLocations((QStandardPaths::StandardLocation) location)[0];
 }
 

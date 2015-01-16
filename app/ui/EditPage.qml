@@ -274,7 +274,7 @@ Page {
                     width: parent.width
 
                     flickable: flickable
-                    Component.onCompleted: addIngredient()
+                    Component.onCompleted: addIngredient(false)
                 }
 
                 Behavior on width { UbuntuNumberAnimation { } }

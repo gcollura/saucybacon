@@ -68,6 +68,12 @@ Item {
                     onCancelPressed: {
                         PopupUtils.close(root.importDialog)
                     }
+
+                    Component.onCompleted: {
+                        // HACK! Hackity hack hack. Bad!
+                        peerPicker.children[0].color = colors.headerColor;
+                        peerPicker.children[4].color = colors.darkRed;
+                    }
                 }
             }
 

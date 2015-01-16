@@ -38,19 +38,6 @@ Page {
     property bool backVisible: false
     flickable: null
 
-    // Connections {
-    //     target: database
-    //     onIsEmptyChanged: {
-    //         console.log("isEmpty", isEmpty);
-    //         if (database.isEmpty) {
-    //             state = "firstLaunch";
-    //         } else {
-    //             state = "default";
-    //         }
-    //         console.log("layouts.visible", layouts.visible);
-    //     }
-    // }
-
     Action {
         id: defaultBackAction
         iconName: "back"
@@ -104,6 +91,7 @@ Page {
             PropertyChanges {
                 target: welcomeItem
                 opacity: 1
+                visible: true
             }
         }
     ]

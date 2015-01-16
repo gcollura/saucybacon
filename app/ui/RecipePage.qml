@@ -28,7 +28,6 @@ import "../components"
 Page {
     id: page
 
-    title: recipe.name ? recipe.name : i18n.tr("Recipe")
     anchors.fill: parent
 
     Action {
@@ -76,12 +75,34 @@ Page {
         }
     }
 
-    head.actions: database.loading ? [] : [
+    property var actions: [
         saveRecipeAction,
         favoriteRecipeAction,
         editRecipeAction,
         deleteRecipeAction,
         sourceRecipeAction
+    ]
+
+    state: database.loading ? "loading" : "default"
+    states: [
+        State {
+            name: "default"
+            PropertyChanges {
+                target: head
+                actions: page.actions
+            }
+            PropertyChanges {
+                target: page
+                title: recipe.name ? recipe.name : i18n.tr("Recipe")
+            }
+        },
+        State {
+            name: "loading"
+            PropertyChanges {
+                target: page
+                title: ""
+            }
+        }
     ]
 
     property Flickable pageFlickable
@@ -99,6 +120,13 @@ Page {
     Layouts {
         id: layouts
         anchors.fill: parent
+
+        opacity: database.loading ? 0 : 1
+        Behavior on opacity {
+            UbuntuNumberAnimation {
+                duration: UbuntuAnimation.SlowDuration
+            }
+        }
 
         layouts: [
             ConditionalLayout {

@@ -30,7 +30,7 @@ set(FULL_APP_NAME           "SaucyBacon")
 set(SAUCYBACON_DIR          "share/qml/${APP_NAME}")
 set(MAIN_QML                "saucybacon.qml")
 set(APP_ICON                "icons/SaucyBacon_icon.png")
-set(APP_VERSION             2.0.0)
+set(APP_VERSION             2.0.1)
 set(APP_PACKAGE             com.ubuntu.developer.gcollura.saucybacon)
 set(FRAMEWORK               ubuntu-sdk-14.10)
 

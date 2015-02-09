@@ -117,6 +117,17 @@ Page {
         isShown: database.loading
     }
 
+    onVisibleChanged: {
+        console.log("recipePage visible", page.visible)
+    }
+
+    opacity: visible ? 1 : 0
+    Behavior on opacity {
+        UbuntuNumberAnimation {
+            duration: UbuntuAnimation.SlowDuration
+        }
+    }
+
     Layouts {
         id: layouts
         anchors.fill: parent
@@ -149,6 +160,14 @@ Page {
                         width: page.width / 2
                         contentHeight: leftColumn.height + units.gu(5)
                         interactive: contentHeight > height
+
+                        Component.onCompleted: {
+                            // FIXME: workaround for qtubuntu not returning values depending on the grid unit definition
+                            // for Flickable.maximumFlickVelocity and Flickable.flickDeceleration
+                            var scaleFactor = units.gridUnit / 8;
+                            maximumFlickVelocity = maximumFlickVelocity * scaleFactor;
+                            flickDeceleration = flickDeceleration * scaleFactor;
+                        }
 
                         Column {
                             id: leftColumn
@@ -234,6 +253,14 @@ Page {
                         contentHeight: rightColumn.height
                         interactive: contentHeight > height
 
+                        Component.onCompleted: {
+                            // FIXME: workaround for qtubuntu not returning values depending on the grid unit definition
+                            // for Flickable.maximumFlickVelocity and Flickable.flickDeceleration
+                            var scaleFactor = units.gridUnit / 8;
+                            maximumFlickVelocity = maximumFlickVelocity * scaleFactor;
+                            flickDeceleration = flickDeceleration * scaleFactor;
+                        }
+
                         Column {
                             id: rightColumn
                             anchors {
@@ -273,7 +300,14 @@ Page {
             contentHeight: column.height
             interactive: contentHeight > parent.height
 
-            Component.onCompleted: pageFlickable = flickable
+            Component.onCompleted: {
+                // FIXME: workaround for qtubuntu not returning values depending on the grid unit definition
+                // for Flickable.maximumFlickVelocity and Flickable.flickDeceleration
+                var scaleFactor = units.gridUnit / 8;
+                maximumFlickVelocity = maximumFlickVelocity * scaleFactor;
+                flickDeceleration = flickDeceleration * scaleFactor;
+                pageFlickable = flickable;
+            }
 
             Column {
                 id: column

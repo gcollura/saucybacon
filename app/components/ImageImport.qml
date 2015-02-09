@@ -72,7 +72,8 @@ Item {
                     Component.onCompleted: {
                         // HACK! Hackity hack hack. Bad!
                         peerPicker.children[0].color = colors.headerColor;
-                        peerPicker.children[4].color = colors.darkRed;
+                        peerPicker.children[4].color = Qt.darker(colors.headerColor, 1.1);
+                        peerPicker.children[1].dividerColor = Qt.darker(colors.headerColor, 1.1);
                     }
                 }
             }

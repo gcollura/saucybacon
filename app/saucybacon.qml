@@ -30,7 +30,7 @@ MainView {
     objectName: "mainView"
     id: mainView
 
-    applicationName: "saucybacon.gcollura"
+    applicationName: "com.ubuntu.developer.gcollura.saucybacon"
 
     automaticOrientation: true
     anchorToKeyboard: true

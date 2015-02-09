@@ -52,6 +52,13 @@ Page {
         }
     ]
 
+    opacity: visible ? 1 : 0
+    Behavior on opacity {
+        UbuntuNumberAnimation {
+            duration: UbuntuAnimation.SlowDuration
+        }
+    }
+
     Flickable {
         id: flickable
 
@@ -63,7 +70,14 @@ Page {
         contentHeight: layout.height
         interactive: contentHeight + units.gu(5) > height // +5 because of strange OptionSelector height
 
-        Component.onCompleted: page.flickable = flickable
+        Component.onCompleted: {
+            // FIXME: workaround for qtubuntu not returning values depending on the grid unit definition
+            // for Flickable.maximumFlickVelocity and Flickable.flickDeceleration
+            var scaleFactor = units.gridUnit / 8;
+            maximumFlickVelocity = maximumFlickVelocity * scaleFactor;
+            flickDeceleration = flickDeceleration * scaleFactor;
+            page.flickable = flickable;
+        }
 
         Grid {
             id: layout
@@ -89,7 +103,7 @@ Page {
                     opacity: ((layout.y+y+height) >= flickable.contentY) && (layout.y+y <= (flickable.contentY + flickable.height)) ? 1 : 0
                     placeholderText: i18n.tr("Enter a name for your recipe")
                     style: TextFieldStyle {
-                        color: "white"
+                        color: (styledItem.focus || styledItem.highlighted) ? Theme.palette.selected.fieldText : "white"
                     }
                 }
 
@@ -274,7 +288,6 @@ Page {
                     width: parent.width
 
                     flickable: flickable
-                    Component.onCompleted: addIngredient(false)
                 }
 
                 Behavior on width { UbuntuNumberAnimation { } }

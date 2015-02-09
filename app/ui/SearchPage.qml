@@ -45,13 +45,20 @@ Page {
         id: searchField
         objectName: "searchField"
 
-        width: parent.width - units.gu(3)
+        width: parent.width - units.gu(2)
         placeholderText: i18n.tr("Search online for a recipe...")
 
         onAccepted: searchOnline(searchField.text)
         onTextChanged: searchLocally(searchField.text)
 
         Behavior on width { UbuntuNumberAnimation { } }
+    }
+
+    opacity: visible ? 1 : 0
+    Behavior on opacity {
+        UbuntuNumberAnimation {
+            duration: UbuntuAnimation.SlowDuration
+        }
     }
 
     LoadingIndicator {
@@ -148,6 +155,7 @@ Page {
 
                 Layout.fillHeight: true
                 clip: true
+                cacheBuffer: units.gu(8) * 20
 
                 model: search
 
@@ -157,6 +165,7 @@ Page {
                     iconSource: contents.image_url
                     text: contents.title
                     subText: contents.publisher_url
+                    height: units.gu(8)
                     onClicked: {
                         database.getRecipeOnline(contents.recipe_id, contents.source_url, contents.publisher_url, contents.image_url);
                         pageStack.push(Qt.resolvedUrl("RecipePage.qml"));

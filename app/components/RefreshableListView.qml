@@ -73,4 +73,12 @@ ListView {
             text: qsTr("Release for more results...")
         }
     }
+
+    Component.onCompleted: {
+        // FIXME: workaround for qtubuntu not returning values depending on the grid unit definition
+        // for Flickable.maximumFlickVelocity and Flickable.flickDeceleration
+        var scaleFactor = units.gridUnit / 8;
+        maximumFlickVelocity = maximumFlickVelocity * scaleFactor;
+        flickDeceleration = flickDeceleration * scaleFactor;
+    }
 }

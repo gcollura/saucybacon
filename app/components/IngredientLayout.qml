@@ -29,24 +29,32 @@ Column {
     property Flickable flickable: null
 
     onIngredientsChanged: {
-        loadIngredients();
+        loadIngredients()
     }
 
     ListModel {
-        id: listModel
+        id: ingredientsModel
     }
 
     Repeater {
         id: repeater
-        model: listModel
-        delegate: ingredientComponent
+        model: ingredientsModel
+        delegate: Component {
+            Loader {
+                property var listModel: model
+                asynchronous: true
+                width: parent ? parent.width : 0
+                opacity: ((container.y+y+height) >= flickable.contentY) && (container.y+y <= (flickable.contentY + flickable.height)) ? 1 : 0
+                sourceComponent: ingredientComponent
+            }
+        }
     }
 
     function getIngredients() {
         var result = [];
         var ingredient;
-        for (var i = 0; i < listModel.count; i++) {
-            ingredient = listModel.get(i);
+        for (var i = 0; i < ingredientsModel.count; i++) {
+            ingredient = ingredientsModel.get(i);
             if (ingredient.name.length > 0) {
                 // Trash that useless ObjectModel
                 result.push(JSON.parse(JSON.stringify(ingredient)))
@@ -57,33 +65,37 @@ Column {
     }
 
     function loadIngredients() {
-        listModel.clear();
+        ingredientsModel.clear();
         // We reuse the already created ingredient entries
         for (var i = 0; i < ingredients.length; i++) {
-            listModel.append(ingredients[i]);
+            ingredientsModel.append(ingredients[i]);
         }
     }
 
     function clearIngredients() {
-        listModel.clear();
+        ingredientsModel.clear();
     }
 
     function addIngredient(focus) {
-        listModel.append({ name: '', quantity: '', unit: '', focus: focus });
+        ingredientsModel.append({ name: '', quantity: '', unit: '', focus: focus });
     }
 
     Component {
         id: ingredientComponent
         IngredientInput {
             id: input
-            width: parent ? parent.width : 0
-            quantity: model.quantity
-            unit: model.unit
-            name: model.name
-            onRemove: listModel.remove(model.index);
+            property var model: listModel
+            quantity: model ? model.quantity : ""
+            unit: model ? model.unit : ""
+            name: model ? model.name : ""
+            onRemove: ingredientsModel.remove(model.index);
             onChanged: modelTimer.restart()
-            focus: model.focus
-            opacity: ((container.y+y+height) >= flickable.contentY) && (container.y+y <= (flickable.contentY + flickable.height)) ? 1 : 0
+            focus: model ? model.focus : ""
+
+            onFocusChanged: {
+                console.log("focus changed", focus);
+                flickable.contentY = container.y + y + height
+            }
 
             Timer {
                 // we avoid that changed signal updates the listmodel entry before other
@@ -91,10 +103,11 @@ Column {
                 id: modelTimer
                 interval: 1000
 
-                onTriggered: listModel.set(model.index, input.get())
+                onTriggered: ingredientsModel.set(model.index, input.get())
             }
 
             Component.onCompleted: {
+                // console.log(listModel.focus)
                 if (model.focus) {
                     focus();
                 }

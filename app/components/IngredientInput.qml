@@ -29,6 +29,7 @@ Item {
     property alias quantity: _quantity.text
     property alias unit: _unit.text
     property alias name: _name.text
+    focus: _name.focus || _unit.focus || _quantity.focus
 
     function get() {
         return { "quantity": quantity, "unit": unit, "name": name };

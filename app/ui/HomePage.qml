@@ -252,6 +252,7 @@ Page {
 
             cellWidth: width / Math.floor(width / units.gu(16))
             cellHeight: 4 / 3 * cellWidth
+            cacheBuffer: cellHeight * 20
 
             model: database.recipes
 
@@ -263,6 +264,14 @@ Page {
                 imageSource: modelData.photos[0] ? modelData.photos[0] : ""
                 favorite: modelData.favorite
                 restriction: modelData.restriction
+            }
+
+            Component.onCompleted: {
+                // FIXME: workaround for qtubuntu not returning values depending on the grid unit definition
+                // for Flickable.maximumFlickVelocity and Flickable.flickDeceleration
+                var scaleFactor = units.gridUnit / 8;
+                maximumFlickVelocity = maximumFlickVelocity * scaleFactor;
+                flickDeceleration = flickDeceleration * scaleFactor;
             }
         }
     }
